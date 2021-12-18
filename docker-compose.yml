@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  mysql_db:
+    image: mysql
+    container_name: mini_blog_api_mysql
+    tty: true
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb_force_recovery=0
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    volumes:
+      - .docker/mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    cap_add:
+      - SYS_NICE
+    networks:
+      - mini_blog_api
+
+  redis:
+    image: "redis:alpine"
+    container_name: mini_blog_api_redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      - mini_blog_api
+
+networks:
+  mini_blog_api:
+    driver: bridge

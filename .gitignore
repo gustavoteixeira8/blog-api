@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+.env
+ormconfig.json
+ormconfig.prod.json
+uploads/*
+!uploads/.gitkeep
+temp/*
+!temp/.gitkeep
+TODO.md
+.docker/mysql_data

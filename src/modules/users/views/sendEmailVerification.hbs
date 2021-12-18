@@ -1,0 +1,30 @@
+<style>
+    * {
+    color: black;
+  }
+
+  .message-content {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 600px;
+    font-size: 18px;
+    line-height: 21px;
+  }
+</style>
+
+<div class="message-content">
+  <p>Hello, {{user.username}}</p>
+
+  <p>
+    Use the link below to check your email and get access to all the blog's features: <br>
+    {{appConfig.url}}/auth/email/verify/{{token}}
+  </p>
+
+  <p>
+    Your token expires in {{convertDate tokenExpires}}.
+  </p>
+
+  <p>
+    Thank you!<br />
+    <strong>{{appConfig.name}}</strong>
+  </p>
+</div>
