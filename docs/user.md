@@ -51,7 +51,7 @@ Os campos ID, isAdmin, isVerifiedEmail e timestamps são definidos automaticamen
 
 **Código HTTP** : `400 Bad Request`
 
-- Alguma campo do BODY não foi enviado ou o valor enviado não passou nas [validações](#corpo-da-requisição-body).
+- Algum campo do BODY não foi enviado ou o valor enviado não passou nas [validações](#parâmetros).
 
 - **Email** ou **username** já existe no banco de dados.
 
