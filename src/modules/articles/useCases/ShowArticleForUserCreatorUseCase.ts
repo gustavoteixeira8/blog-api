@@ -37,9 +37,6 @@ export class ShowArticleForUserCreatorUseCase
 
     if (!user) throw new UserNotFoundError();
 
-    if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
-    }
     if (!user.isAdmin) {
       throw new UserIsNotAdminError();
     }
