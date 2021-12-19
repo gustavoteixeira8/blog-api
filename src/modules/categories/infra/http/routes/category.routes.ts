@@ -8,11 +8,13 @@ import {
   showCategoryByIdController,
   updateCategoryController,
 } from '../controllers';
+import { showAllPublicArticlesByCategoryController } from '@modules/articles/infra/http/controllers';
 
 const categoryRoutes = Router();
 
 categoryRoutes.get('/', showAllCategoriesController.handle);
 categoryRoutes.get('/:categoryId', showCategoryByIdController.handle);
+categoryRoutes.get('/:categoryId/article', showAllPublicArticlesByCategoryController.handle);
 
 categoryRoutes.use(ensureAuthentication);
 categoryRoutes.use(ensureUserIsAdmin);

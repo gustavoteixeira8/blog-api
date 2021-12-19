@@ -6,19 +6,14 @@ import {
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { inject, injectable } from 'tsyringe';
 import { ArticleWithRelationsDTO } from '../dtos/ArticleWithRelationsDTO';
-import {
-  ArticleRepositoryProtocol,
-  SearchArticleOptions,
-} from '../repositories/ArticleRepositoryProtocol';
+import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
 
-export type SearchArticlesRequest = Partial<PaginationOptionsProtocol> &
-  Omit<SearchArticleOptions, 'isPublic'>;
-
-export type SearchArticlesResponse = Promise<PaginationResponseProtocol<ArticleWithRelationsDTO>>;
+export type ShowArticlesRequest = Partial<PaginationOptionsProtocol> & { userId: string };
+export type ShowArticlesResponse = Promise<PaginationResponseProtocol<ArticleWithRelationsDTO>>;
 
 @injectable()
-export class SearchPublicArticlesUseCase
-  implements UseCaseProtocol<SearchArticlesRequest, SearchArticlesResponse>
+export class ShowAllPublicArticlesByUserUseCase
+  implements UseCaseProtocol<ShowArticlesRequest, ShowArticlesResponse>
 {
   constructor(
     @inject('ArticleRepository')
@@ -29,10 +24,8 @@ export class SearchPublicArticlesUseCase
     order,
     page,
     perPage,
-    categorySlug,
-    title,
-    username,
-  }: SearchArticlesRequest): SearchArticlesResponse {
+    userId,
+  }: ShowArticlesRequest): ShowArticlesResponse {
     const take = !perPage || perPage > 20 ? 20 : Math.ceil(perPage);
     const skip = page ? take * (Math.ceil(page) - 1) : 0;
     const orderByDefault = Object.keys(order || {}).length ? order : { createdAt: 'DESC' };
@@ -42,9 +35,6 @@ export class SearchPublicArticlesUseCase
       perPage: take,
     };
 
-    return await this._articleRepository.searchWithRelations(
-      { categorySlug, title, username, isPublic: true, withDeleted: false },
-      pagination,
-    );
+    return await this._articleRepository.findAllPublicByUserWithRelations(userId, pagination);
   }
 }

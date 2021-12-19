@@ -5,19 +5,17 @@ import { Router } from 'express';
 import {
   createArticleController,
   recoverArticleController,
-  searchPublicArticlesController,
-  searchArticlesForUserCreatorController,
+  showAllPublicArticlesController,
   showPublicArticleByIdController,
   softDeleteArticleController,
   updateArticleController,
   updateArticleThumbnailController,
-  showArticleForUserCreatorController,
 } from '../controllers';
 import { uploadConfig } from '@config/upload';
 
 const articleRoutes = Router();
 
-articleRoutes.get('/', searchPublicArticlesController.handle);
+articleRoutes.get('/', showAllPublicArticlesController.handle);
 articleRoutes.get('/:articleId', showPublicArticleByIdController.handle);
 
 articleRoutes.use(ensureAuthentication);
@@ -27,9 +25,6 @@ articleRoutes.post('/', createArticleController.handle);
 articleRoutes.put('/:articleId', updateArticleController.handle);
 articleRoutes.put('/:articleId/recover', recoverArticleController.handle);
 articleRoutes.delete('/:articleId', softDeleteArticleController.handle);
-
-articleRoutes.get('/my-article/search', searchArticlesForUserCreatorController.handle);
-articleRoutes.get('/my-article/:articleId', showArticleForUserCreatorController.handle);
 
 const multerThumbnail = multer(uploadConfig.multer).single('articleThumbnail');
 
