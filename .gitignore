@@ -10,3 +10,4 @@ temp/*
 !temp/.gitkeep
 TODO.md
 .docker/mysql_data
+.docs
