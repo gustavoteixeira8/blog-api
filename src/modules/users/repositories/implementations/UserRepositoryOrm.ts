@@ -101,6 +101,7 @@ export class UserRepositoryOrm implements UserRepositoryProtocol {
         ...(isAdmin !== undefined ? { isAdmin } : null),
       },
       order,
+      withDeleted: true,
       skip: page,
       take: perPage,
     });
