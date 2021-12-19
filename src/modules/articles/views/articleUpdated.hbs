@@ -1,5 +1,5 @@
 <style>
-  .message-content {
+  body {
     font-family: Arial, Helvetica, sans-serif;
     max-width: 600px;
     font-size: 18px;
@@ -24,12 +24,12 @@
   }
 </style>
 
-<div class='message-content'>
+<div>
   <p>Hello, {{user.username}}</p>
 
   <p>
     An article of yours has been updated and the new access link is
-    <a href="{{appConfig.url}}/article/{{article.slug}}">THIS</a>.
+    <a href="{{appConfig.url}}/article/{{article.id}}">THIS</a>.
   </p>
 
   <p>
@@ -38,9 +38,8 @@
     </span> Check the privacy status of the article to make sure it is accessible to everyone
   </p>
 
+  <h3>Article details</h3>
   <table>
-    <h3>Article details</h3>
-
     <thead>
       <tr>
         <th>ID</th>
