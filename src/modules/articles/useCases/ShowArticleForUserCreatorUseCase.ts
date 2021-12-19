@@ -3,7 +3,6 @@ import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import {
   ArticleNotFoundError,
   MissingParamError,
-  UserEmailIsNotVerifiedError,
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
