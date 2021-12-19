@@ -67,7 +67,7 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
       const userWithUsernameExists = await this._userRepository.existsWithUsername(username);
 
       if (userWithUsernameExists && user.username.value !== username) {
-        throw new UsernameAlreadyExistsError(username);
+        throw new UsernameAlreadyExistsError();
       }
 
       const usernameOrError = Username.create(username);
@@ -85,7 +85,7 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
       const userWithEmailExists = await this._userRepository.existsWithEmail(email);
 
       if (userWithEmailExists && user.email.value !== email) {
-        throw new EmailAlreadyExistsError(email);
+        throw new EmailAlreadyExistsError();
       }
 
       const emailOrError = Email.create(email);

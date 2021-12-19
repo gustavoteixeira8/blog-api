@@ -42,10 +42,10 @@ export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Pro
     ]);
 
     if (emailExists) {
-      throw new EmailAlreadyExistsError(email);
+      throw new EmailAlreadyExistsError();
     }
     if (usernameExists) {
-      throw new UsernameAlreadyExistsError(username);
+      throw new UsernameAlreadyExistsError();
     }
 
     const user = User.create({
