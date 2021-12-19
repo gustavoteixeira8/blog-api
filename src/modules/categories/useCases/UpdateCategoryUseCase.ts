@@ -36,10 +36,10 @@ export class UpdateCategoryUseCase
   ) {}
 
   public async execute({ categoryId, name, userId }: UpdateCategoryRequest): Promise<void> {
-    if (!userId) throw new MissingParamError('User id');
+    if (!userId || !categoryId) throw new MissingParamError('User id and category id');
 
-    if (!name || !categoryId) {
-      throw new MissingParamError('Category name and category id');
+    if (!name) {
+      throw new MissingParamError('Category name');
     }
 
     const userExists = await this._userRepository.findById(userId, { withDeleted: false });
@@ -69,7 +69,7 @@ export class UpdateCategoryUseCase
     const slugOrError = Slug.create(slug);
 
     if (categoryNameOrError instanceof Error) {
-      throw new InvalidCategoryNameError(name);
+      throw new InvalidCategoryNameError();
     }
     if (slugOrError instanceof Error) {
       throw new InvalidSlugError();
