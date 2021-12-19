@@ -29,16 +29,16 @@ export class MissingParamError extends Error {
 export class EmailAlreadyExistsError extends Error {
   public readonly name = 'EmailAlreadyExistsError';
 
-  constructor(email: string) {
-    super(`Email already exists: ${email}`);
+  constructor() {
+    super('Invalid email, try another');
   }
 }
 
 export class UsernameAlreadyExistsError extends Error {
   public readonly name = 'UsernameAlreadyExistsError';
 
-  constructor(username: string) {
-    super(`Username already exists: ${username}`);
+  constructor() {
+    super('Invalid username, try another');
   }
 }
 
