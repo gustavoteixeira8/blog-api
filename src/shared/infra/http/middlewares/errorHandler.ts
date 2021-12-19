@@ -1,4 +1,4 @@
-import { convertErrorsToHttpError } from '@shared/infra/http/errors/errorHandler';
+import { convertErrorsToHttpError } from '@shared/infra/http/errors/convertErrorsToHttpError';
 import { EntityError } from '@shared/core/errors';
 import { HttpError } from '@shared/infra/http/errors/httpErrors';
 import { NextFunction, Request, Response } from 'express';
@@ -22,9 +22,5 @@ export function errorHandler(
 
   const handleError = convertErrorsToHttpError(error);
 
-  if (error instanceof Error) {
-    return errorResponse(res, { errors: handleError.errors, status: handleError.status });
-  }
-
-  return errorResponse(res, { errors: ['Internal server error'], status: 500 });
+  return errorResponse(res, { errors: handleError.errors, status: handleError.status });
 }
