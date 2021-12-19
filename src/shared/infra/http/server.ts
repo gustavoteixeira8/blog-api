@@ -7,6 +7,7 @@ import { appConfig } from '@config/app';
 import { closeConnectionDatabase, connectDatabase } from '../database';
 import { routes } from './routes/index.routes';
 import { errorHandler } from './middlewares/errorHandler';
+import { logger } from '@shared/log';
 
 export class Server {
   private _app = express();
@@ -42,7 +43,7 @@ export class Server {
     this.setupRoutes();
     this._server = http.createServer(this._app);
     this._server.listen(appConfig.serverPort, () =>
-      console.log('Server listening on port -> ' + appConfig.serverPort),
+      logger.info('Server listening on port -> ' + appConfig.serverPort),
     );
   }
 

@@ -4,6 +4,7 @@ import 'dotenv/config';
 import '@shared/containers';
 import '@modules/users/events/deleteUsers';
 import { Server } from './server';
+import { logger } from '@shared/log';
 
 export enum ExitStatus {
   success = 0,
@@ -11,12 +12,12 @@ export enum ExitStatus {
 }
 
 process.on('uncaughtException', (error) => {
-  console.log(`App exited with error -> `, error);
+  logger.error(`App exited with error -> `, error);
   process.exit(ExitStatus.error);
 });
 
 process.on('unhandledRejection', (error) => {
-  console.log(`App exited with error -> `, error);
+  logger.error(`App exited with error -> `, error);
   process.exit(ExitStatus.error);
 });
 
@@ -32,16 +33,16 @@ process.on('unhandledRejection', (error) => {
       process.on(signal, async () => {
         try {
           await server.close();
-          console.log(`App exited with success`);
+          logger.info(`App exited with success`);
           process.exit(ExitStatus.success);
         } catch (error) {
-          console.log(`App exited with error -> ${error}`);
+          logger.error(`App exited with error -> ${error}`);
           process.exit(ExitStatus.error);
         }
       });
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     process.exit(ExitStatus.error);
   }
 })();

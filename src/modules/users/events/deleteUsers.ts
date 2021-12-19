@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import cron from 'node-cron';
 import { container } from 'tsyringe';
 import { DeleteAllUsersUseCase } from '../useCases/DeleteAllUsersUseCase';
@@ -8,8 +9,8 @@ cron.schedule('59 59 23 * * *', async () => {
 
     await deleteUsersUseCase.execute();
 
-    console.log('Schedule to delete users executed successfully');
+    logger.info('Schedule to delete users executed successfully');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 });

@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
 import {
   StorageOptions,
@@ -21,13 +22,13 @@ export class ProcessStorageQueueService {
 
         if (action === 'SAVE') {
           await this._storageProvider.save(filename, filetype);
-          console.log('File uploaded successfully');
+          logger.info('File uploaded successfully');
         } else if (action === 'DELETE') {
           await this._storageProvider.delete(filename, filetype);
-          console.log('File deleted successfully');
+          logger.info('File deleted successfully');
         }
       } catch (error) {
-        console.log(error);
+        logger.error(error);
       }
     });
   }

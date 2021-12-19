@@ -3,6 +3,7 @@ import { mailConfig } from '@config/mail';
 import { AddressOptionsProtocol, MailOptionsProtocol, MailProviderProtocol } from '../MailProvider';
 import { HandlebarsProvider } from '@shared/providers/templateProvider/implementations/HandlebarsProvider';
 import { appConfig } from '@config/app';
+import { logger } from '@shared/log';
 
 export class MailTrapProvider implements MailProviderProtocol {
   private readonly _mailerConfig: Record<string, any> = mailConfig.mailtrap;
@@ -27,6 +28,7 @@ export class MailTrapProvider implements MailProviderProtocol {
         replyTo: options.replyTo,
       });
     } catch (error) {
+      logger.error(error);
       throw new Error('Mail service error');
     } finally {
       transporter.close();

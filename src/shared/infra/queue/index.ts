@@ -4,6 +4,7 @@ import '@shared/containers';
 import { container } from 'tsyringe';
 import { ProcessMailQueueService } from './services/ProcessMailQueueService';
 import { ProcessStorageQueueService } from './services/ProcessStorageQueueService';
+import { logger } from '@shared/log';
 
 export enum ExitStatus {
   success = 0,
@@ -23,17 +24,17 @@ export enum ExitStatus {
     quitSignal.forEach((signal) => {
       process.on(signal, async () => {
         try {
-          console.log(`Queue exited with success`);
+          logger.info(`Queue exited with success`);
           process.exit(ExitStatus.success);
         } catch (error) {
-          console.log(`Queue exited with error -> ${error}`);
+          logger.error(`Queue exited with error -> ${error}`);
           process.exit(ExitStatus.error);
         }
       });
     });
 
-    console.log('Running queue');
+    logger.info('Running queue');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 })();

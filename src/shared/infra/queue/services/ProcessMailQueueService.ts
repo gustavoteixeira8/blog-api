@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import {
   MailOptionsProtocol,
   MailProviderProtocol,
@@ -21,9 +22,9 @@ export class ProcessMailQueueService {
 
         await this._mailProvider.sendMail(mailOptions);
 
-        console.log(`Email sent to`, mailOptions.to);
+        logger.info(`Email sent to`, mailOptions.to);
       } catch (error) {
-        console.log(error);
+        logger.error(error);
       }
     });
   }

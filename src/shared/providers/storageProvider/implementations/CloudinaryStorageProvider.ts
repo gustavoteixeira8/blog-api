@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import fs from 'fs';
 import { uploadConfig, uploadProviderConfig } from '@config/upload';
 import { Filetype, StorageProviderProtocol, StorageResponse } from '../StorageProviderProtocol';
+import { logger } from '@shared/log';
 
 export class CloudinaryStorageProvider implements StorageProviderProtocol {
   private readonly _cloudinaryConfig = uploadProviderConfig.cloudinary.cloudinaryOptions;
@@ -28,6 +29,7 @@ export class CloudinaryStorageProvider implements StorageProviderProtocol {
 
       await fs.promises.unlink(resolve(this._tempPath, filename));
     } catch (error) {
+      logger.error(error);
       throw new Error('Storage provider error');
     }
 
@@ -45,6 +47,7 @@ export class CloudinaryStorageProvider implements StorageProviderProtocol {
         invalidate: true,
       });
     } catch (error) {
+      logger.error(error);
       throw new Error('Storage provider error');
     }
   }

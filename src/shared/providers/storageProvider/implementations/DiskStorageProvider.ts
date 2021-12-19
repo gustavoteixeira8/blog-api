@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import fs from 'fs';
 import { resolve } from 'path';
 import { Filetype, StorageProviderProtocol, StorageResponse } from '../StorageProviderProtocol';
@@ -15,6 +16,7 @@ export class DiskStorageProvider implements StorageProviderProtocol {
 
       await fs.promises.rename(oldPath, newPath);
     } catch (error) {
+      logger.error(error);
       throw new Error('Storage provider error');
     }
 
@@ -29,6 +31,7 @@ export class DiskStorageProvider implements StorageProviderProtocol {
 
       await fs.promises.unlink(filePath);
     } catch (error) {
+      logger.error(error);
       throw new Error('Storage provider error');
     }
   }

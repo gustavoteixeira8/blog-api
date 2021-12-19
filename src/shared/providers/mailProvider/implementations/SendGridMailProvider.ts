@@ -1,6 +1,7 @@
 import { appConfig } from '@config/app';
 import { mailConfig } from '@config/mail';
 import sendGrid from '@sendgrid/mail';
+import { logger } from '@shared/log';
 import { HandlebarsProvider } from '@shared/providers/templateProvider/implementations/HandlebarsProvider';
 import { AddressOptionsProtocol, MailOptionsProtocol, MailProviderProtocol } from '../MailProvider';
 
@@ -39,6 +40,7 @@ export class SendGridMailProvider implements MailProviderProtocol {
         replyTo: options.replyTo || this._appAddress.address,
       });
     } catch (error) {
+      logger.error(error);
       throw new Error('Mail service error');
     }
   }

@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import fs from 'fs';
 import hbs from 'handlebars';
 import { TemplateOptionsProtocol, TemplateProviderProtocol } from '../TemplateProviderProtocol';
@@ -15,6 +16,7 @@ export class HandlebarsProvider extends TemplateProviderProtocol {
 
       return parseContent(variables);
     } catch (error) {
+      logger.error(error);
       throw new Error('Template provider error');
     }
   }

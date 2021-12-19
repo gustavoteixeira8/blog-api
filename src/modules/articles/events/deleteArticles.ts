@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import cron from 'node-cron';
 import { container } from 'tsyringe';
 import { DeleteAllArticlesUseCase } from '../useCases/DeleteAllArticlesUseCase';
@@ -8,8 +9,8 @@ cron.schedule('0 0 2 * * *', async () => {
 
     await deleteArticles.execute();
 
-    console.log('Schedule to delete articles executed successfully');
+    logger.info('Schedule to delete articles executed successfully');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 });

@@ -3,6 +3,7 @@ import { EntityError } from '@shared/core/errors';
 import { HttpError } from '@shared/infra/http/errors/httpErrors';
 import { NextFunction, Request, Response } from 'express';
 import { errorResponse } from '../utils/httpResponses';
+import { logger } from '@shared/log';
 
 export function errorHandler(
   error: Error,
@@ -10,7 +11,7 @@ export function errorHandler(
   res: Response,
   next: NextFunction, // eslint-disable-line
 ): Response {
-  console.log(error);
+  logger.error(error);
 
   if (error instanceof HttpError) {
     return errorResponse(res, { errors: error.errors, status: error.status });
