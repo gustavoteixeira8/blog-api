@@ -1,31 +1,31 @@
 import { CreateArticleController } from './CreateArticleController';
-import { SearchArticlesForUserCreatorController } from './SearchArticlesForCreatorController';
-import { SearchPublicArticlesController } from './SearchPublicArticlesController';
+import { ShowAllPublicArticlesController } from './ShowAllPublicArticlesController';
 import { ShowPublicArticleByIdController } from './ShowPublicArticleByIdController';
 import { SoftDeleteArticleController } from './SoftDeleteArticleController';
 import { UpdateArticleController } from './UpdateArticleController';
 import { UpdateArticleThumbnailController } from './UpdateArticleThumbnailController';
 import { RecoverArticleController } from './RecoverArticleController';
-import { ShowArticleForUserCreatorController } from './ShowArticleForUserCreatorController';
+import { ShowAllPublicArticlesByCategoryController } from './ShowAllPublicArticlesByCategoryController';
+import { ShowAllPublicArticlesByUserController } from './ShowAllPublicArticlesByUserController';
 
 const createArticleController = new CreateArticleController();
 const showPublicArticleByIdController = new ShowPublicArticleByIdController();
 const updateArticleController = new UpdateArticleController();
 const updateArticleThumbnailController = new UpdateArticleThumbnailController();
 const softDeleteArticleController = new SoftDeleteArticleController();
-const searchPublicArticlesController = new SearchPublicArticlesController();
-const searchArticlesForUserCreatorController = new SearchArticlesForUserCreatorController();
+const showAllPublicArticlesController = new ShowAllPublicArticlesController();
 const recoverArticleController = new RecoverArticleController();
-const showArticleForUserCreatorController = new ShowArticleForUserCreatorController();
+const showAllPublicArticlesByCategoryController = new ShowAllPublicArticlesByCategoryController();
+const showAllPublicArticlesByUserController = new ShowAllPublicArticlesByUserController();
 
 export {
   createArticleController,
   showPublicArticleByIdController,
   updateArticleController,
   softDeleteArticleController,
-  searchPublicArticlesController,
+  showAllPublicArticlesController,
   updateArticleThumbnailController,
-  searchArticlesForUserCreatorController,
   recoverArticleController,
-  showArticleForUserCreatorController,
+  showAllPublicArticlesByCategoryController,
+  showAllPublicArticlesByUserController,
 };
