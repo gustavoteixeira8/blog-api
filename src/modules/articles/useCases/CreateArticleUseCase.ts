@@ -51,12 +51,8 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
       throw new MissingParamError('User id');
     }
 
-    if (!title || !text) {
-      throw new MissingParamError('Title and text');
-    }
-
-    if (!categoriesId || !categoriesId.length) {
-      throw new MissingParamError('Category id');
+    if (!title || !text || !categoriesId || !categoriesId.length) {
+      throw new MissingParamError('Title, text and categories id');
     }
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });

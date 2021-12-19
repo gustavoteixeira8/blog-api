@@ -33,9 +33,7 @@ export class SoftDeleteArticleUseCase
   ) {}
 
   public async execute({ articleId, userId }: DeleteArticleRequest): Promise<void> {
-    if (!articleId) throw new MissingParamError('Article id');
-
-    if (!userId) throw new MissingParamError('User id');
+    if (!articleId || !userId) throw new MissingParamError('Article id and user id');
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
