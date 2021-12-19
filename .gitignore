@@ -11,3 +11,4 @@ temp/*
 TODO.md
 .docker/mysql_data
 .docs
+.docker/dbdata

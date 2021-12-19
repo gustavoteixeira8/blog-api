@@ -2,7 +2,7 @@ import { databaseConfig } from '@config/database';
 import { ConnectionManager, createConnection } from 'typeorm';
 
 export async function connectDatabase(): Promise<void> {
-  await createConnection(databaseConfig.mysql);
+  await createConnection(databaseConfig.postgres);
 }
 
 export async function closeConnectionDatabase(): Promise<void> {

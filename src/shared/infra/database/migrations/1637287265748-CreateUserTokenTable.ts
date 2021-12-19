@@ -29,7 +29,7 @@ export class CreateUserTokenTable1637287265748 implements MigrationInterface {
           },
           {
             name: 'expiresIn',
-            type: 'datetime',
+            type: 'timestamp',
           },
           {
             name: 'createdAt',
