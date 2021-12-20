@@ -41,7 +41,7 @@ export const defaultLimiter = rateLimiter({
     client: redisProvider.client,
     prefix: 'default-limit:',
   }),
-  max: 100,
+  max: 250,
   windowMs: 1000 * 60 * 5,
   draft_polli_ratelimit_headers: true,
   statusCode: 429,
