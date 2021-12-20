@@ -28,7 +28,7 @@ export class DeleteCategoryUseCase
   ) {}
 
   public async execute({ categoryId, userId }: DeleteCategoryRequest): Promise<void> {
-    if (!userId || categoryId) throw new MissingParamError('User id and category id');
+    if (!userId || !categoryId) throw new MissingParamError('User id and category id');
 
     const userExists = await this._userRepository.findById(userId, { withDeleted: false });
 
