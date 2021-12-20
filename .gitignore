@@ -3,7 +3,7 @@ build/
 dist/
 .env
 ormconfig.json
-ormconfig.prod.json
+ormconfig.dev.json
 uploads/*
 !uploads/.gitkeep
 temp/*
@@ -12,3 +12,4 @@ TODO.md
 .docker/mysql_data
 .docs
 .docker/dbdata
+.env.dev
