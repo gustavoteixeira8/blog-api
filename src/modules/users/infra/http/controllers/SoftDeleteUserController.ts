@@ -11,6 +11,6 @@ export class SoftDeleteUserController {
 
     await deleteUser.execute({ userId });
 
-    return ok(res, { message: 'Your account will be deleted in 1 month' });
+    return ok(res, { message: 'Your user will be deleted in 1 month' });
   }
 }

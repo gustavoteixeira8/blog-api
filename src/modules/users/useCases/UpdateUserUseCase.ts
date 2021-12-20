@@ -110,7 +110,7 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
             name: user.fullName.value,
             address: user.email.value,
           },
-          subject: `Your user has been updated - ${appConfig.name}`,
+          subject: `Your user was updated - ${appConfig.name}`,
           context: {
             user: {
               fullName: user.fullName.value,

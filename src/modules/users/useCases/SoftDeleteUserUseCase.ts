@@ -45,7 +45,7 @@ export class SoftDeleteUserUseCase implements UseCaseProtocol<SoftDeleteRequest,
           name: userExists.fullName.value,
           address: userExists.email.value,
         },
-        subject: `Your user has been deleted - ${appConfig.name}`,
+        subject: `Your user will be deleted in 1 month - ${appConfig.name}`,
         context: {
           user: {
             username: userExists.username.value,

@@ -11,6 +11,6 @@ export class CreateUserController {
 
     await createUser.execute({ fullName, email, password, username });
 
-    return created(res, { message: 'Your account has been successfully created' });
+    return created(res, { message: 'Your user was created successfully' });
   }
 }

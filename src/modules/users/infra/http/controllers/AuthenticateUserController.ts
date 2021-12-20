@@ -15,7 +15,7 @@ export class AuthenticateUserController {
     });
 
     return ok(res, {
-      ...(userIsRecovered ? { message: 'Your account has been successfully restored' } : null),
+      ...(userIsRecovered ? { message: 'Your user was successfully recovered' } : null),
       accessToken,
       expiresIn,
       userId,

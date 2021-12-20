@@ -109,7 +109,7 @@ export class UpdateUserPasswordUseCase
           name: user.fullName.value,
           address: user.email.value,
         },
-        subject: `Your password has been updated - ${appConfig.name}`,
+        subject: `Your password was updated - ${appConfig.name}`,
         context: {
           user: {
             fullName: user.fullName.value,

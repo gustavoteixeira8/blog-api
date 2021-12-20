@@ -12,8 +12,6 @@ export class UpdateUserController {
 
     await updateUser.execute({ userId, fullName, email, username });
 
-    return ok(res, {
-      message: 'User has been successfully updated',
-    });
+    return ok(res, { message: 'Your user was updated successfully' });
   }
 }
