@@ -30,8 +30,6 @@ export class MailTrapProvider implements MailProviderProtocol {
     } catch (error) {
       logger.error(error);
       throw new Error('Mail service error');
-    } finally {
-      transporter.close();
     }
   }
 }
