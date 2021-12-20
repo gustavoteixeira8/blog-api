@@ -1,7 +1,7 @@
 import { Article } from '@modules/articles/entities/Article';
 import { ArticleMapper } from '@modules/articles/mappers/ArticleMapper';
 import { RepositoryOptions } from '@shared/core/repositories/RepositoryOptions';
-import { getRepository, IsNull, Like, Not } from 'typeorm';
+import { getRepository, IsNull, Not } from 'typeorm';
 import { ArticleEntity } from '@shared/infra/database/entities/ArticleEntity';
 import {
   ArticleRepositoryProtocol,
@@ -102,19 +102,19 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
 
     if (articleTitle) {
       qb.andWhere('lower(a.title) like :articleTitle', {
-        articleTitle: Like(`%${articleTitle.toLowerCase()}%`),
+        articleTitle: `%${articleTitle.toLowerCase()}%`,
       });
     }
 
     if (categoryName) {
       qb.andWhere('lower(category.name) like :categoryName', {
-        categoryName: Like(`${categoryName.toLowerCase()}%`),
+        categoryName: `${categoryName.toLowerCase()}%`,
       });
     }
 
     if (username) {
       qb.andWhere('lower(user.username) like :username', {
-        username: Like(`%${username.toLowerCase()}%`),
+        username: `%${username.toLowerCase()}%`,
       });
     }
 
@@ -158,13 +158,13 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
 
     if (articleTitle) {
       qb.andWhere('lower(a.title) like :articleTitle', {
-        articleTitle: Like(`%${articleTitle.toLowerCase()}%`),
+        articleTitle: `%${articleTitle.toLowerCase()}%`,
       });
     }
 
     if (categoryName) {
       qb.andWhere('lower(category.name) like :categoryName', {
-        categoryName: Like(`${categoryName.toLowerCase()}%`),
+        categoryName: `${categoryName.toLowerCase()}%`,
       });
     }
 
