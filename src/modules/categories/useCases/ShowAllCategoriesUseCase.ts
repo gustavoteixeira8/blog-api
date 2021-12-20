@@ -1,15 +1,16 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { CategoryRepositoryProtocol } from '../repositories/CategoryRepositoryProtocol';
+import {
+  CategoriesPaginateResponse,
+  CategoryRepositoryProtocol,
+} from '../repositories/CategoryRepositoryProtocol';
 import {
   OrderByProtocol,
   PaginationOptionsProtocol,
-  PaginationResponseProtocol,
 } from '@shared/core/repositories/PaginationProtocol';
-import { Category } from '../entities/Category';
 
 export type ShowAllCategoriesRequest = Partial<PaginationOptionsProtocol>;
-export type ShowAllCategoriesResponse = Promise<PaginationResponseProtocol<Category>>;
+export type ShowAllCategoriesResponse = Promise<CategoriesPaginateResponse>;
 
 @injectable()
 export class ShowAllCategoriesUseCase

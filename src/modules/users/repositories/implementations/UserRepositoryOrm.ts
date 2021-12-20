@@ -3,11 +3,12 @@ import { UserProtocol } from '@modules/users/entities/user/UserProtocol';
 import { RepositoryOptions } from '@shared/core/repositories/RepositoryOptions';
 import { getRepository, IsNull, Like, Not } from 'typeorm';
 import { UserMapper } from '../../mappers/UserMapper';
+import { PaginationOptionsProtocol } from '@shared/core/repositories/PaginationProtocol';
 import {
-  PaginationOptionsProtocol,
-  PaginationResponseProtocol,
-} from '@shared/core/repositories/PaginationProtocol';
-import { SearchUserOptions, UserRepositoryProtocol } from '../UserRepositoryProtocol';
+  SearchUsersProtocol,
+  UserRepositoryProtocol,
+  UsersPaginateResponse,
+} from '../UserRepositoryProtocol';
 import { UserEntity } from '@shared/infra/database/entities/UserEntity';
 
 export class UserRepositoryOrm implements UserRepositoryProtocol {
@@ -89,9 +90,9 @@ export class UserRepositoryOrm implements UserRepositoryProtocol {
   }
 
   public async search(
-    searchOptions: SearchUserOptions,
+    searchOptions: SearchUsersProtocol,
     pagination: PaginationOptionsProtocol,
-  ): Promise<PaginationResponseProtocol<User>> {
+  ): Promise<UsersPaginateResponse> {
     const { order, page, perPage } = pagination;
     const { username, isAdmin } = searchOptions;
 

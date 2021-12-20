@@ -1,19 +1,17 @@
-import {
-  OrderByProtocol,
-  PaginationOptionsProtocol,
-  PaginationResponseProtocol,
-} from '@shared/core/repositories/PaginationProtocol';
+import { OrderByProtocol } from '@shared/core/repositories/PaginationProtocol';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { MissingParamError, UserIsNotAdminError } from '@shared/core/errors';
 import { inject, injectable } from 'tsyringe';
-import { User } from '../entities/user/User';
-import { SearchUserOptions, UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
+import {
+  UserRepositoryProtocol,
+  SearchUsersProtocol,
+  UsersPaginateResponse,
+  SearchUsersPaginate,
+} from '../repositories/UserRepositoryProtocol';
 
-export type SearchUsersRequest = Partial<PaginationOptionsProtocol> & {
-  adminId: string;
-} & SearchUserOptions;
+export type SearchUsersRequest = SearchUsersPaginate<{ adminId: string } & SearchUsersProtocol>;
 
-export type SearchUsersResponse = Promise<PaginationResponseProtocol<User>>;
+export type SearchUsersResponse = Promise<UsersPaginateResponse>;
 
 @injectable()
 export class SearchUsersUseCase

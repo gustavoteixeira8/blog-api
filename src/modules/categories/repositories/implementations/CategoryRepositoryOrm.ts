@@ -1,10 +1,10 @@
 import { Category } from '@modules/categories/entities/Category';
-import { CategoryRepositoryProtocol } from '@modules/categories/repositories/CategoryRepositoryProtocol';
-import { CategoryMapper } from '@modules/categories/mappers/CategoryMapper';
 import {
-  PaginationResponseProtocol,
-  PaginationOptionsProtocol,
-} from '@shared/core/repositories/PaginationProtocol';
+  CategoryRepositoryProtocol,
+  CategoriesPaginateResponse,
+} from '@modules/categories/repositories/CategoryRepositoryProtocol';
+import { CategoryMapper } from '@modules/categories/mappers/CategoryMapper';
+import { PaginationOptionsProtocol } from '@shared/core/repositories/PaginationProtocol';
 import { getRepository } from 'typeorm';
 import { CategoryEntity } from '@shared/infra/database/entities/CategoryEntity';
 
@@ -37,7 +37,7 @@ export class CategoryRepositoryOrm implements CategoryRepositoryProtocol {
 
   public async findAllPaginate(
     pagination: PaginationOptionsProtocol,
-  ): Promise<PaginationResponseProtocol<Category>> {
+  ): Promise<CategoriesPaginateResponse> {
     const { order, perPage, page } = pagination;
 
     const [categories, count] = await this._table.findAndCount({

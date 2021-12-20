@@ -21,6 +21,7 @@ export type SearchArticlesProtocol = {
 };
 
 export type SearchArticlesPaginate<T> = Partial<PaginationOptionsProtocol> & T;
+
 export type ArticlesPaginateResponse = PaginationResponseProtocol<ArticleWithRelationsDTO>;
 
 export interface ArticleRepositoryProtocol {

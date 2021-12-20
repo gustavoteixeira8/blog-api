@@ -6,10 +6,14 @@ import { RepositoryOptions } from '@shared/core/repositories/RepositoryOptions';
 import { User } from '../entities/user/User';
 import { UserProtocol } from '../entities/user/UserProtocol';
 
-export interface SearchUserOptions {
+export interface SearchUsersProtocol {
   username?: string;
   isAdmin?: boolean;
 }
+
+export type SearchUsersPaginate<T> = Partial<PaginationOptionsProtocol> & T;
+
+export type UsersPaginateResponse = PaginationResponseProtocol<User>;
 
 export interface UserRepositoryProtocol {
   save(user: UserProtocol): Promise<void>;
@@ -20,9 +24,9 @@ export interface UserRepositoryProtocol {
   findByUsername(username: string, options?: RepositoryOptions): Promise<User | undefined>;
   findById(userId: string, options?: RepositoryOptions): Promise<User | undefined>;
   search(
-    searchOptions: SearchUserOptions,
+    searchOptions: SearchUsersProtocol,
     pagination: PaginationOptionsProtocol,
-  ): Promise<PaginationResponseProtocol<User>>;
+  ): Promise<UsersPaginateResponse>;
   existsWithEmail(email: string): Promise<boolean>;
   existsWithUsername(username: string): Promise<boolean>;
   findAllDeleted(): Promise<User[]>;
