@@ -40,6 +40,7 @@ export class RecoverArticleUseCase
     if (!user.isEmailVerified) {
       throw new UserEmailIsNotVerifiedError();
     }
+
     if (!user.isAdmin) {
       throw new UserIsNotAdminError();
     }
