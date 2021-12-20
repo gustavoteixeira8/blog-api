@@ -2,7 +2,6 @@ import { container } from 'tsyringe';
 import { queueConfig } from '@config/queue';
 import { HashProviderProtocol } from '@shared/providers/hashProvider/HashProviderProtocol';
 import { BCryptProvider } from '@shared/providers/hashProvider/implementations/BCryptProvider';
-import { MailTrapProvider } from '@shared/providers/mailProvider/implementations/MailTrapProvider';
 import {
   MailOptionsProtocol,
   MailProviderProtocol,
@@ -28,7 +27,7 @@ import { SendGridMailProvider } from '@shared/providers/mailProvider/implementat
 
 container.registerSingleton<HashProviderProtocol>('HashProvider', BCryptProvider);
 container.registerSingleton<TokenProviderProtocol>('TokenProvider', JsonWebTokenProvider);
-container.registerSingleton<MailProviderProtocol>('MailProvider', MailTrapProvider);
+container.registerSingleton<MailProviderProtocol>('MailProvider', SendGridMailProvider);
 container.registerSingleton<TemplateProviderProtocol>('TemplateProvider', HandlebarsProvider);
 container.registerSingleton<DateProviderProtocol>('DateProvider', DateFnsProvider);
 container.registerSingleton<SlugProviderProtocol>('SlugProvider', SlugifyProvider);
