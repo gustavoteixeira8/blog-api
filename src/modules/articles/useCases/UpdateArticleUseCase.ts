@@ -94,15 +94,10 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
       }
 
       const titleOrError = ArticleTitle.create(title);
-
-      if (titleOrError instanceof Error) {
-        throw new InvalidArticleTitleError();
-      }
-
       const slugOrError = Slug.create(slug);
 
-      if (slugOrError instanceof Error) {
-        throw new InvalidSlugError();
+      if (titleOrError instanceof Error || slugOrError instanceof Error) {
+        throw new InvalidArticleTitleError();
       }
 
       article.updateTitle(titleOrError, slugOrError);
