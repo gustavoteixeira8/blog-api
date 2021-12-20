@@ -12,6 +12,6 @@ export class RecoverArticleController {
 
     await recoverArticle.execute({ articleId, userId });
 
-    return ok(res, { message: 'Article recovered successfully' });
+    return ok(res, { message: 'Your article was recovered successfully' });
   }
 }

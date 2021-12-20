@@ -12,6 +12,6 @@ export class CreateArticleController {
 
     await createArticle.execute({ title, text, isPublic, categoriesId, userId });
 
-    return created(res, { message: 'Article created successfully' });
+    return created(res, { message: 'Your article was created successfully' });
   }
 }

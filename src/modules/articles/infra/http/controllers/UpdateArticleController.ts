@@ -20,6 +20,6 @@ export class UpdateArticleController {
       articleId,
     });
 
-    return ok(res, { message: 'Article updated successfully' });
+    return ok(res, { message: 'Your article was updated successfully' });
   }
 }
