@@ -18,7 +18,6 @@ import {
   CategoryNotFoundError,
   InvalidArticleTextError,
   InvalidArticleTitleError,
-  InvalidSlugError,
   MissingParamError,
   UserEmailIsNotVerifiedError,
   UserIsNotAdminError,
