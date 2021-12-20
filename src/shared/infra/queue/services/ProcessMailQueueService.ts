@@ -22,7 +22,7 @@ export class ProcessMailQueueService {
 
         await this._mailProvider.sendMail(mailOptions);
 
-        logger.info(`Email sent to ${mailOptions.to}`);
+        logger.info(`Email sent to ${mailOptions.to.address}`);
       } catch (error) {
         logger.error(error);
       }
