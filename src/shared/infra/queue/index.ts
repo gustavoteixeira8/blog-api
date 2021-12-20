@@ -11,6 +11,16 @@ export enum ExitStatus {
   error = 1,
 }
 
+process.on('uncaughtException', (error) => {
+  logger.error(`Queue exited with error -> `, error);
+  process.exit(ExitStatus.error);
+});
+
+process.on('unhandledRejection', (error) => {
+  logger.error(`Queue exited with error -> `, error);
+  process.exit(ExitStatus.error);
+});
+
 (function () {
   try {
     const processMailQueueService = container.resolve(ProcessMailQueueService);
@@ -27,7 +37,7 @@ export enum ExitStatus {
           logger.info(`Queue exited with success`);
           process.exit(ExitStatus.success);
         } catch (error) {
-          logger.error(`Queue exited with error -> ${error}`);
+          logger.error('Queue exited with error', error);
           process.exit(ExitStatus.error);
         }
       });
@@ -35,6 +45,6 @@ export enum ExitStatus {
 
     logger.info('Running queue');
   } catch (error) {
-    logger.error(error);
+    logger.error('Queue exited with error', error);
   }
 })();
