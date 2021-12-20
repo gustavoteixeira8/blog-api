@@ -1,23 +1,28 @@
 import { ArticleMapper } from '@modules/articles/mappers/ArticleMapper';
-import { ShowAllPublicArticlesUseCase } from '@modules/articles/useCases/ShowAllPublicArticlesUseCase';
+import { SearchPublicArticlesUseCase } from '@modules/articles/useCases/SearchPublicArticlesUseCase';
 import { ok } from '@shared/infra/http/utils/httpResponses';
 import {
   resolveOrderByParams,
   resolveSearchParamsNumbers,
+  resolveSearchParamsStrings,
 } from '@shared/infra/http/utils/resolveQueryParams';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-export class ShowAllPublicArticlesController {
+export class SearchPublicArticlesController {
   public async handle(req: Request, res: Response): Promise<Response> {
-    const { order, page, perPage } = req.query;
+    const { categoryName, articleTitle, order, page, perPage, username } = req.query;
 
     const orderFormatted = resolveOrderByParams(order as string);
     const numbersFormatted = resolveSearchParamsNumbers({ perPage, page });
+    const stringsFormatted = resolveSearchParamsStrings({ categoryName, articleTitle, username });
 
-    const showArticles = container.resolve(ShowAllPublicArticlesUseCase);
+    const searchForCreator = container.resolve(SearchPublicArticlesUseCase);
 
-    const result = await showArticles.execute({
+    const result = await searchForCreator.execute({
+      categoryName: stringsFormatted.categoryName,
+      username: stringsFormatted.username,
+      articleTitle: stringsFormatted.articleTitle,
       order: orderFormatted,
       page: numbersFormatted.page,
       perPage: numbersFormatted.perPage,

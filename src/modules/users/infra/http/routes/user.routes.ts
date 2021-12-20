@@ -1,4 +1,3 @@
-import { showAllPublicArticlesByUserController } from '@modules/articles/infra/http/controllers';
 import { ensureAuthentication } from '@shared/infra/http/middlewares/ensureAuthentication';
 import { ensureUserIsAdmin } from '@shared/infra/http/middlewares/ensureUserIsAdmin';
 import { Router } from 'express';
@@ -11,12 +10,12 @@ import {
   showUserByIdController,
   updateUserController,
   softDeleteUserController,
+  searchArticlesForUserCreatorController,
 } from '../controllers';
 
 const userRoutes = Router();
 
 userRoutes.post('/', createUserController.handle);
-userRoutes.get('/:userId/article', showAllPublicArticlesByUserController.handle);
 
 userRoutes.use(ensureAuthentication);
 
@@ -28,6 +27,7 @@ userRoutes.get('/:userId', showUserByIdController.handle);
 userRoutes.use(ensureUserIsAdmin);
 
 userRoutes.get('/', searchUsersController.handle);
+userRoutes.get('/me/article', searchArticlesForUserCreatorController.handle);
 userRoutes.put('/admin/add', makeUserAdminController.handle);
 userRoutes.put('/admin/remove', removeUserAdminController.handle);
 

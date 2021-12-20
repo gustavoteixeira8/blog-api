@@ -5,7 +5,7 @@ import { Router } from 'express';
 import {
   createArticleController,
   recoverArticleController,
-  showAllPublicArticlesController,
+  searchPublicArticlesController,
   showPublicArticleByIdController,
   softDeleteArticleController,
   updateArticleController,
@@ -15,7 +15,7 @@ import { uploadConfig } from '@config/upload';
 
 const articleRoutes = Router();
 
-articleRoutes.get('/', showAllPublicArticlesController.handle);
+articleRoutes.get('/', searchPublicArticlesController.handle);
 articleRoutes.get('/:articleId', showPublicArticleByIdController.handle);
 
 articleRoutes.use(ensureAuthentication);

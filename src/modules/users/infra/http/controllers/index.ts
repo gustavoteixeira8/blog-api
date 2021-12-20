@@ -11,6 +11,7 @@ import { UpdateUserController } from './UpdateUserController';
 import { UpdateUserPasswordController } from './UpdateUserPasswordController';
 import { VerifyUserEmailController } from './VerifyUserEmailController';
 import { SoftDeleteUserController } from './SoftDeleteUserController';
+import { SearchArticlesForUserCreatorController } from './SearchArticlesForUserCreatorController';
 
 const createUserController = new CreateUserController();
 const updateUserController = new UpdateUserController();
@@ -25,6 +26,7 @@ const updateUserPasswordController = new UpdateUserPasswordController();
 const showUserByIdController = new ShowUserByIdController();
 const searchUsersController = new SearchUsersController();
 const softDeleteUserController = new SoftDeleteUserController();
+const searchArticlesForUserCreatorController = new SearchArticlesForUserCreatorController();
 
 export {
   createUserController,
@@ -40,4 +42,5 @@ export {
   showUserByIdController,
   searchUsersController,
   softDeleteUserController,
+  searchArticlesForUserCreatorController,
 };
