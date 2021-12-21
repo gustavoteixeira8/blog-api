@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
-    "start": "pm2 start dist/shared/infra/http/index.js --name app && pm2 start dist/shared/infra/queue/index.js --name app-queue"
+    "start": "node dist/shared/infra/http/index.js && node dist/shared/infra/queue/index.js"
   },
   "keywords": [],
   "author": "Gustavo Teixeira <gustavofigueiredoteixeira8@gmail.com>",
