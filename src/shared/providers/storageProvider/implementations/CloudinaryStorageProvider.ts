@@ -27,7 +27,7 @@ export class CloudinaryStorageProvider implements StorageProviderProtocol {
         resource_type: filetype,
       });
 
-      await fs.promises.unlink(resolve(this._tempPath, filename));
+      await fs.promises.rm(resolve(this._tempPath, filename));
     } catch (error) {
       logger.error(error);
       throw new Error('Storage provider error');
