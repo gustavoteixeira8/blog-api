@@ -12,12 +12,12 @@ export enum ExitStatus {
 }
 
 process.on('uncaughtException', (error) => {
-  logger.error(`Queue exited with error -> `, error);
+  logger.error(`Queue exited with error -> ${error}`);
   process.exit(ExitStatus.error);
 });
 
 process.on('unhandledRejection', (error) => {
-  logger.error(`Queue exited with error -> `, error);
+  logger.error(`Queue exited with error -> ${error}`);
   process.exit(ExitStatus.error);
 });
 
@@ -37,7 +37,7 @@ process.on('unhandledRejection', (error) => {
           logger.info(`Queue exited with success`);
           process.exit(ExitStatus.success);
         } catch (error) {
-          logger.error('Queue exited with error ->', error);
+          logger.error(`Queue exited with error -> ${error}`);
           process.exit(ExitStatus.error);
         }
       });
@@ -45,6 +45,6 @@ process.on('unhandledRejection', (error) => {
 
     logger.info('Running queue');
   } catch (error) {
-    logger.error('Queue exited with error -> ', error);
+    logger.error(`Queue exited with error -> ${error}`);
   }
 })();
