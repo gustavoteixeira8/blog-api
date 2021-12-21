@@ -11,7 +11,7 @@ export const databaseConfig = {
     database: process.env.POSTGRES_DATABASE as string,
     ssl: true,
     extra: {
-      rejectUnauthorized: false,
+      ssl: { rejectUnauthorized: false },
     },
     timezone: '+00:00',
     charset: 'utf8',
