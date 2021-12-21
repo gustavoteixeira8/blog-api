@@ -1,0 +1,58 @@
+<style>
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 600px;
+    font-size: 18px;
+    line-height: 21px;
+  }
+
+  table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    border-radius: 5px;
+    padding: 5px;
+  }
+
+  th {
+    border: 1px solid black;
+    padding: 5px;
+  }
+
+  td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+</style>
+
+<div>
+  <p>Hello, {{user.username}}</p>
+
+  <p>
+    You have removed a user from the administration,
+    if not you urgently change your password using the link below:
+    {{appConfig.url}}/auth/password
+  </p>
+
+  <h3>User details</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>{{userToRemoveAdmin.id}}</td>
+        <td>{{userToRemoveAdmin.email}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Thank you!<br />
+    <strong>{{appConfig.name}}</strong>
+  </p>
+
+</div>
