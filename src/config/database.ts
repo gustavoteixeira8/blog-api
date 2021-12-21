@@ -12,10 +12,10 @@ export const databaseConfig = {
     timezone: '+00:00',
     charset: 'utf8',
     namingStrategy: new CamelcaseStrategy(),
-    entities: ['./dist/shared/infra/database/entities/*.js'],
-    migrations: ['./dist/shared/infra/database/migrations/*.js'],
+    entities: ['./src/shared/infra/database/entities/*.ts'],
+    migrations: ['./src/shared/infra/database/migrations/*.ts'],
     cli: {
-      migrationsDir: './dist/shared/infra/database/migrations',
+      migrationsDir: './src/shared/infra/database/migrations',
     },
   } as PostgresConnectionOptions,
 };
