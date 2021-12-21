@@ -1,2 +1,1 @@
-web: npm run start:server
-web: npm run start:queue
+web: npm run start:server && npm run start:queue
