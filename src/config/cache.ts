@@ -6,8 +6,5 @@ export const cacheConfig = {
     port: Number(process.env.REDIS_PORT) as number,
     password: process.env.REDIS_PASSWORD as string,
     autoResubscribe: false,
-    tls: {
-      rejectUnauthorized: false,
-    },
   } as RedisOptions,
 };
