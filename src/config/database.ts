@@ -9,6 +9,9 @@ export const databaseConfig = {
     username: process.env.POSTGRES_USERNAME as string,
     password: process.env.POSTGRES_PASSWORD as string,
     database: process.env.POSTGRES_DATABASE as string,
+    ssl: {
+      rejectUnauthorized: false,
+    },
     timezone: '+00:00',
     charset: 'utf8',
     namingStrategy: new CamelcaseStrategy(),
