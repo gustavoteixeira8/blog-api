@@ -12,12 +12,12 @@ export enum ExitStatus {
 }
 
 process.on('uncaughtException', (error) => {
-  logger.error(`App exited with error -> `, error);
+  logger.error(error);
   process.exit(ExitStatus.error);
 });
 
 process.on('unhandledRejection', (error) => {
-  logger.error(`App exited with error -> `, error);
+  logger.error(error);
   process.exit(ExitStatus.error);
 });
 
