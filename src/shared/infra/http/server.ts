@@ -42,7 +42,7 @@ export class Server {
     this.setupMiddlewares();
     this.setupRoutes();
     this._server = http.createServer(this._app);
-    this._server.listen(appConfig.serverPort, () =>
+    this._server.listen(process.env.SERVER_PORT || appConfig.serverPort, () =>
       logger.info('Server listening on port -> ' + appConfig.serverPort),
     );
   }
