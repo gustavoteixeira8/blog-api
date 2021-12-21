@@ -16,18 +16,6 @@ services:
     networks:
       - blog_api
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_blog
-    tty: true
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - ${PGADMIN_PORT}:${PGADMIN_DEFAULT_PORT}
-    depends_on:
-      - postgres
-
   redis:
     image: "redis:alpine"
     restart: always
