@@ -36,13 +36,13 @@ process.on('unhandledRejection', (error) => {
           logger.info(`App exited with success`);
           process.exit(ExitStatus.success);
         } catch (error) {
-          logger.error(`App exited with error -> ${error}`);
+          logger.error(`App exited with error -> `, error);
           process.exit(ExitStatus.error);
         }
       });
     });
   } catch (error) {
-    logger.error(error);
+    logger.error(`App exited with error -> `, error);
     process.exit(ExitStatus.error);
   }
 })();
