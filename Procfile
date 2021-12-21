@@ -1,1 +1,1 @@
-web: npm run start:server && npm run start:queue
+web: npm install -g pm2 && npm start
