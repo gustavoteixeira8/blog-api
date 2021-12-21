@@ -3,7 +3,6 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 
 export const databaseConfig = {
   postgres: {
-    url: process.env.DATABASE_URL as string,
     type: process.env.POSTGRES_TYPE as string,
     host: process.env.POSTGRES_HOST as string,
     port: Number(process.env.POSTGRES_PORT) as number,
