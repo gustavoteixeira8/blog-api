@@ -21,9 +21,9 @@ class UpdateUserPasswordController {
       token
     } = req.params;
 
-    const createUser = _tsyringe.container.resolve(_UpdateUserPasswordUseCase.UpdateUserPasswordUseCase);
+    const updatePassword = _tsyringe.container.resolve(_UpdateUserPasswordUseCase.UpdateUserPasswordUseCase);
 
-    await createUser.execute({
+    await updatePassword.execute({
       token,
       password,
       confirmPassword
