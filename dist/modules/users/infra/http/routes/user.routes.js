@@ -16,7 +16,7 @@ var _controllers = require("../controllers");
 const userRoutes = (0, _express.Router)();
 exports.userRoutes = userRoutes;
 userRoutes.use(_ensureAuthentication.ensureAuthentication);
-userRoutes.post('/', _controllers.createUserController.handle);
+userRoutes.post('/', _ensureUserIsAdmin.ensureUserIsAdmin, _controllers.createUserController.handle);
 userRoutes.put('/', _controllers.updateUserController.handle);
 userRoutes.delete('/', _controllers.softDeleteUserController.handle);
 userRoutes.get('/me', _controllers.showMeController.handle);
