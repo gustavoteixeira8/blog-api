@@ -8,9 +8,9 @@ export class UpdateUserPasswordController {
     const { password, confirmPassword } = req.body;
     const { token } = req.params;
 
-    const createUser = container.resolve(UpdateUserPasswordUseCase);
+    const updatePassword = container.resolve(UpdateUserPasswordUseCase);
 
-    await createUser.execute({ token, password, confirmPassword });
+    await updatePassword.execute({ token, password, confirmPassword });
 
     return ok(res, { message: 'Your password was updated successfully' });
   }
