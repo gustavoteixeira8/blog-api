@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.appConfig = void 0;
 const appConfig = {
   serverPort: process.env.SERVER_PORT || 3000,
-  url: 'http://localhost:3000',
+  url: process.env.SERVER_URL,
   name: process.env.APP_NAME,
   mail: {
     address: process.env.APP_MAIL,

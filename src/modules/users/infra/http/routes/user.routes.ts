@@ -15,9 +15,9 @@ import {
 
 const userRoutes = Router();
 
-userRoutes.post('/', createUserController.handle);
-
 userRoutes.use(ensureAuthentication);
+
+userRoutes.post('/', ensureUserIsAdmin, createUserController.handle);
 
 userRoutes.put('/', updateUserController.handle);
 userRoutes.delete('/', softDeleteUserController.handle);
