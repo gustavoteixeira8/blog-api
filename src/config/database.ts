@@ -1,6 +1,10 @@
 import { CamelcaseStrategy } from '@shared/infra/database/namingStrategies/Camelcase';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+const distOrSrc = isDevelopment ? 'src' : 'dist';
+const jsOrTs = isDevelopment ? 'ts' : 'js';
+
 export const databaseConfig = {
   postgres: {
     type: process.env.POSTGRES_TYPE as string,
@@ -12,10 +16,10 @@ export const databaseConfig = {
     timezone: '+00:00',
     charset: 'utf8',
     namingStrategy: new CamelcaseStrategy(),
-    entities: ['./dist/shared/infra/database/entities/*.js'],
-    migrations: ['./dist/shared/infra/database/migrations/*.js'],
+    entities: [`./${distOrSrc}/shared/infra/database/entities/*.${jsOrTs}`],
+    migrations: [`./${distOrSrc}/shared/infra/database/migrations/*.${jsOrTs}`],
     cli: {
-      migrationsDir: './dist/shared/infra/database/migrations',
+      migrationsDir: `./${distOrSrc}/shared/infra/database/migrations`,
     },
   } as PostgresConnectionOptions,
 };
