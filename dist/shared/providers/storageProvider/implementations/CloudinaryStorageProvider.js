@@ -38,7 +38,7 @@ class CloudinaryStorageProvider {
         type: 'upload',
         resource_type: filetype
       });
-      await _fs.default.promises.rm((0, _path.resolve)(this._tempPath, filename));
+      await _fs.default.promises.unlink((0, _path.resolve)(this._tempPath, filename));
     } catch (error) {
       _log.logger.error(error);
 

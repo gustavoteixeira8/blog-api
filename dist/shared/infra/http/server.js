@@ -25,6 +25,8 @@ var _errorHandler = require("./middlewares/errorHandler");
 
 var _log = require("../../log");
 
+var _cors2 = require("../../../config/cors");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -53,7 +55,7 @@ class Server {
   }
 
   setupMiddlewares() {
-    this._app.use((0, _cors.default)());
+    this._app.use((0, _cors.default)(_cors2.corsConfig));
 
     this._app.use((0, _helmet.default)());
 
