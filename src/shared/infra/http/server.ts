@@ -8,6 +8,7 @@ import { closeConnectionDatabase, connectDatabase } from '../database';
 import { routes } from './routes/index.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { logger } from '@shared/log';
+import { corsConfig } from '@config/cors';
 
 export class Server {
   private _app = express();
@@ -31,7 +32,7 @@ export class Server {
   }
 
   private setupMiddlewares(): void {
-    this._app.use(cors());
+    this._app.use(cors(corsConfig));
     this._app.use(helmet());
     this._app.use(urlencoded({ extended: true }));
     this._app.use(json());
