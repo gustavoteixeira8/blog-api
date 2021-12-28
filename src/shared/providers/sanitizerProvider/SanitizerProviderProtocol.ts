@@ -1,3 +1,3 @@
 export interface SanitizerProviderProtocol {
-  sanitize(value: string): string;
+  sanitize(value: any): string | any;
 }
