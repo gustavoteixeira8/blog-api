@@ -24,6 +24,8 @@ import { ProcessImageProvider } from '@shared/providers/processImageProvider/Pro
 import { SharpProvider } from '@shared/providers/processImageProvider/implementations/SharpProvider';
 import { CloudinaryStorageProvider } from '@shared/providers/storageProvider/implementations/CloudinaryStorageProvider';
 import { SendGridMailProvider } from '@shared/providers/mailProvider/implementations/SendGridMailProvider';
+import { SanitizeHtmlProvider } from '@shared/providers/sanitizerProvider/implementations/SanitizeHtmlProvider';
+import { SanitizerProviderProtocol } from '@shared/providers/sanitizerProvider/SanitizerProviderProtocol';
 
 container.registerSingleton<HashProviderProtocol>('HashProvider', BCryptProvider);
 container.registerSingleton<TokenProviderProtocol>('TokenProvider', JsonWebTokenProvider);
@@ -33,6 +35,7 @@ container.registerSingleton<DateProviderProtocol>('DateProvider', DateFnsProvide
 container.registerSingleton<SlugProviderProtocol>('SlugProvider', SlugifyProvider);
 container.registerSingleton<StorageProviderProtocol>('StorageProvider', CloudinaryStorageProvider);
 container.registerSingleton<ProcessImageProvider>('ProcessImageProvider', SharpProvider);
+container.registerSingleton<SanitizerProviderProtocol>('SanitizerProvider', SanitizeHtmlProvider);
 container.registerInstance<QueueProviderProtocol<MailOptionsProtocol>>(
   'MailQueueProvider',
   new BullQueueProvider('mail-queue', queueConfig.mailQueue),
