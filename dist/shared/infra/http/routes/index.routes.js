@@ -17,6 +17,8 @@ var _article = require("../../../../modules/articles/infra/http/routes/article.r
 
 var _rateLimiter = require("../middlewares/rateLimiter");
 
+var _sanitizeBody = require("../middlewares/sanitizeBody");
+
 const routes = (0, _express.Router)();
 exports.routes = routes;
-routes.use('/user', _rateLimiter.defaultLimiter, _user.userRoutes).use('/auth', _rateLimiter.authRoutesSlowDown, _rateLimiter.authRoutesLimiter, _auth.authRoutes).use('/category', _rateLimiter.defaultLimiter, _category.categoryRoutes).use('/article', _rateLimiter.defaultLimiter, _article.articleRoutes);
+routes.use('/user', _sanitizeBody.sanitizeBody, _rateLimiter.defaultLimiter, _user.userRoutes).use('/auth', _sanitizeBody.sanitizeBody, _rateLimiter.authRoutesSlowDown, _rateLimiter.authRoutesLimiter, _auth.authRoutes).use('/category', _sanitizeBody.sanitizeBody, _rateLimiter.defaultLimiter, _category.categoryRoutes).use('/article', _sanitizeBody.sanitizeBody, _rateLimiter.defaultLimiter, _article.articleRoutes);

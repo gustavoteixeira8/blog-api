@@ -22,6 +22,8 @@ var _CloudinaryStorageProvider = require("../providers/storageProvider/implement
 
 var _SendGridMailProvider = require("../providers/mailProvider/implementations/SendGridMailProvider");
 
+var _SanitizeHtmlProvider = require("../providers/sanitizerProvider/implementations/SanitizeHtmlProvider");
+
 _tsyringe.container.registerSingleton('HashProvider', _BCryptProvider.BCryptProvider);
 
 _tsyringe.container.registerSingleton('TokenProvider', _JsonWebTokenProvider.JsonWebTokenProvider);
@@ -37,6 +39,8 @@ _tsyringe.container.registerSingleton('SlugProvider', _SlugifyProvider.SlugifyPr
 _tsyringe.container.registerSingleton('StorageProvider', _CloudinaryStorageProvider.CloudinaryStorageProvider);
 
 _tsyringe.container.registerSingleton('ProcessImageProvider', _SharpProvider.SharpProvider);
+
+_tsyringe.container.registerSingleton('SanitizerProvider', _SanitizeHtmlProvider.SanitizeHtmlProvider);
 
 _tsyringe.container.registerInstance('MailQueueProvider', new _BullQueueProvider.BullQueueProvider('mail-queue', _queue.queueConfig.mailQueue));
 
