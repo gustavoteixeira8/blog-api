@@ -14,7 +14,7 @@ class CategoryName extends _ValueObjectProtocol.ValueObjectProtocol {
     const nameFormatted = this.format(name);
 
     if (!this.validate(name)) {
-      return new _errors.InvalidCategoryNameError(nameFormatted);
+      return new _errors.InvalidCategoryNameError();
     }
 
     return new CategoryName(nameFormatted);

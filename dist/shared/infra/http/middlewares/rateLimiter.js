@@ -55,8 +55,8 @@ const defaultLimiter = (0, _expressRateLimit.default)({
     client: redisProvider.client,
     prefix: 'default-limit:'
   }),
-  max: 250,
-  windowMs: 1000 * 60 * 5,
+  max: 1000,
+  windowMs: 1000 * 60 * 3,
   draft_polli_ratelimit_headers: true,
   statusCode: 429,
 
