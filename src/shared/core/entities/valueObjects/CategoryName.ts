@@ -6,7 +6,7 @@ export class CategoryName extends ValueObjectProtocol<string> {
     const nameFormatted = this.format(name);
 
     if (!this.validate(name)) {
-      return new InvalidCategoryNameError(nameFormatted);
+      return new InvalidCategoryNameError();
     }
 
     return new CategoryName(nameFormatted);
