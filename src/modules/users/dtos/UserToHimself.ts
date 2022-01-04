@@ -7,4 +7,5 @@ export interface UserToHimself {
   isEmailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date | null;
 }
