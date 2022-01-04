@@ -10,6 +10,7 @@ import {
   updateUserController,
   softDeleteUserController,
   searchArticlesForUserCreatorController,
+  showUserByIdController,
 } from '../controllers';
 
 const userRoutes = Router();
@@ -20,6 +21,7 @@ userRoutes.post('/', ensureUserIsAdmin, createUserController.handle);
 
 userRoutes.put('/', updateUserController.handle);
 userRoutes.delete('/', softDeleteUserController.handle);
+userRoutes.get('/me', showUserByIdController.handle);
 userRoutes.get('/:username', showUserByUsernameController.handle);
 
 userRoutes.use(ensureUserIsAdmin);
