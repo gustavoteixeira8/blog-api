@@ -4,6 +4,7 @@ import { ArticleDTO } from '../dtos/ArticleDTO';
 import { UserMapper } from '@modules/users/mappers/UserMapper';
 import { CategoryMapper } from '@modules/categories/mappers/CategoryMapper';
 import { ArticleWithRelationsDTO } from '../dtos/ArticleWithRelationsDTO';
+import { uploadConfig } from '@config/upload';
 
 export class ArticleMapper {
   public static toPersistence(article: Article): ArticleDTO {
@@ -42,13 +43,15 @@ export class ArticleMapper {
     { article, user, categories }: ArticleWithRelationsDTO,
     withText = false,
   ): ArticleDetailsDTO {
+    const thumbnailLocation = uploadConfig.storageProvider.storageLocation;
+
     return {
       id: article.id.value,
       title: article.title.value,
       ...(withText ? { text: article.text.value } : null),
       slug: article.slug.value,
       isPublic: article.isPublic,
-      thumbnail: !article.thumbnail ? null : article.thumbnail.value,
+      thumbnail: !article.thumbnail ? null : `${thumbnailLocation}/${article.thumbnail.value}`,
       createdAt: article.createdAt,
       updatedAt: article.updatedAt,
       deletedAt: article.deletedAt,
