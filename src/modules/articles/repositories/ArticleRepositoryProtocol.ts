@@ -30,8 +30,8 @@ export interface ArticleRepositoryProtocol {
   findById(articleId: string, options?: RepositoryOptions): Promise<Article | undefined>;
   findAllDeleted(): Promise<Article[]>;
   existsWithSlug(slug: string, options?: RepositoryOptions): Promise<boolean>;
-  findPublicByIdWithRelations(
-    articleId: string,
+  findPublicBySlugWithRelations(
+    articleSlug: string,
     options?: RepositoryOptions,
   ): Promise<ArticleWithRelationsDTO | undefined>;
   searchWithRelations(

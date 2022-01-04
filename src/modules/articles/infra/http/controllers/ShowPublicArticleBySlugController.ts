@@ -1,16 +1,16 @@
 import { ArticleMapper } from '@modules/articles/mappers/ArticleMapper';
-import { ShowPublicArticleByIdUseCase } from '@modules/articles/useCases/ShowPublicArticleByIdUseCase';
+import { ShowPublicArticleBySlugUseCase } from '@modules/articles/useCases/ShowPublicArticleBySlugUseCase';
 import { ok } from '@shared/infra/http/utils/httpResponses';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-export class ShowPublicArticleByIdController {
+export class ShowPublicArticleBySlugController {
   public async handle(req: Request, res: Response): Promise<Response> {
-    const { articleId } = req.params;
+    const { articleSlug } = req.params;
 
-    const showArticle = container.resolve(ShowPublicArticleByIdUseCase);
+    const showArticle = container.resolve(ShowPublicArticleBySlugUseCase);
 
-    const article = await showArticle.execute({ articleId });
+    const article = await showArticle.execute({ articleSlug });
 
     const articleFormatted = ArticleMapper.toDetails(article, true);
 

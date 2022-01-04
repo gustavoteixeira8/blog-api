@@ -57,8 +57,8 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
     return !!article;
   }
 
-  public async findPublicByIdWithRelations(
-    articleId: string,
+  public async findPublicBySlugWithRelations(
+    articleSlug: string,
     options?: RepositoryOptions,
   ): Promise<ArticleWithRelationsDTO | undefined> {
     const article = await this._table.findOne({
@@ -66,7 +66,7 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
         alias: 'a',
         leftJoinAndSelect: { user: 'a.user', categories: 'a.categories' },
       },
-      where: { id: articleId, isPublic: true },
+      where: { slug: articleSlug, isPublic: true },
       ...options,
     });
 

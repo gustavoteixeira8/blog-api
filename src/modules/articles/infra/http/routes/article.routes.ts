@@ -6,7 +6,7 @@ import {
   createArticleController,
   recoverArticleController,
   searchPublicArticlesController,
-  showPublicArticleByIdController,
+  showPublicArticleBySlugController,
   softDeleteArticleController,
   updateArticleController,
   updateArticleThumbnailController,
@@ -16,7 +16,7 @@ import { uploadConfig } from '@config/upload';
 const articleRoutes = Router();
 
 articleRoutes.get('/', searchPublicArticlesController.handle);
-articleRoutes.get('/:articleId', showPublicArticleByIdController.handle);
+articleRoutes.get('/:articleSlug', showPublicArticleBySlugController.handle);
 
 articleRoutes.use(ensureAuthentication);
 articleRoutes.use(ensureUserIsAdmin);

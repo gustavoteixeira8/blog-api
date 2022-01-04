@@ -4,23 +4,25 @@ import { inject, injectable } from 'tsyringe';
 import { ArticleWithRelationsDTO } from '../dtos/ArticleWithRelationsDTO';
 import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
 
-export interface ShowArticleByIdRequest {
-  articleId: string;
+export interface ShowArticleBySlugRequest {
+  articleSlug: string;
 }
 
 @injectable()
-export class ShowPublicArticleByIdUseCase
-  implements UseCaseProtocol<ShowArticleByIdRequest, Promise<ArticleWithRelationsDTO>>
+export class ShowPublicArticleBySlugUseCase
+  implements UseCaseProtocol<ShowArticleBySlugRequest, Promise<ArticleWithRelationsDTO>>
 {
   constructor(
     @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
   ) {}
 
-  public async execute({ articleId }: ShowArticleByIdRequest): Promise<ArticleWithRelationsDTO> {
-    if (!articleId) throw new MissingParamError('Article id');
+  public async execute({
+    articleSlug,
+  }: ShowArticleBySlugRequest): Promise<ArticleWithRelationsDTO> {
+    if (!articleSlug) throw new MissingParamError('Article slug');
 
-    const article = await this._articleRepository.findPublicByIdWithRelations(articleId, {
+    const article = await this._articleRepository.findPublicBySlugWithRelations(articleSlug, {
       withDeleted: false,
     });
 
