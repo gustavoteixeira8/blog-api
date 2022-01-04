@@ -24,5 +24,6 @@ userRoutes.get('/:username', _controllers.showUserByUsernameController.handle);
 userRoutes.use(_ensureUserIsAdmin.ensureUserIsAdmin);
 userRoutes.get('/', _controllers.searchUsersController.handle);
 userRoutes.get('/me/article', _controllers.searchArticlesForUserCreatorController.handle);
+userRoutes.get('/me/article/:articleSlug', _controllers.showArticleForCreatorController.handle);
 userRoutes.put('/admin/add', _controllers.makeUserAdminController.handle);
 userRoutes.put('/admin/remove', _controllers.removeUserAdminController.handle);

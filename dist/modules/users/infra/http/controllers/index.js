@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.verifyUserEmailController = exports.updateUserPasswordController = exports.updateUserController = exports.softDeleteUserController = exports.showUserByUsernameController = exports.showUserByIdController = exports.sendVerificationEmailController = exports.sendUpdatePasswordEmailController = exports.searchUsersController = exports.searchArticlesForUserCreatorController = exports.removeUserAdminController = exports.makeUserAdminController = exports.createUserController = exports.authenticateUserController = void 0;
+exports.verifyUserEmailController = exports.updateUserPasswordController = exports.updateUserController = exports.softDeleteUserController = exports.showUserByUsernameController = exports.showUserByIdController = exports.showArticleForCreatorController = exports.sendVerificationEmailController = exports.sendUpdatePasswordEmailController = exports.searchUsersController = exports.searchArticlesForUserCreatorController = exports.removeUserAdminController = exports.makeUserAdminController = exports.createUserController = exports.authenticateUserController = void 0;
 
 var _AuthenticateUserController = require("./AuthenticateUserController");
 
@@ -33,6 +33,8 @@ var _SearchArticlesForUserCreatorController = require("./SearchArticlesForUserCr
 
 var _ShowUserByIdController = require("./ShowUserByIdController");
 
+var _ShowArticleForCreatorController = require("./ShowArticleForCreatorController");
+
 const createUserController = new _CreateUserController.CreateUserController();
 exports.createUserController = createUserController;
 const updateUserController = new _UpdateUserController.UpdateUserController();
@@ -55,6 +57,8 @@ const showUserByUsernameController = new _ShowUserByUsernameController.ShowUserB
 exports.showUserByUsernameController = showUserByUsernameController;
 const showUserByIdController = new _ShowUserByIdController.ShowUserByIdController();
 exports.showUserByIdController = showUserByIdController;
+const showArticleForCreatorController = new _ShowArticleForCreatorController.ShowArticleForCreatorController();
+exports.showArticleForCreatorController = showArticleForCreatorController;
 const searchUsersController = new _SearchUsersController.SearchUsersController();
 exports.searchUsersController = searchUsersController;
 const softDeleteUserController = new _SoftDeleteUserController.SoftDeleteUserController();

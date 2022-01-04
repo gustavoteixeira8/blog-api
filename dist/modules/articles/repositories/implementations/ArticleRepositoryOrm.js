@@ -90,6 +90,29 @@ class ArticleRepositoryOrm {
     };
   }
 
+  async findBySlugForCreatorWithRelations(articleSlug, userId) {
+    const article = await this._table.findOne({
+      join: {
+        alias: 'a',
+        leftJoinAndSelect: {
+          user: 'a.user',
+          categories: 'a.categories'
+        }
+      },
+      where: {
+        slug: articleSlug,
+        userId
+      },
+      withDeleted: true
+    });
+    if (!article) return;
+    return {
+      article: _ArticleMapper.ArticleMapper.toDomain(article),
+      user: _UserMapper.UserMapper.toDomain(article.user),
+      categories: article.categories.map(_CategoryMapper.CategoryMapper.toDomain)
+    };
+  }
+
   async searchWithRelations(searchOptions, pagination) {
     const {
       order,
