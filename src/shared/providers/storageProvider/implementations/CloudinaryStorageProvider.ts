@@ -1,12 +1,12 @@
 import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 import { resolve } from 'path';
 import fs from 'fs';
-import { uploadConfig, uploadProviderConfig } from '@config/upload';
+import { uploadConfig } from '@config/upload';
 import { Filetype, StorageProviderProtocol, StorageResponse } from '../StorageProviderProtocol';
 import { logger } from '@shared/log';
 
 export class CloudinaryStorageProvider implements StorageProviderProtocol {
-  private readonly _cloudinaryConfig = uploadProviderConfig.cloudinary.cloudinaryOptions;
+  private readonly _cloudinaryConfig = uploadConfig.storageProvider.cloudinary;
   private readonly _tempPath = uploadConfig.tempPath;
 
   constructor() {
