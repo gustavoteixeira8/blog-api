@@ -34,6 +34,10 @@ export interface ArticleRepositoryProtocol {
     articleSlug: string,
     options?: RepositoryOptions,
   ): Promise<ArticleWithRelationsDTO | undefined>;
+  findBySlugForCreatorWithRelations(
+    articleSlug: string,
+    userId: string,
+  ): Promise<ArticleWithRelationsDTO | undefined>;
   searchWithRelations(
     searchOptions: SearchArticlesProtocol,
     pagination: PaginationOptionsProtocol,

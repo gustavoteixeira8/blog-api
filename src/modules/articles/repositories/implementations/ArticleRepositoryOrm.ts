@@ -79,6 +79,28 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
     };
   }
 
+  public async findBySlugForCreatorWithRelations(
+    articleSlug: string,
+    userId: string,
+  ): Promise<ArticleWithRelationsDTO | undefined> {
+    const article = await this._table.findOne({
+      join: {
+        alias: 'a',
+        leftJoinAndSelect: { user: 'a.user', categories: 'a.categories' },
+      },
+      where: { slug: articleSlug, userId },
+      withDeleted: true,
+    });
+
+    if (!article) return;
+
+    return {
+      article: ArticleMapper.toDomain(article),
+      user: UserMapper.toDomain(article.user),
+      categories: article.categories.map(CategoryMapper.toDomain),
+    };
+  }
+
   public async searchWithRelations(
     searchOptions: SearchArticlesProtocol,
     pagination: PaginationOptionsProtocol,

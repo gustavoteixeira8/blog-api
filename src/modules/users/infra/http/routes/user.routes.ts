@@ -11,6 +11,7 @@ import {
   softDeleteUserController,
   searchArticlesForUserCreatorController,
   showUserByIdController,
+  showArticleForCreatorController,
 } from '../controllers';
 
 const userRoutes = Router();
@@ -28,6 +29,7 @@ userRoutes.use(ensureUserIsAdmin);
 
 userRoutes.get('/', searchUsersController.handle);
 userRoutes.get('/me/article', searchArticlesForUserCreatorController.handle);
+userRoutes.get('/me/article/:articleSlug', showArticleForCreatorController.handle);
 userRoutes.put('/admin/add', makeUserAdminController.handle);
 userRoutes.put('/admin/remove', removeUserAdminController.handle);
 
