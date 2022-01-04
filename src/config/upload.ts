@@ -39,16 +39,16 @@ export const uploadConfig = {
       cb(new BadRequestError('The supported types are jpeg, png, gif, bmp, webp'));
     },
   },
-};
 
-export const uploadProviderConfig = {
-  cloudinary: {
-    cloudinaryLocation: process.env.CLOUDINARY_LOCATION_FILE,
-    cloudinaryOptions: {
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
-      secure: true,
+  storageProvider: {
+    storageLocation: process.env.STORAGE_LOCATION_FILE,
+    cloudinary: {
+      cloudinaryOptions: {
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+        secure: true,
+      },
     },
   },
 };
