@@ -17,7 +17,7 @@ export const sanitizeConfig = {
     section: ['style'],
     blockquote: ['style'],
     dd: ['style'],
-    div: ['style'],
+    div: ['style', 'id', 'classes'],
     dl: ['style'],
     dt: ['style'],
     figcaption: ['style'],
