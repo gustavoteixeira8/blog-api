@@ -1,16 +1,16 @@
 import { CategoryMapper } from '@modules/categories/mappers/CategoryMapper';
-import { ShowCategoryByIdUseCase } from '@modules/categories/useCases/ShowCategoryByIdUseCase';
+import { ShowCategoryBySlugUseCase } from '@modules/categories/useCases/ShowCategoryBySlugUseCase';
 import { ok } from '@shared/infra/http/utils/httpResponses';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-export class ShowCategoryByIdController {
+export class ShowCategoryBySlugController {
   public async handle(req: Request, res: Response): Promise<Response> {
-    const { categoryId } = req.params;
+    const { categorySlug } = req.params;
 
-    const showCategory = container.resolve(ShowCategoryByIdUseCase);
+    const showCategory = container.resolve(ShowCategoryBySlugUseCase);
 
-    const category = await showCategory.execute({ categoryId });
+    const category = await showCategory.execute({ categorySlug });
 
     const categoryFormatted = CategoryMapper.toDetails(category);
 

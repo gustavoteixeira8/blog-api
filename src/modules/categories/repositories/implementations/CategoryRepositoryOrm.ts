@@ -35,6 +35,14 @@ export class CategoryRepositoryOrm implements CategoryRepositoryProtocol {
     return CategoryMapper.toDomain(category);
   }
 
+  public async findBySlug(categorySlug: string): Promise<Category | undefined> {
+    const category = await this._table.findOne({ where: { slug: categorySlug } });
+
+    if (!category) return;
+
+    return CategoryMapper.toDomain(category);
+  }
+
   public async findAllPaginate(
     pagination: PaginationOptionsProtocol,
   ): Promise<CategoriesPaginateResponse> {

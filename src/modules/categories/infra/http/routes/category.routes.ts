@@ -5,14 +5,14 @@ import {
   createCategoryController,
   deleteCategoryController,
   showAllCategoriesController,
-  showCategoryByIdController,
+  showCategoryBySlugController,
   updateCategoryController,
 } from '../controllers';
 
 const categoryRoutes = Router();
 
 categoryRoutes.get('/', showAllCategoriesController.handle);
-categoryRoutes.get('/:categoryId', showCategoryByIdController.handle);
+categoryRoutes.get('/:categorySlug', showCategoryBySlugController.handle);
 
 categoryRoutes.use(ensureAuthentication);
 categoryRoutes.use(ensureUserIsAdmin);

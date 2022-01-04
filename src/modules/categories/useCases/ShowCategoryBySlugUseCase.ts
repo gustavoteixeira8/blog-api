@@ -5,11 +5,11 @@ import { Category } from '../entities/Category';
 import { CategoryNotFoundError, MissingParamError } from '@shared/core/errors';
 
 export interface ShowCategoryRequest {
-  categoryId: string;
+  categorySlug: string;
 }
 
 @injectable()
-export class ShowCategoryByIdUseCase
+export class ShowCategoryBySlugUseCase
   implements UseCaseProtocol<ShowCategoryRequest, Promise<Category>>
 {
   constructor(
@@ -17,10 +17,10 @@ export class ShowCategoryByIdUseCase
     private readonly _categoryRepository: CategoryRepositoryProtocol,
   ) {}
 
-  public async execute({ categoryId }: ShowCategoryRequest): Promise<Category> {
-    if (!categoryId) throw new MissingParamError('Category id');
+  public async execute({ categorySlug }: ShowCategoryRequest): Promise<Category> {
+    if (!categorySlug) throw new MissingParamError('Category id');
 
-    const category = await this._categoryRepository.findById(categoryId);
+    const category = await this._categoryRepository.findBySlug(categorySlug);
 
     if (!category) throw new CategoryNotFoundError();
 
