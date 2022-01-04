@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.verifyUserEmailController = exports.updateUserPasswordController = exports.updateUserController = exports.softDeleteUserController = exports.showUserByIdController = exports.showMeController = exports.sendVerificationEmailController = exports.sendUpdatePasswordEmailController = exports.searchUsersController = exports.searchArticlesForUserCreatorController = exports.removeUserAdminController = exports.makeUserAdminController = exports.createUserController = exports.authenticateUserController = void 0;
+exports.verifyUserEmailController = exports.updateUserPasswordController = exports.updateUserController = exports.softDeleteUserController = exports.showUserByUsernameController = exports.showUserByIdController = exports.sendVerificationEmailController = exports.sendUpdatePasswordEmailController = exports.searchUsersController = exports.searchArticlesForUserCreatorController = exports.removeUserAdminController = exports.makeUserAdminController = exports.createUserController = exports.authenticateUserController = void 0;
 
 var _AuthenticateUserController = require("./AuthenticateUserController");
 
@@ -19,9 +19,7 @@ var _SendUpdatePasswordEmailController = require("./SendUpdatePasswordEmailContr
 
 var _SendVerificationEmailController = require("./SendVerificationEmailController");
 
-var _ShowMeController = require("./ShowMeController");
-
-var _ShowUserByIdController = require("./ShowUserByIdController");
+var _ShowUserByUsernameController = require("./ShowUserByUsernameController");
 
 var _UpdateUserController = require("./UpdateUserController");
 
@@ -33,12 +31,12 @@ var _SoftDeleteUserController = require("./SoftDeleteUserController");
 
 var _SearchArticlesForUserCreatorController = require("./SearchArticlesForUserCreatorController");
 
+var _ShowUserByIdController = require("./ShowUserByIdController");
+
 const createUserController = new _CreateUserController.CreateUserController();
 exports.createUserController = createUserController;
 const updateUserController = new _UpdateUserController.UpdateUserController();
 exports.updateUserController = updateUserController;
-const showMeController = new _ShowMeController.ShowMeController();
-exports.showMeController = showMeController;
 const sendVerificationEmailController = new _SendVerificationEmailController.SendVerificationEmailController();
 exports.sendVerificationEmailController = sendVerificationEmailController;
 const verifyUserEmailController = new _VerifyUserEmailController.VerifyUserEmailController();
@@ -53,6 +51,8 @@ const sendUpdatePasswordEmailController = new _SendUpdatePasswordEmailController
 exports.sendUpdatePasswordEmailController = sendUpdatePasswordEmailController;
 const updateUserPasswordController = new _UpdateUserPasswordController.UpdateUserPasswordController();
 exports.updateUserPasswordController = updateUserPasswordController;
+const showUserByUsernameController = new _ShowUserByUsernameController.ShowUserByUsernameController();
+exports.showUserByUsernameController = showUserByUsernameController;
 const showUserByIdController = new _ShowUserByIdController.ShowUserByIdController();
 exports.showUserByIdController = showUserByIdController;
 const searchUsersController = new _SearchUsersController.SearchUsersController();

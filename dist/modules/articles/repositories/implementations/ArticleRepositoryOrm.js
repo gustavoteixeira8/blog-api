@@ -67,7 +67,7 @@ class ArticleRepositoryOrm {
     return !!article;
   }
 
-  async findPublicByIdWithRelations(articleId, options) {
+  async findPublicBySlugWithRelations(articleSlug, options) {
     const article = await this._table.findOne({
       join: {
         alias: 'a',
@@ -77,7 +77,7 @@ class ArticleRepositoryOrm {
         }
       },
       where: {
-        id: articleId,
+        slug: articleSlug,
         isPublic: true
       },
       ...options

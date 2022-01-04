@@ -22,7 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const articleRoutes = (0, _express.Router)();
 exports.articleRoutes = articleRoutes;
 articleRoutes.get('/', _controllers.searchPublicArticlesController.handle);
-articleRoutes.get('/:articleId', _controllers.showPublicArticleByIdController.handle);
+articleRoutes.get('/:articleSlug', _controllers.showPublicArticleBySlugController.handle);
 articleRoutes.use(_ensureAuthentication.ensureAuthentication);
 articleRoutes.use(_ensureUserIsAdmin.ensureUserIsAdmin);
 articleRoutes.post('/', _controllers.createArticleController.handle);

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.uploadProviderConfig = exports.uploadConfig = void 0;
+exports.uploadConfig = void 0;
 
 var _httpErrors = require("../shared/infra/http/errors/httpErrors");
 
@@ -43,18 +43,17 @@ const uploadConfig = {
       cb(new _httpErrors.BadRequestError('The supported types are jpeg, png, gif, bmp, webp'));
     }
 
-  }
-};
-exports.uploadConfig = uploadConfig;
-const uploadProviderConfig = {
-  cloudinary: {
-    cloudinaryLocation: process.env.CLOUDINARY_LOCATION_FILE,
-    cloudinaryOptions: {
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_API_KEY,
-      api_secret: process.env.CLOUDINARY_API_SECRET,
-      secure: true
+  },
+  storageProvider: {
+    storageLocation: process.env.STORAGE_LOCATION_FILE,
+    cloudinary: {
+      cloudinaryOptions: {
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+        secure: true
+      }
     }
   }
 };
-exports.uploadProviderConfig = uploadProviderConfig;
+exports.uploadConfig = uploadConfig;

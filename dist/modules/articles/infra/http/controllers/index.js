@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateArticleThumbnailController = exports.updateArticleController = exports.softDeleteArticleController = exports.showPublicArticleByIdController = exports.searchPublicArticlesController = exports.recoverArticleController = exports.createArticleController = void 0;
+exports.updateArticleThumbnailController = exports.updateArticleController = exports.softDeleteArticleController = exports.showPublicArticleBySlugController = exports.searchPublicArticlesController = exports.recoverArticleController = exports.createArticleController = void 0;
 
 var _CreateArticleController = require("./CreateArticleController");
 
-var _ShowPublicArticleByIdController = require("./ShowPublicArticleByIdController");
+var _ShowPublicArticleBySlugController = require("./ShowPublicArticleBySlugController");
 
 var _SoftDeleteArticleController = require("./SoftDeleteArticleController");
 
@@ -21,8 +21,8 @@ var _SearchPublicArticlesController = require("./SearchPublicArticlesController"
 
 const createArticleController = new _CreateArticleController.CreateArticleController();
 exports.createArticleController = createArticleController;
-const showPublicArticleByIdController = new _ShowPublicArticleByIdController.ShowPublicArticleByIdController();
-exports.showPublicArticleByIdController = showPublicArticleByIdController;
+const showPublicArticleBySlugController = new _ShowPublicArticleBySlugController.ShowPublicArticleBySlugController();
+exports.showPublicArticleBySlugController = showPublicArticleBySlugController;
 const updateArticleController = new _UpdateArticleController.UpdateArticleController();
 exports.updateArticleController = updateArticleController;
 const updateArticleThumbnailController = new _UpdateArticleThumbnailController.UpdateArticleThumbnailController();

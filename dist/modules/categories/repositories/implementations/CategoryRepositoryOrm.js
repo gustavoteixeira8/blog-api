@@ -45,6 +45,16 @@ class CategoryRepositoryOrm {
     return _CategoryMapper.CategoryMapper.toDomain(category);
   }
 
+  async findBySlug(categorySlug) {
+    const category = await this._table.findOne({
+      where: {
+        slug: categorySlug
+      }
+    });
+    if (!category) return;
+    return _CategoryMapper.CategoryMapper.toDomain(category);
+  }
+
   async findAllPaginate(pagination) {
     const {
       order,

@@ -19,7 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class CloudinaryStorageProvider {
   constructor() {
-    this._cloudinaryConfig = _upload.uploadProviderConfig.cloudinary.cloudinaryOptions;
+    this._cloudinaryConfig = _upload.uploadConfig.storageProvider.cloudinary;
     this._tempPath = _upload.uploadConfig.tempPath;
 
     _cloudinary.v2.config(this._cloudinaryConfig);

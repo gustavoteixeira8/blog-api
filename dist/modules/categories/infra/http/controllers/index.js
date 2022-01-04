@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateCategoryController = exports.showCategoryByIdController = exports.showAllCategoriesController = exports.deleteCategoryController = exports.createCategoryController = void 0;
+exports.updateCategoryController = exports.showCategoryBySlugController = exports.showAllCategoriesController = exports.deleteCategoryController = exports.createCategoryController = void 0;
 
 var _CreateCategoryController = require("./CreateCategoryController");
 
@@ -11,7 +11,7 @@ var _DeleteCategoryController = require("./DeleteCategoryController");
 
 var _ShowAllCategoriesController = require("./ShowAllCategoriesController");
 
-var _ShowCategoryByIdController = require("./ShowCategoryByIdController");
+var _ShowCategoryBySlugController = require("./ShowCategoryBySlugController");
 
 var _UpdateCategoryController = require("./UpdateCategoryController");
 
@@ -23,5 +23,5 @@ const deleteCategoryController = new _DeleteCategoryController.DeleteCategoryCon
 exports.deleteCategoryController = deleteCategoryController;
 const showAllCategoriesController = new _ShowAllCategoriesController.ShowAllCategoriesController();
 exports.showAllCategoriesController = showAllCategoriesController;
-const showCategoryByIdController = new _ShowCategoryByIdController.ShowCategoryByIdController();
-exports.showCategoryByIdController = showCategoryByIdController;
+const showCategoryBySlugController = new _ShowCategoryBySlugController.ShowCategoryBySlugController();
+exports.showCategoryBySlugController = showCategoryBySlugController;

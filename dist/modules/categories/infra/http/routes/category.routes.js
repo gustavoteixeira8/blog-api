@@ -16,7 +16,7 @@ var _controllers = require("../controllers");
 const categoryRoutes = (0, _express.Router)();
 exports.categoryRoutes = categoryRoutes;
 categoryRoutes.get('/', _controllers.showAllCategoriesController.handle);
-categoryRoutes.get('/:categoryId', _controllers.showCategoryByIdController.handle);
+categoryRoutes.get('/:categorySlug', _controllers.showCategoryBySlugController.handle);
 categoryRoutes.use(_ensureAuthentication.ensureAuthentication);
 categoryRoutes.use(_ensureUserIsAdmin.ensureUserIsAdmin);
 categoryRoutes.post('/', _controllers.createCategoryController.handle);

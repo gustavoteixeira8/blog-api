@@ -36,7 +36,8 @@ class UserMapper {
       isAdmin: user.isAdmin,
       isEmailVerified: user.isEmailVerified,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      updatedAt: user.updatedAt,
+      deletedAt: user.deletedAt
     };
   }
 

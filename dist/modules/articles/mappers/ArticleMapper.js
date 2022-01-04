@@ -11,6 +11,8 @@ var _UserMapper = require("../../users/mappers/UserMapper");
 
 var _CategoryMapper = require("../../categories/mappers/CategoryMapper");
 
+var _upload = require("../../../config/upload");
+
 class ArticleMapper {
   static toPersistence(article) {
     return {
@@ -49,6 +51,7 @@ class ArticleMapper {
     user,
     categories
   }, withText = false) {
+    const thumbnailLocation = _upload.uploadConfig.storageProvider.storageLocation;
     return {
       id: article.id.value,
       title: article.title.value,
@@ -57,7 +60,7 @@ class ArticleMapper {
       } : null),
       slug: article.slug.value,
       isPublic: article.isPublic,
-      thumbnail: !article.thumbnail ? null : article.thumbnail.value,
+      thumbnail: !article.thumbnail ? null : `${thumbnailLocation}/${article.thumbnail.value}`,
       createdAt: article.createdAt,
       updatedAt: article.updatedAt,
       deletedAt: article.deletedAt,

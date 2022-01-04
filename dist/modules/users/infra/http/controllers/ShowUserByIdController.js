@@ -17,7 +17,7 @@ class ShowUserByIdController {
   async handle(req, res) {
     const {
       userId
-    } = req.params;
+    } = req.userData;
 
     const showUser = _tsyringe.container.resolve(_ShowUserByIdUseCase.ShowUserByIdUseCase);
 
@@ -25,10 +25,10 @@ class ShowUserByIdController {
       userId
     });
 
-    const userDetails = _UserMapper.UserMapper.toDetails(user);
+    const userFormatted = _UserMapper.UserMapper.toHimself(user);
 
     return (0, _httpResponses.ok)(res, {
-      user: userDetails
+      user: userFormatted
     });
   }
 
