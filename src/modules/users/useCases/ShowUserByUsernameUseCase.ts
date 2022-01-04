@@ -4,21 +4,23 @@ import { inject, injectable } from 'tsyringe';
 import { User } from '../entities/user/User';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 
-export interface ShowUserByIdRequest {
-  userId: string;
+export interface ShowUserByUsernameRequest {
+  username: string;
 }
 
 @injectable()
-export class ShowUserByIdUseCase implements UseCaseProtocol<ShowUserByIdRequest, Promise<User>> {
+export class ShowUserByUsernameUseCase
+  implements UseCaseProtocol<ShowUserByUsernameRequest, Promise<User>>
+{
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
   ) {}
 
-  public async execute({ userId }: ShowUserByIdRequest): Promise<User> {
-    if (!userId) throw new MissingParamError('User id');
+  public async execute({ username }: ShowUserByUsernameRequest): Promise<User> {
+    if (!username) throw new MissingParamError('Username');
 
-    const user = await this._userRepository.findById(userId, { withDeleted: false });
+    const user = await this._userRepository.findByUsername(username, { withDeleted: false });
 
     if (!user) throw new UserNotFoundError();
 
