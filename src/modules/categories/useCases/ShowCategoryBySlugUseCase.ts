@@ -18,7 +18,7 @@ export class ShowCategoryBySlugUseCase
   ) {}
 
   public async execute({ categorySlug }: ShowCategoryRequest): Promise<Category> {
-    if (!categorySlug) throw new MissingParamError('Category id');
+    if (!categorySlug) throw new MissingParamError('Category slug');
 
     const category = await this._categoryRepository.findBySlug(categorySlug);
 
