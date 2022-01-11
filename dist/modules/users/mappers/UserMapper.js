@@ -9,8 +9,10 @@ var _User = require("../entities/user/User");
 
 class UserMapper {
   static toPersistence(user) {
+    var _user$id;
+
     return {
-      id: user.id?.value || '',
+      id: ((_user$id = user.id) === null || _user$id === void 0 ? void 0 : _user$id.value) || '',
       fullName: user.fullName.value,
       email: user.email.value,
       username: user.username.value,
@@ -28,8 +30,10 @@ class UserMapper {
   }
 
   static toHimself(user) {
+    var _user$id2;
+
     return {
-      id: user.id?.value || '',
+      id: ((_user$id2 = user.id) === null || _user$id2 === void 0 ? void 0 : _user$id2.value) || '',
       fullName: user.fullName.value,
       email: user.email.value,
       username: user.username.value,

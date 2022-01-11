@@ -21,6 +21,8 @@ var _Slug = require("../../../shared/core/entities/valueObjects/Slug");
 
 var _errors = require("../../../shared/core/errors");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class Article extends _Entity.Entity {
   get title() {
     return this._title;
@@ -64,16 +66,27 @@ class Article extends _Entity.Entity {
 
   constructor(props) {
     super(props);
-    this._title = void 0;
-    this._text = void 0;
-    this._slug = void 0;
-    this._isPublic = void 0;
-    this._thumbnail = void 0;
-    this._categoriesId = void 0;
-    this._userId = void 0;
-    this._createdAt = void 0;
-    this._updatedAt = void 0;
-    this._deletedAt = void 0;
+
+    _defineProperty(this, "_title", void 0);
+
+    _defineProperty(this, "_text", void 0);
+
+    _defineProperty(this, "_slug", void 0);
+
+    _defineProperty(this, "_isPublic", void 0);
+
+    _defineProperty(this, "_thumbnail", void 0);
+
+    _defineProperty(this, "_categoriesId", void 0);
+
+    _defineProperty(this, "_userId", void 0);
+
+    _defineProperty(this, "_createdAt", void 0);
+
+    _defineProperty(this, "_updatedAt", void 0);
+
+    _defineProperty(this, "_deletedAt", void 0);
+
     this._title = props.title;
     this._text = props.text;
     this._categoriesId = props.categoriesId;

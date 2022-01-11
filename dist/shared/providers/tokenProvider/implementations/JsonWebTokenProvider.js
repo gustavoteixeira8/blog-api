@@ -9,9 +9,11 @@ var _jsonwebtoken = require("jsonwebtoken");
 
 var _auth = require("../../../../config/auth");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class JsonWebTokenProvider {
   constructor() {
-    this.jwtConfig = _auth.authConfig.jwt;
+    _defineProperty(this, "jwtConfig", _auth.authConfig.jwt);
   }
 
   sign(payload, options) {

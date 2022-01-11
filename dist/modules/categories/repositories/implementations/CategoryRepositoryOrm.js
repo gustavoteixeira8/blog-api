@@ -11,9 +11,11 @@ var _typeorm = require("typeorm");
 
 var _CategoryEntity = require("../../../../shared/infra/database/entities/CategoryEntity");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class CategoryRepositoryOrm {
   constructor() {
-    this._table = (0, _typeorm.getRepository)(_CategoryEntity.CategoryEntity);
+    _defineProperty(this, "_table", (0, _typeorm.getRepository)(_CategoryEntity.CategoryEntity));
   }
 
   async save(category) {
@@ -80,7 +82,7 @@ class CategoryRepositoryOrm {
     const category = await this._table.createQueryBuilder('c').withDeleted().leftJoinAndSelect('c.articles', 'article').where('c.id = :categoryId', {
       categoryId
     }).getOne();
-    return !!category?.articles.length;
+    return !!(category !== null && category !== void 0 && category.articles.length);
   }
 
 }

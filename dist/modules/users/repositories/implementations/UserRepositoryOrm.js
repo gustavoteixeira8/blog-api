@@ -11,9 +11,11 @@ var _UserMapper = require("../../mappers/UserMapper");
 
 var _UserEntity = require("../../../../shared/infra/database/entities/UserEntity");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class UserRepositoryOrm {
   constructor() {
-    this._table = (0, _typeorm.getRepository)(_UserEntity.UserEntity);
+    _defineProperty(this, "_table", (0, _typeorm.getRepository)(_UserEntity.UserEntity));
   }
 
   async save(user) {

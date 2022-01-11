@@ -17,16 +17,21 @@ var _HandlebarsProvider = require("../../templateProvider/implementations/Handle
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class SendGridMailProvider {
   constructor() {
-    this._apiKey = _mail.mailConfig.sendGrid.apiKey;
-    this._appAddress = _app.appConfig.mail;
+    _defineProperty(this, "_apiKey", _mail.mailConfig.sendGrid.apiKey);
+
+    _defineProperty(this, "_appAddress", _app.appConfig.mail);
 
     _mail2.default.setApiKey(this._apiKey);
   }
 
   async sendMail(options) {
     try {
+      var _options$from, _options$from2, _options$attachments;
+
       const handlebars = new _HandlebarsProvider.HandlebarsProvider();
       const htmlParsed = await handlebars.parse({
         file: options.html,
@@ -34,8 +39,8 @@ class SendGridMailProvider {
       });
       await _mail2.default.send({
         from: {
-          email: options.from?.address || this._appAddress.address,
-          name: options.from?.name || this._appAddress.name
+          email: ((_options$from = options.from) === null || _options$from === void 0 ? void 0 : _options$from.address) || this._appAddress.address,
+          name: ((_options$from2 = options.from) === null || _options$from2 === void 0 ? void 0 : _options$from2.name) || this._appAddress.name
         },
         to: {
           email: options.to.address,
@@ -43,7 +48,7 @@ class SendGridMailProvider {
         },
         subject: options.subject,
         html: htmlParsed,
-        attachments: options.attachments?.map(a => ({
+        attachments: (_options$attachments = options.attachments) === null || _options$attachments === void 0 ? void 0 : _options$attachments.map(a => ({
           content: a.content,
           filename: a.filename,
           type: a.contentType

@@ -17,10 +17,13 @@ var _log = require("../../../log");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class MailTrapProvider {
   constructor() {
-    this._mailerConfig = _mail.mailConfig.mailtrap;
-    this._appAddress = _app.appConfig.mail;
+    _defineProperty(this, "_mailerConfig", _mail.mailConfig.mailtrap);
+
+    _defineProperty(this, "_appAddress", _app.appConfig.mail);
   }
 
   async sendMail(options) {

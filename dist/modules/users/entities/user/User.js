@@ -19,6 +19,8 @@ var _errors = require("../../../../shared/core/errors");
 
 var _Identifier = require("../../../../shared/core/entities/valueObjects/Identifier");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class User extends _Entity.Entity {
   get fullName() {
     return this._fullName;
@@ -58,15 +60,25 @@ class User extends _Entity.Entity {
 
   constructor(props) {
     super(props);
-    this._fullName = void 0;
-    this._email = void 0;
-    this._username = void 0;
-    this._password = void 0;
-    this._isAdmin = void 0;
-    this._isEmailVerified = void 0;
-    this._createdAt = void 0;
-    this._updatedAt = void 0;
-    this._deletedAt = void 0;
+
+    _defineProperty(this, "_fullName", void 0);
+
+    _defineProperty(this, "_email", void 0);
+
+    _defineProperty(this, "_username", void 0);
+
+    _defineProperty(this, "_password", void 0);
+
+    _defineProperty(this, "_isAdmin", void 0);
+
+    _defineProperty(this, "_isEmailVerified", void 0);
+
+    _defineProperty(this, "_createdAt", void 0);
+
+    _defineProperty(this, "_updatedAt", void 0);
+
+    _defineProperty(this, "_deletedAt", void 0);
+
     this._fullName = props.fullName;
     this._email = props.email;
     this._username = props.username;

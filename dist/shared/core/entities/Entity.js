@@ -7,13 +7,16 @@ exports.Entity = void 0;
 
 var _Identifier = require("./valueObjects/Identifier");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class Entity {
   get id() {
     return this._id;
   }
 
   constructor(props) {
-    this._id = void 0;
+    _defineProperty(this, "_id", void 0);
+
     this._id = props.id || _Identifier.Identifier.create();
   }
 

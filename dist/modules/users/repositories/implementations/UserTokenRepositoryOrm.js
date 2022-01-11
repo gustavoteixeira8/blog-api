@@ -11,9 +11,11 @@ var _UserTokenEntity = require("../../../../shared/infra/database/entities/UserT
 
 var _typeorm = require("typeorm");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class UserTokenRepositoryOrm {
   constructor() {
-    this._table = (0, _typeorm.getRepository)(_UserTokenEntity.UserTokenEntity);
+    _defineProperty(this, "_table", (0, _typeorm.getRepository)(_UserTokenEntity.UserTokenEntity));
   }
 
   async save(userToken) {
