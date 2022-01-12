@@ -1,7 +1,11 @@
 import { UnauthorizedError } from '@shared/infra/http/errors/httpErrors';
 import { CorsOptions } from 'cors';
 
-const allowedDomains = ['https://gustavo.gq'];
+const allowedDomains = [
+  'https://gustavo.gq',
+  process.env.MY_LOCALHOST_IP,
+  process.env.MY_LOCALHOST,
+];
 
 export const corsConfig = {
   origin: (origin, cb) => {

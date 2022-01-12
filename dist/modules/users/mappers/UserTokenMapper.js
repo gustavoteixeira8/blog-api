@@ -9,10 +9,8 @@ var _UserToken = require("../entities/userToken/UserToken");
 
 class UserTokenMapper {
   static toPersistence(userToken) {
-    var _userToken$id;
-
     return {
-      id: (_userToken$id = userToken.id) === null || _userToken$id === void 0 ? void 0 : _userToken$id.value,
+      id: userToken.id?.value,
       token: userToken.token.value,
       type: userToken.type,
       userId: userToken.userId.value,

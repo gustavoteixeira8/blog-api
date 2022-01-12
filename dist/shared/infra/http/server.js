@@ -83,9 +83,7 @@ class Server {
 
     if (this._server) {
       await new Promise((resolve, reject) => {
-        var _this$_server;
-
-        (_this$_server = this._server) === null || _this$_server === void 0 ? void 0 : _this$_server.close(error => error ? reject(error) : resolve(null));
+        this._server?.close(error => error ? reject(error) : resolve(null));
       });
     }
   }

@@ -37,8 +37,6 @@ let UpdateArticleThumbnailUseCase = (_dec = (0, _tsyringe.injectable)(), _dec2 =
     articleId,
     userId
   }) {
-    var _article$thumbnail;
-
     if (!articleId || !userId) throw new _errors.MissingParamError('Article id and user id');
     const [user, article] = await Promise.all([this._userRepository.findById(userId), this._articleRepository.findById(articleId)]);
     if (!user) throw new _errors.UserNotFoundError('User not found');
@@ -74,7 +72,7 @@ let UpdateArticleThumbnailUseCase = (_dec = (0, _tsyringe.injectable)(), _dec2 =
 
     const newThumbnail = _ImageName.ImageName.create(thumbnail);
 
-    const oldThumbnail = (_article$thumbnail = article.thumbnail) === null || _article$thumbnail === void 0 ? void 0 : _article$thumbnail.value;
+    const oldThumbnail = article.thumbnail?.value;
 
     if (newThumbnail instanceof Error) {
       throw new _errors.InvalidImageNameError();

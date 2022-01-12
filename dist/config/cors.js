@@ -7,7 +7,7 @@ exports.corsConfig = void 0;
 
 var _httpErrors = require("../shared/infra/http/errors/httpErrors");
 
-const allowedDomains = ['https://gustavo.gq'];
+const allowedDomains = ['https://gustavo.gq', process.env.MY_LOCALHOST_IP, process.env.MY_LOCALHOST];
 const corsConfig = {
   origin: (origin, cb) => {
     if (!allowedDomains.includes(origin || 'WRONG_ORIGIN')) {

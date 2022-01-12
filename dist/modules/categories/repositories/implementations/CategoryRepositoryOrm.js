@@ -82,7 +82,7 @@ class CategoryRepositoryOrm {
     const category = await this._table.createQueryBuilder('c').withDeleted().leftJoinAndSelect('c.articles', 'article').where('c.id = :categoryId', {
       categoryId
     }).getOne();
-    return !!(category !== null && category !== void 0 && category.articles.length);
+    return !!category?.articles.length;
   }
 
 }
