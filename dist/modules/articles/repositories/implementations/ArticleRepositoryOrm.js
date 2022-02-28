@@ -15,9 +15,11 @@ var _UserMapper = require("../../../users/mappers/UserMapper");
 
 var _CategoryMapper = require("../../../categories/mappers/CategoryMapper");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class ArticleRepositoryOrm {
   constructor() {
-    this._table = (0, _typeorm.getRepository)(_ArticleEntity.ArticleEntity);
+    _defineProperty(this, "_table", (0, _typeorm.getRepository)(_ArticleEntity.ArticleEntity));
   }
 
   async save(article) {

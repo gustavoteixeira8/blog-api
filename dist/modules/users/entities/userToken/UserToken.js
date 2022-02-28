@@ -15,6 +15,8 @@ var _TokenJWT = require("../../../../shared/core/entities/valueObjects/TokenJWT"
 
 var _errors = require("../../../../shared/core/errors");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class UserToken extends _Entity.Entity {
   get token() {
     return this._token;
@@ -38,11 +40,17 @@ class UserToken extends _Entity.Entity {
 
   constructor(props) {
     super(props);
-    this._token = void 0;
-    this._type = void 0;
-    this._userId = void 0;
-    this._expiresIn = void 0;
-    this._createdAt = void 0;
+
+    _defineProperty(this, "_token", void 0);
+
+    _defineProperty(this, "_type", void 0);
+
+    _defineProperty(this, "_userId", void 0);
+
+    _defineProperty(this, "_expiresIn", void 0);
+
+    _defineProperty(this, "_createdAt", void 0);
+
     this._token = props.token;
     this._userId = props.userId;
     this._expiresIn = props.expiresIn;

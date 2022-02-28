@@ -11,9 +11,11 @@ var _typeorm = require("typeorm");
 
 var _CategoryEntity = require("../../../../shared/infra/database/entities/CategoryEntity");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class CategoryRepositoryOrm {
   constructor() {
-    this._table = (0, _typeorm.getRepository)(_CategoryEntity.CategoryEntity);
+    _defineProperty(this, "_table", (0, _typeorm.getRepository)(_CategoryEntity.CategoryEntity));
   }
 
   async save(category) {

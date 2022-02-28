@@ -9,9 +9,12 @@ var _bull = _interopRequireDefault(require("bull"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class BullQueueProvider {
   constructor(queueName, queueOptions) {
-    this._queue = void 0;
+    _defineProperty(this, "_queue", void 0);
+
     this._queue = new _bull.default(queueName, queueOptions);
   }
 

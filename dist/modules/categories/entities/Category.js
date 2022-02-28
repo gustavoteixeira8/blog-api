@@ -15,6 +15,8 @@ var _Slug = require("../../../shared/core/entities/valueObjects/Slug");
 
 var _errors = require("../../../shared/core/errors");
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class Category extends _Entity.Entity {
   get name() {
     return this._name;
@@ -34,10 +36,15 @@ class Category extends _Entity.Entity {
 
   constructor(props) {
     super(props);
-    this._name = void 0;
-    this._slug = void 0;
-    this._createdAt = void 0;
-    this._updatedAt = void 0;
+
+    _defineProperty(this, "_name", void 0);
+
+    _defineProperty(this, "_slug", void 0);
+
+    _defineProperty(this, "_createdAt", void 0);
+
+    _defineProperty(this, "_updatedAt", void 0);
+
     this._name = props.name;
     this._slug = props.slug;
     this._createdAt = props.createdAt;

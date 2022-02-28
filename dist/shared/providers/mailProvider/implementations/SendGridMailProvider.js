@@ -17,10 +17,13 @@ var _HandlebarsProvider = require("../../templateProvider/implementations/Handle
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class SendGridMailProvider {
   constructor() {
-    this._apiKey = _mail.mailConfig.sendGrid.apiKey;
-    this._appAddress = _app.appConfig.mail;
+    _defineProperty(this, "_apiKey", _mail.mailConfig.sendGrid.apiKey);
+
+    _defineProperty(this, "_appAddress", _app.appConfig.mail);
 
     _mail2.default.setApiKey(this._apiKey);
   }

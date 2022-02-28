@@ -2,14 +2,14 @@ import { UnauthorizedError } from '@shared/infra/http/errors/httpErrors';
 import { CorsOptions } from 'cors';
 
 const allowedDomains = [
-  'https://api.gustavo.gq',
-  'http://localhost:3000',
+  'https://gustavo.gq',
   process.env.MY_LOCALHOST_IP,
+  process.env.MY_LOCALHOST,
 ];
 
 export const corsConfig = {
   origin: (origin, cb) => {
-    if (origin && !allowedDomains.includes(origin)) {
+    if (!allowedDomains.includes(origin || 'WRONG_ORIGIN')) {
       cb(new UnauthorizedError('Not allowed by CORS'));
       return;
     }

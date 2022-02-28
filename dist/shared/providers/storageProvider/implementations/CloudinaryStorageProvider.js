@@ -17,10 +17,13 @@ var _log = require("../../../log");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 class CloudinaryStorageProvider {
   constructor() {
-    this._cloudinaryConfig = _upload.uploadConfig.storageProvider.cloudinary;
-    this._tempPath = _upload.uploadConfig.tempPath;
+    _defineProperty(this, "_cloudinaryConfig", _upload.uploadConfig.storageProvider.cloudinary);
+
+    _defineProperty(this, "_tempPath", _upload.uploadConfig.tempPath);
 
     _cloudinary.v2.config(this._cloudinaryConfig);
   }
