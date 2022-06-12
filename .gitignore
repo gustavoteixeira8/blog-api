@@ -11,3 +11,5 @@ TODO.md
 .docs
 .docker/dbdata
 .env.dev
+dist/
+build
