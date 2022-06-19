@@ -1,10 +1,10 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { inject, injectable } from 'tsyringe';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
-import { DateProviderProtocol } from '@shared/providers/dateProvider/DateProviderProtocol';
-import { TokenProviderProtocol } from '@shared/providers/tokenProvider/TokenProviderProtocol';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
+import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
+import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserToken } from '../entities/userToken/UserToken';
 import { UserTokenRepositoryProtocol } from '../repositories/UserTokenRepositoryProtocol';
@@ -23,12 +23,12 @@ export class SendUpdatePasswordEmailUseCase
     private readonly _userRepository: UserRepositoryProtocol,
     @inject('UserTokenRepository')
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
-    @inject('DateProvider')
-    private readonly _dateProvider: DateProviderProtocol,
-    @inject('TokenProvider')
-    private readonly _tokenProvider: TokenProviderProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('DateAdapter')
+    private readonly _dateAdapter: DateAdapterProtocol,
+    @inject('TokenAdapter')
+    private readonly _tokenAdapter: TokenAdapterProtocol,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ email }: SendPasswordMailRequest): Promise<void> {
@@ -41,15 +41,15 @@ export class SendUpdatePasswordEmailUseCase
     const userToken = await this._userTokenRepository.findByUserId(user.id.value);
 
     if (userToken) {
-      const tokenIsExpired = this._dateProvider.isAfter(new Date(), userToken.expiresIn);
+      const tokenIsExpired = this._dateAdapter.isAfter(new Date(), userToken.expiresIn);
 
       if (!tokenIsExpired) return;
 
       await this._userTokenRepository.delete(userToken.id.value);
     }
 
-    const tokenExpiresIn = this._dateProvider.add(new Date(), { minutes: 15 });
-    const token = this._tokenProvider.sign({}, { expiresIn: '15m' });
+    const tokenExpiresIn = this._dateAdapter.add(new Date(), { minutes: 15 });
+    const token = this._tokenAdapter.sign({}, { expiresIn: '15m' });
     const newUserToken = UserToken.create({
       userId: user.id.value,
       expiresIn: tokenExpiresIn,
@@ -59,7 +59,7 @@ export class SendUpdatePasswordEmailUseCase
 
     await Promise.all([
       this._userTokenRepository.save(newUserToken),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
           address: user.email.value,

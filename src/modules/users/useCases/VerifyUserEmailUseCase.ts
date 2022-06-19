@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { DateProviderProtocol } from '@shared/providers/dateProvider/DateProviderProtocol';
-import { TokenProviderProtocol } from '@shared/providers/tokenProvider/TokenProviderProtocol';
+import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
+import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 import { UserTokenRepositoryProtocol } from '../repositories/UserTokenRepositoryProtocol';
 import { InvalidTokenError, MissingParamError, UserNotFoundError } from '@shared/core/errors';
@@ -17,10 +17,10 @@ export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Pro
     private readonly _userRepository: UserRepositoryProtocol,
     @inject('UserTokenRepository')
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
-    @inject('DateProvider')
-    private readonly _dateProvider: DateProviderProtocol,
-    @inject('TokenProvider')
-    private readonly _tokenProvider: TokenProviderProtocol,
+    @inject('DateAdapter')
+    private readonly _dateAdapter: DateAdapterProtocol,
+    @inject('TokenAdapter')
+    private readonly _tokenAdapter: TokenAdapterProtocol,
   ) {}
 
   public async execute({ token }: TokenRequest): Promise<void> {
@@ -32,7 +32,7 @@ export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Pro
       throw new InvalidTokenError();
     }
 
-    const tokenIsExpired = this._dateProvider.isAfter(new Date(), tokenExists.expiresIn);
+    const tokenIsExpired = this._dateAdapter.isAfter(new Date(), tokenExists.expiresIn);
 
     if (tokenIsExpired) {
       await this._userTokenRepository.delete(tokenExists.id.value);
@@ -41,7 +41,7 @@ export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Pro
     }
 
     try {
-      this._tokenProvider.verify(token);
+      this._tokenAdapter.verify(token);
     } catch (error) {
       await this._userTokenRepository.delete(tokenExists.id.value);
       throw new InvalidTokenError();

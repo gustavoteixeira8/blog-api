@@ -2,8 +2,8 @@ import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { StorageOptions } from '@shared/providers/storageProvider/StorageProviderProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { StorageOptions } from '@shared/adapters/storageAdapter/StorageAdapterProtocol';
 import { ImageName } from '@shared/core/entities/valueObjects/ImageName';
 import {
   ArticleIsNotYoursError,
@@ -30,8 +30,8 @@ export class UpdateArticleThumbnailUseCase
     private readonly _articleRepository: ArticleRepositoryProtocol,
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('StorageQueueProvider')
-    private readonly _storageQueueProvider: QueueProviderProtocol<StorageOptions>,
+    @inject('StorageQueueAdapter')
+    private readonly _storageQueueAdapter: QueueAdapterProtocol<StorageOptions>,
   ) {}
 
   public async execute({
@@ -68,7 +68,7 @@ export class UpdateArticleThumbnailUseCase
 
         await Promise.all([
           this._articleRepository.save(article),
-          this._storageQueueProvider.add({
+          this._storageQueueAdapter.add({
             filename: oldName.value,
             action: 'DELETE',
             filetype: 'image',
@@ -89,7 +89,7 @@ export class UpdateArticleThumbnailUseCase
     article.updateThumbnail(newThumbnail);
 
     if (oldThumbnail) {
-      await this._storageQueueProvider.add({
+      await this._storageQueueAdapter.add({
         filename: oldThumbnail,
         action: 'DELETE',
         filetype: 'image',
@@ -98,7 +98,7 @@ export class UpdateArticleThumbnailUseCase
 
     await Promise.all([
       this._articleRepository.save(article),
-      this._storageQueueProvider.add({
+      this._storageQueueAdapter.add({
         filename: newThumbnail.value,
         action: 'SAVE',
         filetype: 'image',

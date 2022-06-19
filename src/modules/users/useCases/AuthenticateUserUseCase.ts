@@ -1,9 +1,9 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { Email } from '@shared/core/entities/valueObjects/Email';
-import { DateProviderProtocol } from '@shared/providers/dateProvider/DateProviderProtocol';
-import { HashProviderProtocol } from '@shared/providers/hashProvider/HashProviderProtocol';
-import { TokenProviderProtocol } from '@shared/providers/tokenProvider/TokenProviderProtocol';
+import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
+import { HashAdapterProtocol } from '@shared/adapters/hashAdapter/HashAdapterProtocol';
+import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 import { User } from '../entities/user/User';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 import { LoginOrPasswordInvalidError, MissingParamError } from '@shared/core/errors';
@@ -27,12 +27,12 @@ export class AuthenticateUserUseCase
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('TokenProvider')
-    private readonly _tokenProvider: TokenProviderProtocol,
-    @inject('DateProvider')
-    private readonly _dateProvider: DateProviderProtocol,
-    @inject('HashProvider')
-    private readonly _hashProvider: HashProviderProtocol,
+    @inject('TokenAdapter')
+    private readonly _tokenAdapter: TokenAdapterProtocol,
+    @inject('DateAdapter')
+    private readonly _dateAdapter: DateAdapterProtocol,
+    @inject('HashAdapter')
+    private readonly _hashAdapter: HashAdapterProtocol,
   ) {}
 
   public async execute({
@@ -54,12 +54,12 @@ export class AuthenticateUserUseCase
 
     if (!user.isEmailVerified) throw new LoginOrPasswordInvalidError();
 
-    const isValidPassword = await this._hashProvider.compare(password, user.password.value);
+    const isValidPassword = await this._hashAdapter.compare(password, user.password.value);
 
     if (!isValidPassword) throw new LoginOrPasswordInvalidError();
 
-    const tokenExpiresIn = this._dateProvider.add(new Date(), { days: 1 });
-    const accessToken = this._tokenProvider.sign(
+    const tokenExpiresIn = this._dateAdapter.add(new Date(), { days: 1 });
+    const accessToken = this._tokenAdapter.sign(
       { id: user.id.value, expiresIn: tokenExpiresIn },
       { expiresIn: '1d' },
     );

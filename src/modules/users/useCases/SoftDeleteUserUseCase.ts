@@ -5,8 +5,8 @@ import {
   UserEmailIsNotVerifiedError,
   UserNotFoundError,
 } from '@shared/core/errors';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { inject, injectable } from 'tsyringe';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 
@@ -19,8 +19,8 @@ export class SoftDeleteUserUseCase implements UseCaseProtocol<SoftDeleteRequest,
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ userId }: SoftDeleteRequest): Promise<void> {
@@ -40,7 +40,7 @@ export class SoftDeleteUserUseCase implements UseCaseProtocol<SoftDeleteRequest,
 
     await Promise.all([
       this._userRepository.softDelete(userExists.id.value),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: userExists.fullName.value,
           address: userExists.email.value,

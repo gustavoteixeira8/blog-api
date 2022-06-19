@@ -9,8 +9,8 @@ import {
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { inject, injectable } from 'tsyringe';
 import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
 
@@ -28,8 +28,8 @@ export class SoftDeleteArticleUseCase
     private readonly _userRepository: UserRepositoryProtocol,
     @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ articleId, userId }: DeleteArticleRequest): Promise<void> {
@@ -59,7 +59,7 @@ export class SoftDeleteArticleUseCase
 
     await Promise.all([
       this._articleRepository.save(article),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
           address: user.email.value,

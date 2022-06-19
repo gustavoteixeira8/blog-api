@@ -1,12 +1,12 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
-import { TokenProviderProtocol } from '@shared/providers/tokenProvider/TokenProviderProtocol';
-import { DateProviderProtocol } from '@shared/providers/dateProvider/DateProviderProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
+import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
+import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 import { Password } from '@shared/core/entities/valueObjects/Password';
-import { HashProviderProtocol } from '@shared/providers/hashProvider/HashProviderProtocol';
+import { HashAdapterProtocol } from '@shared/adapters/hashAdapter/HashAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserTokenRepositoryProtocol } from '../repositories/UserTokenRepositoryProtocol';
 import {
@@ -33,14 +33,14 @@ export class UpdateUserPasswordUseCase
     private readonly _userRepository: UserRepositoryProtocol,
     @inject('UserTokenRepository')
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
-    @inject('DateProvider')
-    private readonly _dateProvider: DateProviderProtocol,
-    @inject('TokenProvider')
-    private readonly _tokenProvider: TokenProviderProtocol,
-    @inject('HashProvider')
-    private readonly _hashProvider: HashProviderProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('DateAdapter')
+    private readonly _dateAdapter: DateAdapterProtocol,
+    @inject('TokenAdapter')
+    private readonly _tokenAdapter: TokenAdapterProtocol,
+    @inject('HashAdapter')
+    private readonly _hashAdapter: HashAdapterProtocol,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ password, confirmPassword, token }: UpdatePasswordRequest): Promise<void> {
@@ -60,7 +60,7 @@ export class UpdateUserPasswordUseCase
       throw new InvalidTokenError();
     }
 
-    const tokenIsExpired = this._dateProvider.isAfter(new Date(), userToken.expiresIn);
+    const tokenIsExpired = this._dateAdapter.isAfter(new Date(), userToken.expiresIn);
 
     if (tokenIsExpired) {
       await this._userTokenRepository.delete(userToken.id.value);
@@ -69,7 +69,7 @@ export class UpdateUserPasswordUseCase
     }
 
     try {
-      this._tokenProvider.verify(userToken.token.value);
+      this._tokenAdapter.verify(userToken.token.value);
     } catch (error) {
       await this._userTokenRepository.delete(userToken.id.value);
       throw new InvalidTokenError();
@@ -86,7 +86,7 @@ export class UpdateUserPasswordUseCase
       throw new UserEmailIsNotVerifiedError();
     }
 
-    const isTheSamePassword = await this._hashProvider.compare(password, user.password.value);
+    const isTheSamePassword = await this._hashAdapter.compare(password, user.password.value);
 
     if (isTheSamePassword) {
       throw new InvalidPasswordError();
@@ -98,13 +98,13 @@ export class UpdateUserPasswordUseCase
       throw new InvalidPasswordError();
     }
 
-    const hash = await this._hashProvider.generate(password);
+    const hash = await this._hashAdapter.generate(password);
     user.updatePassword(Password.create(hash, true) as Password);
 
     await Promise.all([
       this._userRepository.save(user),
       this._userTokenRepository.delete(userToken.id.value),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
           address: user.email.value,

@@ -3,8 +3,8 @@ import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { PersonName } from '@shared/core/entities/valueObjects/PersonName';
 import { Email } from '@shared/core/entities/valueObjects/Email';
 import { Username } from '@shared/core/entities/valueObjects/Username';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 import {
@@ -30,8 +30,8 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ userId, fullName, email, username }: UpdateUserRequest): Promise<void> {
@@ -105,7 +105,7 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
     if (userUpdatedToCompare !== userToCompare) {
       await Promise.all([
         this._userRepository.save(user),
-        this._mailQueueProvider.add({
+        this._mailQueueAdapter.add({
           to: {
             name: user.fullName.value,
             address: user.email.value,

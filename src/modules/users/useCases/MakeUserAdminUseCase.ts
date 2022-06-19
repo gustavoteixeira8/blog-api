@@ -6,8 +6,8 @@ import {
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { inject, injectable } from 'tsyringe';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 
@@ -21,8 +21,8 @@ export class MakeUserAdminUseCase implements UseCaseProtocol<MakeUserAdminReques
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ adminId, userId }: MakeUserAdminRequest): Promise<void> {
@@ -57,7 +57,7 @@ export class MakeUserAdminUseCase implements UseCaseProtocol<MakeUserAdminReques
 
     await Promise.all([
       this._userRepository.save(userToMakeAdmin),
-      this._mailQueueProvider.add([
+      this._mailQueueAdapter.add([
         {
           to: {
             name: admin.fullName.value,

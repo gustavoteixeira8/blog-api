@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { JsonWebTokenProvider } from '@shared/providers/tokenProvider/implementations/JsonWebTokenProvider';
+import { JsonWebTokenAdapter } from '@shared/adapters/tokenAdapter/implementations/JsonWebTokenAdapter';
 import { UnauthorizedError } from '@shared/infra/http/errors/httpErrors';
 
 export function ensureAuthentication(req: Request, res: Response, next: NextFunction): void {
@@ -16,7 +16,7 @@ export function ensureAuthentication(req: Request, res: Response, next: NextFunc
     throw new UnauthorizedError('Invalid token');
   }
 
-  const tokenProvider = container.resolve(JsonWebTokenProvider);
+  const tokenProvider = container.resolve(JsonWebTokenAdapter);
 
   try {
     const { id } = tokenProvider.verify(tokenJWT);

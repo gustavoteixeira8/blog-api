@@ -1,6 +1,6 @@
 import { UpdateArticleThumbnailUseCase } from '@modules/articles/useCases/UpdateArticleThumbnailUseCase';
 import { ok } from '@shared/infra/http/utils/httpResponses';
-import { SharpProvider } from '@shared/providers/processImageProvider/implementations/SharpProvider';
+import { SharpAdapter } from '@shared/adapters/processImageAdapter/implementations/SharpAdapter';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { resolve, basename } from 'path';
@@ -10,7 +10,7 @@ export class UpdateArticleThumbnailController {
     let thumbnail: string | undefined;
 
     if (req.file) {
-      const sharpProvider = new SharpProvider();
+      const sharpProvider = new SharpAdapter();
       const newPath = await sharpProvider.convertToWebp(resolve(req.file.path));
       thumbnail = basename(newPath);
     }

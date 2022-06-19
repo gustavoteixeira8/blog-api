@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { SlugProviderProtocol } from '@shared/providers/slugProvider/SlugProviderProtocol';
+import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { CategoryRepositoryProtocol } from '@modules/categories/repositories/CategoryRepositoryProtocol';
 import { Article } from '../entities/Article';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
@@ -34,10 +34,10 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
     private readonly _categoryRepository: CategoryRepositoryProtocol,
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugProvider')
-    private readonly _slugProvider: SlugProviderProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('SlugAdapter')
+    private readonly _slugAdapter: SlugAdapterProtocol,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({
@@ -66,7 +66,7 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
       throw new UserIsNotAdminError();
     }
 
-    const slug = this._slugProvider.generate(title);
+    const slug = this._slugAdapter.generate(title);
 
     const articleExists = await this._articleRepository.existsWithSlug(slug, {
       withDeleted: true,
@@ -94,7 +94,7 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
 
     await Promise.all([
       this._articleRepository.save(article),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
           address: user.email.value,

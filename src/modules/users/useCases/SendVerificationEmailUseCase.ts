@@ -1,9 +1,9 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
-import { TokenProviderProtocol } from '@shared/providers/tokenProvider/TokenProviderProtocol';
-import { DateProviderProtocol } from '@shared/providers/dateProvider/DateProviderProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
+import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
+import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 import { UserToken } from '../entities/userToken/UserToken';
@@ -23,12 +23,12 @@ export class SendVerificationEmailUseCase
     private readonly _userRepository: UserRepositoryProtocol,
     @inject('UserTokenRepository')
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
-    @inject('DateProvider')
-    private readonly _dateProvider: DateProviderProtocol,
-    @inject('TokenProvider')
-    private readonly _tokenProvider: TokenProviderProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('DateAdapter')
+    private readonly _dateAdapter: DateAdapterProtocol,
+    @inject('TokenAdapter')
+    private readonly _tokenAdapter: TokenAdapterProtocol,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ email }: SendVerificationMailRequest): Promise<void> {
@@ -41,15 +41,15 @@ export class SendVerificationEmailUseCase
     const userToken = await this._userTokenRepository.findByUserId(user.id.value);
 
     if (userToken) {
-      const userTokenIsExpired = this._dateProvider.isAfter(new Date(), userToken.expiresIn);
+      const userTokenIsExpired = this._dateAdapter.isAfter(new Date(), userToken.expiresIn);
 
       if (!userTokenIsExpired && userToken.type === 'verifyEmail') return;
 
       await this._userTokenRepository.delete(userToken.id.value);
     }
 
-    const expiresDate = this._dateProvider.add(new Date(), { minutes: 30 });
-    const token = this._tokenProvider.sign({}, { expiresIn: '30m' });
+    const expiresDate = this._dateAdapter.add(new Date(), { minutes: 30 });
+    const token = this._tokenAdapter.sign({}, { expiresIn: '30m' });
 
     const newUserToken = UserToken.create({
       userId: user.id.value,
@@ -60,7 +60,7 @@ export class SendVerificationEmailUseCase
 
     await Promise.all([
       this._userTokenRepository.save(newUserToken),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
           address: user.email.value,

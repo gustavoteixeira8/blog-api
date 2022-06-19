@@ -1,2 +1,2 @@
-import './providers';
+import './adapters';
 import './repositories';

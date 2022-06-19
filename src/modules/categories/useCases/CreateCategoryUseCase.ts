@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { CategoryRepositoryProtocol } from '../repositories/CategoryRepositoryProtocol';
-import { SlugProviderProtocol } from '@shared/providers/slugProvider/SlugProviderProtocol';
+import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { Category } from '../entities/Category';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import {
@@ -26,8 +26,8 @@ export class CreateCategoryUseCase
     private readonly _categoryRepository: CategoryRepositoryProtocol,
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugProvider')
-    private readonly _slugProvider: SlugProviderProtocol,
+    @inject('SlugAdapter')
+    private readonly _slugAdapter: SlugAdapterProtocol,
   ) {}
 
   public async execute({ name, userId }: CreateCategoryRequest): Promise<void> {
@@ -46,7 +46,7 @@ export class CreateCategoryUseCase
       throw new UserIsNotAdminError();
     }
 
-    const slug = this._slugProvider.generate(name);
+    const slug = this._slugAdapter.generate(name);
 
     const categoryExists = await this._categoryRepository.existsWithSlug(slug);
 

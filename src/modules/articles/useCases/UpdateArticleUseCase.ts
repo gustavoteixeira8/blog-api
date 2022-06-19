@@ -1,12 +1,12 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { SlugProviderProtocol } from '@shared/providers/slugProvider/SlugProviderProtocol';
+import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { CategoryRepositoryProtocol } from '@modules/categories/repositories/CategoryRepositoryProtocol';
 import { ArticleTitle } from '@shared/core/entities/valueObjects/ArticleTitle';
 import { ArticleText } from '@shared/core/entities/valueObjects/ArticleText';
 import { Slug } from '@shared/core/entities/valueObjects/Slug';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { ForeignKeyId } from '@shared/core/entities/valueObjects/ForeignKeyId';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
@@ -42,10 +42,10 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
     private readonly _categoryRepository: CategoryRepositoryProtocol,
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugProvider')
-    private readonly _slugProvider: SlugProviderProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('SlugAdapter')
+    private readonly _slugAdapter: SlugAdapterProtocol,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({
@@ -82,7 +82,7 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
     const articleToCompare = JSON.stringify(article);
 
     if (title && title !== article.title.value) {
-      const slug = this._slugProvider.generate(title);
+      const slug = this._slugAdapter.generate(title);
 
       const articleWithSlugAlreadyExists = await this._articleRepository.existsWithSlug(slug, {
         withDeleted: true,
@@ -142,7 +142,7 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
     if (articleToCompare !== articleUpdatedToCompare) {
       await Promise.all([
         this._articleRepository.save(article),
-        this._mailQueueProvider.add({
+        this._mailQueueAdapter.add({
           to: {
             name: user.fullName.value,
             address: user.email.value,

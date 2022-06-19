@@ -1,15 +1,15 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
-import { DateProviderProtocol } from '@shared/providers/dateProvider/DateProviderProtocol';
+import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
 
 @injectable()
 export class DeleteAllUsersUseCase implements UseCaseProtocol<void, Promise<void>> {
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('DateProvider')
-    private readonly _dateProvider: DateProviderProtocol,
+    @inject('DateAdapter')
+    private readonly _dateAdapter: DateAdapterProtocol,
   ) {}
 
   public async execute(): Promise<void> {
@@ -18,7 +18,7 @@ export class DeleteAllUsersUseCase implements UseCaseProtocol<void, Promise<void
     for (const user of users) {
       if (!user.deletedAt) continue;
 
-      const deletedAtPlusOneMonth = this._dateProvider.add(user.deletedAt, { months: 1 });
+      const deletedAtPlusOneMonth = this._dateAdapter.add(user.deletedAt, { months: 1 });
 
       if (deletedAtPlusOneMonth.getTime() > new Date().getTime()) continue;
 

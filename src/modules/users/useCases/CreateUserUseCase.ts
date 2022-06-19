@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { HashProviderProtocol } from '@shared/providers/hashProvider/HashProviderProtocol';
-import { QueueProviderProtocol } from '@shared/providers/queueProvider/QueueProviderProtocol';
-import { MailOptionsProtocol } from '@shared/providers/mailProvider/MailProvider';
+import { HashAdapterProtocol } from '@shared/adapters/hashAdapter/HashAdapterProtocol';
+import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
+import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 import { Password } from '@shared/core/entities/valueObjects/Password';
@@ -25,10 +25,10 @@ export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Pro
   constructor(
     @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('HashProvider')
-    private readonly _hashProvider: HashProviderProtocol,
-    @inject('MailQueueProvider')
-    private readonly _mailQueueProvider: QueueProviderProtocol<MailOptionsProtocol>,
+    @inject('HashAdapter')
+    private readonly _hashAdapter: HashAdapterProtocol,
+    @inject('MailQueueAdapter')
+    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ fullName, email, password, username }: CreateUserRequest): Promise<void> {
@@ -57,13 +57,13 @@ export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Pro
       isAdmin: false,
     });
 
-    const hash = await this._hashProvider.generate(user.password.value);
+    const hash = await this._hashAdapter.generate(user.password.value);
     const passwordHash = Password.create(hash, true) as Password;
     user.updatePassword(passwordHash);
 
     await Promise.all([
       this._userRepository.save(user),
-      this._mailQueueProvider.add({
+      this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
           address: user.email.value,
