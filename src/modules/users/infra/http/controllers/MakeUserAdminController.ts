@@ -1,17 +1,22 @@
 import { MakeUserAdminUseCase } from '@modules/users/useCases/MakeUserAdminUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { WebController } from '@shared/core/controllers/WebController';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class MakeUserAdminController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { userId } = req.body;
-    const { userId: adminId } = req.userData;
+export class MakeUserAdminController extends WebController {
+  constructor(useCase: MakeUserAdminUseCase) {
+    super(useCase);
+  }
 
-    const makeAdmin = container.resolve(MakeUserAdminUseCase);
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { userId } = httpRequest.body;
+    const { userId: adminId } = httpRequest.userData;
 
-    await makeAdmin.execute({ adminId, userId });
+    await this._useCase.execute({ adminId, userId });
 
-    return ok(res, { message: 'You have given admin permission to a new user successfully' });
+    return ok({
+      message: 'You have given admin permission to a new user successfully',
+      data: null,
+    });
   }
 }

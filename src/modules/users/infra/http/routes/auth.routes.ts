@@ -1,20 +1,20 @@
+import { controllerAdapter } from '@shared/adapters/expressAdapter/controllerAdapter';
+import { makeAuthenticateUserController } from '@shared/factories/controllers/makeAuthenticateUserController';
+import { makeSendUpdatePasswordEmailController } from '@shared/factories/controllers/makeSendUpdatePasswordEmailController';
+import { makeSendVerificationEmailController } from '@shared/factories/controllers/makeSendVerificationEmailController';
 import { Router } from 'express';
-import {
-  authenticateUserController,
-  sendUpdatePasswordEmailController,
-  sendVerificationEmailController,
-  updateUserPasswordController,
-  verifyUserEmailController,
-} from '../controllers';
+import { updateUserPasswordController, verifyUserEmailController } from '../controllers';
 
-const authRoutes = Router();
+export const setupAuthRoutes = () => {
+  const authRoutes = Router();
 
-authRoutes.post('/', authenticateUserController.handle);
+  authRoutes.post('/', controllerAdapter(makeAuthenticateUserController()));
 
-authRoutes.post('/email/verify', sendVerificationEmailController.handle);
-authRoutes.put('/email/verify/:token', verifyUserEmailController.handle);
+  authRoutes.post('/email/verify', controllerAdapter(makeSendVerificationEmailController()));
+  authRoutes.put('/email/verify/:token', verifyUserEmailController.handle);
 
-authRoutes.post('/password/forgot', sendUpdatePasswordEmailController.handle);
-authRoutes.put('/password/recover/:token', updateUserPasswordController.handle);
+  authRoutes.post('/password/forgot', controllerAdapter(makeSendUpdatePasswordEmailController()));
+  authRoutes.put('/password/recover/:token', updateUserPasswordController.handle);
 
-export { authRoutes };
+  return authRoutes;
+};

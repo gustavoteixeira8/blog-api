@@ -1,4 +1,3 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
@@ -14,20 +13,14 @@ export interface SendVerificationMailRequest {
   email: string;
 }
 
-@injectable()
 export class SendVerificationEmailUseCase
   implements UseCaseProtocol<SendVerificationMailRequest, Promise<void>>
 {
   constructor(
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('UserTokenRepository')
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
-    @inject('DateAdapter')
     private readonly _dateAdapter: DateAdapterProtocol,
-    @inject('TokenAdapter')
     private readonly _tokenAdapter: TokenAdapterProtocol,
-    @inject('MailQueueAdapter')
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 

@@ -2,7 +2,6 @@ import { UserRepositoryProtocol } from '@modules/users/repositories/UserReposito
 import { MissingParamError, UserIsNotAdminError } from '@shared/core/errors';
 import { OrderByProtocol } from '@shared/core/repositories/PaginationProtocol';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { inject, injectable } from 'tsyringe';
 import {
   ArticleRepositoryProtocol,
   ArticlesPaginateResponse,
@@ -13,14 +12,11 @@ import {
 export type SearchArticlesRequest = SearchArticlesPaginate<SearchArticlesForCreatorProtocol>;
 export type SearchArticlesResponse = Promise<ArticlesPaginateResponse>;
 
-@injectable()
 export class SearchArticlesForUserCreatorUseCase
   implements UseCaseProtocol<SearchArticlesRequest, SearchArticlesResponse>
 {
   constructor(
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
   ) {}
 

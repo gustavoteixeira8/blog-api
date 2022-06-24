@@ -1,17 +1,18 @@
 import { RemoveUserAdminUseCase } from '@modules/users/useCases/RemoveUserAdminUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { WebController } from '@shared/core/controllers/WebController';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class RemoveUserAdminController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { userId } = req.body;
-    const { userId: adminId } = req.userData;
+export class RemoveUserAdminController extends WebController {
+  constructor(useCase: RemoveUserAdminUseCase) {
+    super(useCase);
+  }
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { userId } = httpRequest.body;
+    const { userId: adminId } = httpRequest.userData;
 
-    const makeAdmin = container.resolve(RemoveUserAdminUseCase);
+    await this._useCase.execute({ adminId, userId });
 
-    await makeAdmin.execute({ adminId, userId });
-
-    return ok(res, { message: 'You have removed a user from admin successfully' });
+    return ok({ message: 'You have removed a user from admin successfully', data: null });
   }
 }

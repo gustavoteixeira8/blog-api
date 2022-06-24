@@ -5,7 +5,6 @@ import {
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
-import { inject, injectable } from 'tsyringe';
 import { ArticleWithRelationsDTO } from '@modules/articles/dtos/ArticleWithRelationsDTO';
 import { ArticleRepositoryProtocol } from '@modules/articles/repositories/ArticleRepositoryProtocol';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
@@ -15,14 +14,11 @@ export interface ShowArticleForCreatorRequest {
   userId: string;
 }
 
-@injectable()
 export class ShowArticleForCreatorUseCase
   implements UseCaseProtocol<ShowArticleForCreatorRequest, Promise<ArticleWithRelationsDTO>>
 {
   constructor(
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
   ) {}
 

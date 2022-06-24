@@ -1,20 +1,21 @@
 import { ArticleMapper } from '@modules/articles/mappers/ArticleMapper';
 import { ShowArticleForCreatorUseCase } from '@modules/users/useCases/ShowArticleForCreatorUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { WebController } from '@shared/core/controllers/WebController';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class ShowArticleForCreatorController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { userId } = req.userData;
-    const { articleSlug } = req.params;
+export class ShowArticleForCreatorController extends WebController {
+  constructor(useCase: ShowArticleForCreatorUseCase) {
+    super(useCase);
+  }
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { userId } = httpRequest.userData;
+    const { articleSlug } = httpRequest.params;
 
-    const showArticle = container.resolve(ShowArticleForCreatorUseCase);
-
-    const article = await showArticle.execute({ articleSlug, userId });
+    const article = await this._useCase.execute({ articleSlug, userId });
 
     const articleFormatted = ArticleMapper.toDetails(article, true);
 
-    return ok(res, { article: articleFormatted });
+    return ok({ message: null, data: articleFormatted });
   }
 }

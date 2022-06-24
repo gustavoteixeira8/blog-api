@@ -1,24 +1,29 @@
 import { AuthenticateUserUseCase } from '@modules/users/useCases/AuthenticateUserUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse } from '@shared/core/http/HttpResponse';
+import { WebController } from '@shared/core/controllers/WebController';
+import { ok } from '@shared/core/http/HttpResponse';
 
-export class AuthenticateUserController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { login, password } = req.body;
+export class AuthenticateUserController extends WebController {
+  constructor(useCase: AuthenticateUserUseCase) {
+    super(useCase);
+  }
 
-    const authUser = container.resolve(AuthenticateUserUseCase);
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { login, password } = httpRequest.body;
 
-    const { accessToken, expiresIn, userId, userIsRecovered } = await authUser.execute({
+    const { accessToken, expiresIn, userId, userIsRecovered } = await this._useCase.execute({
       login,
       password,
     });
 
-    return ok(res, {
-      ...(userIsRecovered ? { message: 'Your user was successfully recovered' } : null),
-      accessToken,
-      expiresIn,
-      userId,
+    return ok({
+      message: userIsRecovered ? 'Your user was successfully recovered' : null,
+      data: {
+        accessToken,
+        expiresIn,
+        userId,
+      },
     });
   }
 }

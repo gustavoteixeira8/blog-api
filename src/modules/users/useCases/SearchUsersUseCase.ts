@@ -1,7 +1,6 @@
 import { OrderByProtocol } from '@shared/core/repositories/PaginationProtocol';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { MissingParamError, UserIsNotAdminError } from '@shared/core/errors';
-import { inject, injectable } from 'tsyringe';
 import {
   UserRepositoryProtocol,
   SearchUsersProtocol,
@@ -13,14 +12,10 @@ export type SearchUsersRequest = SearchUsersPaginate<{ adminId: string } & Searc
 
 export type SearchUsersResponse = Promise<UsersPaginateResponse>;
 
-@injectable()
 export class SearchUsersUseCase
   implements UseCaseProtocol<SearchUsersRequest, SearchUsersResponse>
 {
-  constructor(
-    @inject('UserRepository')
-    private readonly _userRepository: UserRepositoryProtocol,
-  ) {}
+  constructor(private readonly _userRepository: UserRepositoryProtocol) {}
 
   public async execute({
     order,

@@ -1,4 +1,3 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { HashAdapterProtocol } from '@shared/adapters/hashAdapter/HashAdapterProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
@@ -20,14 +19,10 @@ export interface CreateUserRequest {
   password: string;
 }
 
-@injectable()
 export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Promise<void>> {
   constructor(
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('HashAdapter')
     private readonly _hashAdapter: HashAdapterProtocol,
-    @inject('MailQueueAdapter')
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 

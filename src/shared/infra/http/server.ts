@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import express, { json, urlencoded } from 'express';
+import express, { json, Router, urlencoded } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import http from 'http';
 import { appConfig } from '@config/app';
 import { closeConnectionDatabase, connectDatabase } from '../database';
-import { routes } from './routes/index.routes';
+import { setupRoutes } from './routes/index.routes';
 import { errorHandler } from './middlewares/errorHandler';
 import { logger } from '@shared/log';
 import { corsConfig } from '@config/cors';
@@ -26,7 +26,7 @@ export class Server {
     //
   }
 
-  private setupRoutes(): void {
+  private setupRoutes(routes: Router): void {
     this._app.use(routes);
     this._app.use(errorHandler);
   }
@@ -41,7 +41,7 @@ export class Server {
   public async start(): Promise<void> {
     await connectDatabase();
     this.setupMiddlewares();
-    this.setupRoutes();
+    this.setupRoutes(setupRoutes());
     this._server = http.createServer(this._app);
     this._server.listen(appConfig.serverPort, () =>
       logger.info('Server listening on port -> ' + appConfig.serverPort),

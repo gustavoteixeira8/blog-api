@@ -1,28 +1,24 @@
 import { UserMapper } from '@modules/users/mappers/UserMapper';
 import { SearchUsersUseCase } from '@modules/users/useCases/SearchUsersUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import {
-  resolveOrderByParams,
-  resolveSearchParamsBoolean,
-  resolveSearchParamsNumbers,
-  resolveSearchParamsStrings,
-} from '@shared/infra/http/utils/resolveQueryParams';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { WebController } from '@shared/core/controllers/WebController';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class SearchUsersController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { userId: adminId } = req.userData;
-    const { order, perPage, page, isAdmin, username } = req.query;
+export class SearchUsersController extends WebController {
+  constructor(useCase: SearchUsersUseCase) {
+    super(useCase);
+  }
 
-    const orderFormatted = resolveOrderByParams(order);
-    const numbersFormatted = resolveSearchParamsNumbers({ perPage, page });
-    const stringFormatted = resolveSearchParamsStrings({ username });
-    const boolFormatted = resolveSearchParamsBoolean({ isAdmin });
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { userId: adminId } = httpRequest.userData;
+    const { order, perPage, page, isAdmin, username } = httpRequest.query;
 
-    const searchUsers = container.resolve(SearchUsersUseCase);
+    const orderFormatted = this.resolveQueryOrderBy(order);
+    const numbersFormatted = this.resolveQueryNumbers({ perPage, page });
+    const stringFormatted = this.resolveQueryStrings({ username });
+    const boolFormatted = this.resolveQueryBoolean({ isAdmin });
 
-    const result = await searchUsers.execute({
+    const result = await this._useCase.execute({
       adminId,
       order: orderFormatted,
       perPage: numbersFormatted.perPage,
@@ -33,6 +29,6 @@ export class SearchUsersController {
 
     const usersFormatted = result.data.map(UserMapper.toHimself);
 
-    return ok(res, { users: { ...result, data: usersFormatted } });
+    return ok({ message: null, data: { ...result, data: usersFormatted } });
   }
 }

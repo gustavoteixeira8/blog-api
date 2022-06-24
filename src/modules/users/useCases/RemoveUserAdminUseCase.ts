@@ -8,7 +8,6 @@ import {
 } from '@shared/core/errors';
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
-import { inject, injectable } from 'tsyringe';
 import { UserRepositoryProtocol } from '../repositories/UserRepositoryProtocol';
 
 export interface RemoveUserAdminRequest {
@@ -16,14 +15,11 @@ export interface RemoveUserAdminRequest {
   adminId: string;
 }
 
-@injectable()
 export class RemoveUserAdminUseCase
   implements UseCaseProtocol<RemoveUserAdminRequest, Promise<void>>
 {
   constructor(
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('MailQueueAdapter')
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 

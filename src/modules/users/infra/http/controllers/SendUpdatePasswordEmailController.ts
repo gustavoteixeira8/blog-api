@@ -1,18 +1,20 @@
 import { SendUpdatePasswordEmailUseCase } from '@modules/users/useCases/SendUpdatePasswordEmailUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { WebController } from '@shared/core/controllers/WebController';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class SendUpdatePasswordEmailController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { email } = req.body;
+export class SendUpdatePasswordEmailController extends WebController {
+  constructor(useCase: SendUpdatePasswordEmailUseCase) {
+    super(useCase);
+  }
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { email } = httpRequest.body;
 
-    const sendEmail = container.resolve(SendUpdatePasswordEmailUseCase);
+    await this._useCase.execute({ email });
 
-    await sendEmail.execute({ email });
-
-    return ok(res, {
+    return ok({
       message: 'If the email exists in the database and is not verified, you will receive an email',
+      data: null,
     });
   }
 }

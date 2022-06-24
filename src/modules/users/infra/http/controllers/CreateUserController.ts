@@ -1,16 +1,18 @@
 import { CreateUserUseCase } from '@modules/users/useCases/CreateUserUseCase';
-import { created } from '@shared/infra/http/utils/httpResponses';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
+import { WebController } from '@shared/core/controllers/WebController';
 
-export class CreateUserController {
-  public async handle(req: Request, res: Response): Promise<Response | never> {
-    const { fullName, email, password, username } = req.body;
+export class CreateUserController extends WebController {
+  constructor(useCase: CreateUserUseCase) {
+    super(useCase);
+  }
 
-    const createUser = container.resolve(CreateUserUseCase);
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { fullName, email, password, username } = httpRequest.body;
 
-    await createUser.execute({ fullName, email, password, username });
+    await this._useCase.execute({ fullName, email, password, username });
 
-    return created(res, { message: 'Your user was created successfully' });
+    return ok({ data: null, message: 'Your user was created successfully' });
   }
 }

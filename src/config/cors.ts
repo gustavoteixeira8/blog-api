@@ -1,4 +1,4 @@
-import { UnauthorizedError } from '@shared/infra/http/errors/httpErrors';
+// import { UnauthorizedError } from '@shared/infra/http/errors/httpErrors';
 import { CorsOptions } from 'cors';
 
 const allowedDomains = [
@@ -10,8 +10,8 @@ const allowedDomains = [
 export const corsConfig = {
   origin: (origin, cb) => {
     if (!allowedDomains.includes(origin || 'WRONG_ORIGIN')) {
-      cb(new UnauthorizedError('Not allowed by CORS'));
-      return;
+      // cb(new UnauthorizedError('Not allowed by CORS'));
+      // return;
     }
 
     cb(null, origin);

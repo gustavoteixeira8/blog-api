@@ -1,4 +1,3 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { Email } from '@shared/core/entities/valueObjects/Email';
 import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
@@ -20,18 +19,13 @@ export interface AuthenticationResponse {
   userIsRecovered: boolean;
 }
 
-@injectable()
 export class AuthenticateUserUseCase
   implements UseCaseProtocol<AuthenticationRequest, Promise<AuthenticationResponse>>
 {
   constructor(
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('TokenAdapter')
     private readonly _tokenAdapter: TokenAdapterProtocol,
-    @inject('DateAdapter')
     private readonly _dateAdapter: DateAdapterProtocol,
-    @inject('HashAdapter')
     private readonly _hashAdapter: HashAdapterProtocol,
   ) {}
 

@@ -1,28 +1,25 @@
 import { ArticleMapper } from '@modules/articles/mappers/ArticleMapper';
 import { SearchArticlesForUserCreatorUseCase } from '@modules/users/useCases/SearchArticlesForUserCreatorUseCase';
-import { ok } from '@shared/infra/http/utils/httpResponses';
-import {
-  resolveOrderByParams,
-  resolveSearchParamsBoolean,
-  resolveSearchParamsNumbers,
-  resolveSearchParamsStrings,
-} from '@shared/infra/http/utils/resolveQueryParams';
-import { Request, Response } from 'express';
-import { container } from 'tsyringe';
+import { WebController } from '@shared/core/controllers/WebController';
+import { HttpRequest } from '@shared/core/http/HttpRequest';
+import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class SearchArticlesForUserCreatorController {
-  public async handle(req: Request, res: Response): Promise<Response> {
-    const { categoryName, articleTitle, isPublic, isDeleted, order, page, perPage } = req.query;
-    const { userId } = req.userData;
+export class SearchArticlesForUserCreatorController extends WebController {
+  constructor(useCase: SearchArticlesForUserCreatorUseCase) {
+    super(useCase);
+  }
 
-    const orderFormatted = resolveOrderByParams(order as string);
-    const numbersFormatted = resolveSearchParamsNumbers({ perPage, page });
-    const stringsFormatted = resolveSearchParamsStrings({ categoryName, articleTitle });
-    const boolFormatted = resolveSearchParamsBoolean({ isPublic, isDeleted });
+  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+    const { categoryName, articleTitle, isPublic, isDeleted, order, page, perPage } =
+      httpRequest.query;
+    const { userId } = httpRequest.userData;
 
-    const searchForCreator = container.resolve(SearchArticlesForUserCreatorUseCase);
+    const orderFormatted = this.resolveQueryOrderBy(order as string);
+    const numbersFormatted = this.resolveQueryNumbers({ perPage, page });
+    const stringsFormatted = this.resolveQueryStrings({ categoryName, articleTitle });
+    const boolFormatted = this.resolveQueryBoolean({ isPublic, isDeleted });
 
-    const result = await searchForCreator.execute({
+    const result = await this._useCase.execute({
       userId,
       categoryName: stringsFormatted.categoryName,
       articleTitle: stringsFormatted.articleTitle,
@@ -35,6 +32,6 @@ export class SearchArticlesForUserCreatorController {
 
     const articlesFormatted = result.data.map((article) => ArticleMapper.toDetails(article, false));
 
-    return ok(res, { articles: { ...result, data: articlesFormatted } });
+    return ok({ message: null, data: { ...result, data: articlesFormatted } });
   }
 }
