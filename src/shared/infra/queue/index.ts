@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import 'dotenv/config';
 import '@shared/containers';
-import { container } from 'tsyringe';
-import { ProcessMailQueueService } from './services/ProcessMailQueueService';
-import { ProcessStorageQueueService } from './services/ProcessStorageQueueService';
 import { logger } from '@shared/log';
+import { makeProcessMailQueue } from './services/processMailQueue/makeProcessMailQueue';
+import { makeProcessStorageQueue } from './services/processStorageQueue/makeProcessStorageQueue';
+import { connectDatabase } from '../database';
 
 export enum ExitStatus {
   success = 0,
@@ -21,10 +21,10 @@ process.on('unhandledRejection', (error) => {
   process.exit(ExitStatus.error);
 });
 
-(function () {
+(async function () {
   try {
-    const processMailQueueService = container.resolve(ProcessMailQueueService);
-    const processStorageQueueService = container.resolve(ProcessStorageQueueService);
+    const processMailQueueService = makeProcessMailQueue();
+    const processStorageQueueService = makeProcessStorageQueue();
 
     processMailQueueService.execute();
     processStorageQueueService.execute();

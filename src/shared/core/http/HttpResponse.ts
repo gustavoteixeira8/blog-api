@@ -10,12 +10,24 @@ export interface HttpResponse {
   status: number;
 }
 
-export const created = (data: Body): HttpResponse => {
-  return { body: data, status: 201 };
+export const created = ({ data, message }: Body): HttpResponse => {
+  return {
+    body: {
+      data,
+      message,
+    },
+    status: 201,
+  };
 };
 
-export const ok = (data: Body): HttpResponse => {
-  return { body: data, status: 200 };
+export const ok = ({ data, message }: Body): HttpResponse => {
+  return {
+    body: {
+      data,
+      message,
+    },
+    status: 200,
+  };
 };
 
 export const errorResponse = (error: HttpErrorProtocol): HttpResponse => {

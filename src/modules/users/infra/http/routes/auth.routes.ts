@@ -1,20 +1,21 @@
+import { makeAuthenticateUser } from '@modules/users/useCases/autheticateUser/makeAuthenticateUser';
+import { makeSendUpdatePasswordEmail } from '@modules/users/useCases/sendUpdatePasswordEmail/makeSendUpdatePasswordEmail';
+import { makeSendVerificationEmail } from '@modules/users/useCases/sendVerificationEmail/makeSendVerificationEmail';
+import { makeUpdateUserPassword } from '@modules/users/useCases/updateUserPassword/makeUpdateUserPassword';
+import { makeVerifyUserEmail } from '@modules/users/useCases/verifyUserEmail/makeVerifyUserEmail';
 import { controllerAdapter } from '@shared/adapters/expressAdapter/controllerAdapter';
-import { makeAuthenticateUserController } from '@shared/factories/controllers/makeAuthenticateUserController';
-import { makeSendUpdatePasswordEmailController } from '@shared/factories/controllers/makeSendUpdatePasswordEmailController';
-import { makeSendVerificationEmailController } from '@shared/factories/controllers/makeSendVerificationEmailController';
 import { Router } from 'express';
-import { updateUserPasswordController, verifyUserEmailController } from '../controllers';
 
 export const setupAuthRoutes = () => {
   const authRoutes = Router();
 
-  authRoutes.post('/', controllerAdapter(makeAuthenticateUserController()));
+  authRoutes.post('/', controllerAdapter(makeAuthenticateUser()));
 
-  authRoutes.post('/email/verify', controllerAdapter(makeSendVerificationEmailController()));
-  authRoutes.put('/email/verify/:token', verifyUserEmailController.handle);
+  authRoutes.post('/email/verify', controllerAdapter(makeSendVerificationEmail()));
+  authRoutes.put('/email/verify/:token', controllerAdapter(makeVerifyUserEmail()));
 
-  authRoutes.post('/password/forgot', controllerAdapter(makeSendUpdatePasswordEmailController()));
-  authRoutes.put('/password/recover/:token', updateUserPasswordController.handle);
+  authRoutes.post('/password/forgot', controllerAdapter(makeSendUpdatePasswordEmail()));
+  authRoutes.put('/password/recover/:token', controllerAdapter(makeUpdateUserPassword()));
 
   return authRoutes;
 };

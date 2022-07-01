@@ -1,11 +1,10 @@
 import { logger } from '@shared/log';
 import cron from 'node-cron';
-import { container } from 'tsyringe';
-import { DeleteAllUsersUseCase } from '../useCases/DeleteAllUsersUseCase';
+import { makeDeleteAllUsers } from '../useCases/deleteAllUsers/makeDeleteAllUsers';
 
 cron.schedule('59 59 23 * * *', async () => {
   try {
-    const deleteUsersUseCase = container.resolve(DeleteAllUsersUseCase);
+    const deleteUsersUseCase = makeDeleteAllUsers();
 
     await deleteUsersUseCase.execute();
 

@@ -26,14 +26,16 @@ import { CloudinaryStorageAdapter } from '@shared/adapters/storageAdapter/implem
 import { SendGridMailAdapter } from '@shared/adapters/mailAdapter/implementations/SendGridMailAdapter';
 import { SanitizeHtmlAdapter } from '@shared/adapters/sanitizerAdapter/implementations/SanitizeHtmlAdapter';
 import { SanitizerAdapterProtocol } from '@shared/adapters/sanitizerAdapter/SanitizerAdapterProtocol';
+import { MailTrapAdapter } from '@shared/adapters/mailAdapter/implementations/MailTrapAdapter';
+import { DiskStorageAdapter } from '@shared/adapters/storageAdapter/implementations/DiskStorageAdapter';
 
 container.registerSingleton<HashAdapterProtocol>('HashAdapter', BCryptAdapter);
 container.registerSingleton<TokenAdapterProtocol>('TokenAdapter', JsonWebTokenAdapter);
-container.registerSingleton<MailAdapterProtocol>('MailAdapter', SendGridMailAdapter);
+container.registerSingleton<MailAdapterProtocol>('MailAdapter', MailTrapAdapter);
 container.registerSingleton<TemplateAdapterProtocol>('TemplateAdapter', HandlebarsAdapter);
 container.registerSingleton<DateAdapterProtocol>('DateAdapter', DateFnsAdapter);
 container.registerSingleton<SlugAdapterProtocol>('SlugAdapter', SlugifyAdapter);
-container.registerSingleton<StorageAdapterProtocol>('StorageAdapter', CloudinaryStorageAdapter);
+container.registerSingleton<StorageAdapterProtocol>('StorageAdapter', DiskStorageAdapter);
 container.registerSingleton<ProcessImageAdapterProtocol>(
   'ProcessImageAdapterProtocol',
   SharpAdapter,

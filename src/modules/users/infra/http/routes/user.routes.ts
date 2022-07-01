@@ -1,42 +1,37 @@
+import { makeCreateUser } from '@modules/users/useCases/createUser/makeCreateUser';
+import { makeMakeUserAdmin } from '@modules/users/useCases/makeUserAdmin/makeMakeUserAdmin';
+import { makeRemoveUserAdmin } from '@modules/users/useCases/removeUserAdmin/makeRemoveUserAdmin';
+import { makeSearchArticlesForUserCreator } from '@modules/users/useCases/searchArticleForUserCreator/makeSearchArticlesForUserCreator';
+import { makeSearchUsersController } from '@modules/users/useCases/searchUsers/makeSearchUsers';
+import { makeShowArticleForCreator } from '@modules/users/useCases/showArticleForCreator/makeShowArticleForCreator';
+import { makeShowUserById } from '@modules/users/useCases/showUserById/makeShowUserById';
+import { makeShowUserByUsername } from '@modules/users/useCases/showUserByUsername/makeShowUserByUsername';
+import { makeSoftDeleteUser } from '@modules/users/useCases/softDeleteUser/makeSoftDeleteUser';
+import { makeUpdateUser } from '@modules/users/useCases/updateUser/makeUpdateUser';
 import { controllerAdapter } from '@shared/adapters/expressAdapter/controllerAdapter';
-import { makeCreateUserController } from '@shared/factories/controllers/makeCreateUserController';
-import { makeMakeUserAdminController } from '@shared/factories/controllers/makeMakeUserAdminController';
-import { makeRemoveUserAdminController } from '@shared/factories/controllers/makeRemoveUserAdminController';
-import { makeSearchArticlesForUserCreatorController } from '@shared/factories/controllers/makeSearchArticlesForUserCreatorController';
-import { makeSearchUsersController } from '@shared/factories/controllers/makeSearchUsersController';
-import { makeShowArticleForCreatorController } from '@shared/factories/controllers/makeShowArticleForCreatorController';
 import { ensureAuthentication } from '@shared/infra/http/middlewares/ensureAuthentication';
 import { ensureUserIsAdmin } from '@shared/infra/http/middlewares/ensureUserIsAdmin';
 import { Router } from 'express';
-import {
-  showUserByUsernameController,
-  updateUserController,
-  softDeleteUserController,
-  showUserByIdController,
-} from '../controllers';
 
 const userRoutes = () => {
   const userRoutes = Router();
 
   userRoutes.use(ensureAuthentication);
 
-  userRoutes.post('/', ensureUserIsAdmin, controllerAdapter(makeCreateUserController()));
+  userRoutes.post('/', ensureUserIsAdmin, controllerAdapter(makeCreateUser()));
 
-  userRoutes.put('/', updateUserController.handle);
-  userRoutes.delete('/', softDeleteUserController.handle);
-  userRoutes.get('/me', showUserByIdController.handle);
-  userRoutes.get('/:username', showUserByUsernameController.handle);
+  userRoutes.put('/', controllerAdapter(makeUpdateUser()));
+  userRoutes.delete('/', controllerAdapter(makeSoftDeleteUser()));
+  userRoutes.get('/me', controllerAdapter(makeShowUserById()));
+  userRoutes.get('/:username', controllerAdapter(makeShowUserByUsername()));
 
   userRoutes.use(ensureUserIsAdmin);
 
   userRoutes.get('/', controllerAdapter(makeSearchUsersController()));
-  userRoutes.get('/me/article', controllerAdapter(makeSearchArticlesForUserCreatorController()));
-  userRoutes.get(
-    '/me/article/:articleSlug',
-    controllerAdapter(makeShowArticleForCreatorController()),
-  );
-  userRoutes.put('/admin/add', controllerAdapter(makeMakeUserAdminController()));
-  userRoutes.put('/admin/remove', controllerAdapter(makeRemoveUserAdminController()));
+  userRoutes.get('/me/article', controllerAdapter(makeSearchArticlesForUserCreator()));
+  userRoutes.get('/me/article/:articleSlug', controllerAdapter(makeShowArticleForCreator()));
+  userRoutes.put('/admin/add', controllerAdapter(makeMakeUserAdmin()));
+  userRoutes.put('/admin/remove', controllerAdapter(makeRemoveUserAdmin()));
 
   return userRoutes;
 };
