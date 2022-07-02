@@ -8,16 +8,18 @@ import { ensureAuthentication } from '@shared/infra/http/middlewares/ensureAuthe
 import { ensureUserIsAdmin } from '@shared/infra/http/middlewares/ensureUserIsAdmin';
 import { Router } from 'express';
 
-const categoryRoutes = Router();
+export const setupCategoryRoutes = () => {
+  const categoryRoutes = Router();
 
-categoryRoutes.get('/', controllerAdapter(makeShowAllCategories()));
-categoryRoutes.get('/:categorySlug', controllerAdapter(makeShowCategoryBySlug()));
+  categoryRoutes.get('/', controllerAdapter(makeShowAllCategories()));
+  categoryRoutes.get('/:categorySlug', controllerAdapter(makeShowCategoryBySlug()));
 
-categoryRoutes.use(ensureAuthentication);
-categoryRoutes.use(ensureUserIsAdmin);
+  categoryRoutes.use(ensureAuthentication);
+  categoryRoutes.use(ensureUserIsAdmin);
 
-categoryRoutes.post('/', controllerAdapter(makeCreateCategory()));
-categoryRoutes.put('/:categoryId', controllerAdapter(makeUpdateCategory()));
-categoryRoutes.delete('/:categoryId', controllerAdapter(makeDeleteCategory()));
+  categoryRoutes.post('/', controllerAdapter(makeCreateCategory()));
+  categoryRoutes.put('/:categoryId', controllerAdapter(makeUpdateCategory()));
+  categoryRoutes.delete('/:categoryId', controllerAdapter(makeDeleteCategory()));
 
-export { categoryRoutes };
+  return categoryRoutes;
+};
