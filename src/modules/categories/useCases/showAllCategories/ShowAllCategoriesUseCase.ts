@@ -1,9 +1,8 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import {
   CategoriesPaginateResponse,
   CategoryRepositoryProtocol,
-} from '../repositories/CategoryRepositoryProtocol';
+} from '../../repositories/CategoryRepositoryProtocol';
 import {
   OrderByProtocol,
   PaginationOptionsProtocol,
@@ -12,14 +11,10 @@ import {
 export type ShowAllCategoriesRequest = Partial<PaginationOptionsProtocol>;
 export type ShowAllCategoriesResponse = Promise<CategoriesPaginateResponse>;
 
-@injectable()
 export class ShowAllCategoriesUseCase
   implements UseCaseProtocol<ShowAllCategoriesRequest, ShowAllCategoriesResponse>
 {
-  constructor(
-    @inject('CategoryRepository')
-    private readonly _categoryRepository: CategoryRepositoryProtocol,
-  ) {}
+  constructor(private readonly _categoryRepository: CategoryRepositoryProtocol) {}
 
   public async execute({
     order,

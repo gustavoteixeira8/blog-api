@@ -1,8 +1,7 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { CategoryRepositoryProtocol } from '../repositories/CategoryRepositoryProtocol';
+import { CategoryRepositoryProtocol } from '../../repositories/CategoryRepositoryProtocol';
 import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
-import { Category } from '../entities/Category';
+import { Category } from '../../entities/Category';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import {
   CategoryNameAlreadyExistsError,
@@ -17,16 +16,12 @@ export interface CreateCategoryRequest {
   userId: string;
 }
 
-@injectable()
 export class CreateCategoryUseCase
   implements UseCaseProtocol<CreateCategoryRequest, Promise<void>>
 {
   constructor(
-    @inject('CategoryRepository')
     private readonly _categoryRepository: CategoryRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugAdapter')
     private readonly _slugAdapter: SlugAdapterProtocol,
   ) {}
 

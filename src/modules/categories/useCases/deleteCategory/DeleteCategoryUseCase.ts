@@ -1,6 +1,5 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { CategoryRepositoryProtocol } from '../repositories/CategoryRepositoryProtocol';
+import { CategoryRepositoryProtocol } from '../../repositories/CategoryRepositoryProtocol';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import {
   CategoryIsRelatedWithArticleError,
@@ -16,14 +15,11 @@ export interface DeleteCategoryRequest {
   userId: string;
 }
 
-@injectable()
 export class DeleteCategoryUseCase
   implements UseCaseProtocol<DeleteCategoryRequest, Promise<void>>
 {
   constructor(
-    @inject('CategoryRepository')
     private readonly _categoryRepository: CategoryRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
   ) {}
 

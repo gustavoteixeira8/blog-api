@@ -1,6 +1,5 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { CategoryRepositoryProtocol } from '../repositories/CategoryRepositoryProtocol';
+import { CategoryRepositoryProtocol } from '../../repositories/CategoryRepositoryProtocol';
 import { CategoryName } from '@shared/core/entities/valueObjects/CategoryName';
 import { Slug } from '@shared/core/entities/valueObjects/Slug';
 import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
@@ -22,16 +21,12 @@ export interface UpdateCategoryRequest {
   name: string;
 }
 
-@injectable()
 export class UpdateCategoryUseCase
   implements UseCaseProtocol<UpdateCategoryRequest, Promise<void>>
 {
   constructor(
-    @inject('CategoryRepository')
     private readonly _categoryRepository: CategoryRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugAdapter')
     private readonly _slugAdapter: SlugAdapterProtocol,
   ) {}
 
