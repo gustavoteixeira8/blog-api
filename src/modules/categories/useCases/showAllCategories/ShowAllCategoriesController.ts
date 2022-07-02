@@ -23,6 +23,6 @@ export class ShowAllCategoriesController extends WebController {
 
     const articlesFormatted = result.data.map(CategoryMapper.toDetails);
 
-    return ok({ message: null, data: { data: articlesFormatted, ...result } });
+    return ok({ message: null, data: { ...result, data: articlesFormatted } });
   }
 }
