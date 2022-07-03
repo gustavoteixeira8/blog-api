@@ -1,4 +1,3 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { CategoryRepositoryProtocol } from '@modules/categories/repositories/CategoryRepositoryProtocol';
@@ -10,7 +9,7 @@ import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterPro
 import { appConfig } from '@config/app';
 import { ForeignKeyId } from '@shared/core/entities/valueObjects/ForeignKeyId';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
-import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
+import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 import {
   ArticleIsNotYoursError,
   ArticleNotFoundError,
@@ -33,18 +32,12 @@ export interface UpdateArticleRequest {
   articleId: string;
 }
 
-@injectable()
 export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleRequest, Promise<void>> {
   constructor(
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('CategoryRepository')
     private readonly _categoryRepository: CategoryRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugAdapter')
     private readonly _slugAdapter: SlugAdapterProtocol,
-    @inject('MailQueueAdapter')
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 

@@ -8,22 +8,18 @@ import {
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
-import { inject, injectable } from 'tsyringe';
-import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
+import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 
 export interface RecoverArticleRequest {
   articleId: string;
   userId: string;
 }
 
-@injectable()
 export class RecoverArticleUseCase
   implements UseCaseProtocol<RecoverArticleRequest, Promise<void>>
 {
   constructor(
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
   ) {}
 

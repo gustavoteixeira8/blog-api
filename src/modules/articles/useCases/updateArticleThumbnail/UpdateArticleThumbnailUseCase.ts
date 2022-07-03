@@ -1,7 +1,6 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
-import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
+import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { StorageOptions } from '@shared/adapters/storageAdapter/StorageAdapterProtocol';
 import { ImageName } from '@shared/core/entities/valueObjects/ImageName';
@@ -21,16 +20,12 @@ export interface UpdateArticleThumbnailRequest {
   userId: string;
 }
 
-@injectable()
 export class UpdateArticleThumbnailUseCase
   implements UseCaseProtocol<UpdateArticleThumbnailRequest, Promise<void>>
 {
   constructor(
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('StorageQueueAdapter')
     private readonly _storageQueueAdapter: QueueAdapterProtocol<StorageOptions>,
   ) {}
 

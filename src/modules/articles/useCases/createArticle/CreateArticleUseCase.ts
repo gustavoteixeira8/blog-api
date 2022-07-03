@@ -1,13 +1,12 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { CategoryRepositoryProtocol } from '@modules/categories/repositories/CategoryRepositoryProtocol';
-import { Article } from '../entities/Article';
+import { Article } from '../../entities/Article';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
-import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
+import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 import {
   ArticleTitleAlreadyExistsError,
   CategoryNotFoundError,
@@ -25,18 +24,12 @@ export interface CreateArticleRequest {
   categoriesId: string[];
 }
 
-@injectable()
 export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleRequest, Promise<void>> {
   constructor(
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('CategoryRepository')
     private readonly _categoryRepository: CategoryRepositoryProtocol,
-    @inject('UserRepository')
     private readonly _userRepository: UserRepositoryProtocol,
-    @inject('SlugAdapter')
     private readonly _slugAdapter: SlugAdapterProtocol,
-    @inject('MailQueueAdapter')
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 

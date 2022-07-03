@@ -1,4 +1,3 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { OrderByProtocol } from '@shared/core/repositories/PaginationProtocol';
 import {
@@ -6,19 +5,15 @@ import {
   ArticlesPaginateResponse,
   SearchArticlesPaginate,
   SearchArticlesProtocol,
-} from '../repositories/ArticleRepositoryProtocol';
+} from '../../repositories/ArticleRepositoryProtocol';
 
 export type SearchArticlesRequest = SearchArticlesPaginate<SearchArticlesProtocol>;
 export type SearchArticlesResponse = Promise<ArticlesPaginateResponse>;
 
-@injectable()
 export class SearchPublicArticlesUseCase
   implements UseCaseProtocol<SearchArticlesRequest, SearchArticlesResponse>
 {
-  constructor(
-    @inject('ArticleRepository')
-    private readonly _articleRepository: ArticleRepositoryProtocol,
-  ) {}
+  constructor(private readonly _articleRepository: ArticleRepositoryProtocol) {}
 
   public async execute({
     order,

@@ -1,14 +1,10 @@
-import { inject, injectable } from 'tsyringe';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
-import { ArticleRepositoryProtocol } from '../repositories/ArticleRepositoryProtocol';
+import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 
-@injectable()
 export class DeleteAllArticlesUseCase implements UseCaseProtocol<void, Promise<void>> {
   constructor(
-    @inject('ArticleRepository')
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    @inject('DateAdapter')
     private readonly _dateAdapter: DateAdapterProtocol,
   ) {}
 
