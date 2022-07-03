@@ -13,7 +13,7 @@ import { ensureAuthentication } from '@shared/infra/http/middlewares/ensureAuthe
 import { ensureUserIsAdmin } from '@shared/infra/http/middlewares/ensureUserIsAdmin';
 import { Router } from 'express';
 
-const userRoutes = () => {
+export const setupUserRoutes = () => {
   const userRoutes = Router();
 
   userRoutes.use(ensureAuthentication);
@@ -35,5 +35,3 @@ const userRoutes = () => {
 
   return userRoutes;
 };
-
-export { userRoutes };
