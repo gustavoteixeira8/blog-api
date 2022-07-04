@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm-run-all --parallel dev:server dev:queue | pino-pretty -c",
+    "dev": "clear && npm-run-all --parallel dev:server dev:queue | pino-pretty -c",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules src/shared/infra/http/index.ts",
     "dev:queue": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules src/shared/infra/queue/index.ts",
     "typeorm:dev": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
