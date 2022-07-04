@@ -5,9 +5,11 @@ import { Request, Response } from 'express';
 export const controllerAdapter = (webController: WebController) => {
   return async (req: Request, res: Response) => {
     const httpRequest: HttpRequest = {
+      headers: req.headers,
       body: req.body,
       params: req.params,
       query: req.query,
+      file: req.file,
       userData: req.userData,
     };
     const httpResponse = await webController.handleRequest(httpRequest);

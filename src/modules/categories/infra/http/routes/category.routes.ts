@@ -4,8 +4,9 @@ import { makeShowAllCategories } from '@modules/categories/useCases/showAllCateg
 import { makeShowCategoryBySlug } from '@modules/categories/useCases/showCategoryBySlug/makeShowCategoryBySlug';
 import { makeUpdateCategory } from '@modules/categories/useCases/updateCategory/makeUpdateCategory';
 import { controllerAdapter } from '@shared/adapters/expressAdapter/controllerAdapter';
-import { ensureAuthentication } from '@shared/infra/http/middlewares/ensureAuthentication';
-import { ensureUserIsAdmin } from '@shared/infra/http/middlewares/ensureUserIsAdmin';
+import { middlewareAdapter } from '@shared/adapters/expressAdapter/middlewareAdapter';
+import { makeEnsureAdmin } from '@shared/infra/http/middlewares/ensureAdmin/makeEnsureAdmin';
+import { makeEnsureAuthentication } from '@shared/infra/http/middlewares/ensureAuth/makeEnsureAuthentication';
 import { Router } from 'express';
 
 export const setupCategoryRoutes = () => {
@@ -14,8 +15,8 @@ export const setupCategoryRoutes = () => {
   categoryRoutes.get('/', controllerAdapter(makeShowAllCategories()));
   categoryRoutes.get('/:categorySlug', controllerAdapter(makeShowCategoryBySlug()));
 
-  categoryRoutes.use(ensureAuthentication);
-  categoryRoutes.use(ensureUserIsAdmin);
+  categoryRoutes.use(middlewareAdapter(makeEnsureAuthentication()));
+  categoryRoutes.use(middlewareAdapter(makeEnsureAdmin()));
 
   categoryRoutes.post('/', controllerAdapter(makeCreateCategory()));
   categoryRoutes.put('/:categoryId', controllerAdapter(makeUpdateCategory()));

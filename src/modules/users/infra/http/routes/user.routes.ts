@@ -9,23 +9,24 @@ import { makeShowUserByUsername } from '@modules/users/useCases/showUserByUserna
 import { makeSoftDeleteUser } from '@modules/users/useCases/softDeleteUser/makeSoftDeleteUser';
 import { makeUpdateUser } from '@modules/users/useCases/updateUser/makeUpdateUser';
 import { controllerAdapter } from '@shared/adapters/expressAdapter/controllerAdapter';
-import { ensureAuthentication } from '@shared/infra/http/middlewares/ensureAuthentication';
-import { ensureUserIsAdmin } from '@shared/infra/http/middlewares/ensureUserIsAdmin';
+import { middlewareAdapter } from '@shared/adapters/expressAdapter/middlewareAdapter';
+import { makeEnsureAuthentication } from '@shared/infra/http/middlewares/ensureAuth/makeEnsureAuthentication';
 import { Router } from 'express';
+import { makeEnsureAdmin } from '@shared/infra/http/middlewares/ensureAdmin/makeEnsureAdmin';
 
 export const setupUserRoutes = () => {
   const userRoutes = Router();
 
-  userRoutes.use(ensureAuthentication);
+  userRoutes.use(middlewareAdapter(makeEnsureAuthentication()));
 
-  userRoutes.post('/', ensureUserIsAdmin, controllerAdapter(makeCreateUser()));
+  userRoutes.post('/', middlewareAdapter(makeEnsureAdmin()), controllerAdapter(makeCreateUser()));
 
   userRoutes.put('/', controllerAdapter(makeUpdateUser()));
   userRoutes.delete('/', controllerAdapter(makeSoftDeleteUser()));
   userRoutes.get('/me', controllerAdapter(makeShowUserById()));
   userRoutes.get('/:username', controllerAdapter(makeShowUserByUsername()));
 
-  userRoutes.use(ensureUserIsAdmin);
+  userRoutes.use(middlewareAdapter(makeEnsureAdmin()));
 
   userRoutes.get('/', controllerAdapter(makeSearchUsersController()));
   userRoutes.get('/me/article', controllerAdapter(makeSearchArticlesForUserCreator()));
