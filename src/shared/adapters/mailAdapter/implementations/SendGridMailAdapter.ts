@@ -2,25 +2,24 @@ import { appConfig } from '@config/app';
 import { mailConfig } from '@config/mail';
 import sendGrid from '@sendgrid/mail';
 import { logger } from '@shared/log';
-import { HandlebarsAdapter } from '@shared/adapters/templateAdapter/implementations/HandlebarsAdapter';
 import {
   AddressOptionsProtocol,
   MailOptionsProtocol,
   MailAdapterProtocol,
 } from '../MailAdapterProtocol';
+import { TemplateAdapterProtocol } from '@shared/adapters/templateAdapter/TemplateAdapterProtocol';
 
 export class SendGridMailAdapter implements MailAdapterProtocol {
   private readonly _apiKey = mailConfig.sendGrid.apiKey;
   private readonly _appAddress: AddressOptionsProtocol = appConfig.mail;
 
-  constructor() {
+  constructor(private _templateAdapter: TemplateAdapterProtocol) {
     sendGrid.setApiKey(this._apiKey);
   }
 
   public async sendMail(options: MailOptionsProtocol): Promise<void> {
     try {
-      const handlebars = new HandlebarsAdapter();
-      const htmlParsed = await handlebars.parse({
+      const htmlParsed = await this._templateAdapter.parse({
         file: options.html,
         variables: options.context,
       });

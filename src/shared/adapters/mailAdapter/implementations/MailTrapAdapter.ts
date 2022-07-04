@@ -5,20 +5,21 @@ import {
   MailOptionsProtocol,
   MailAdapterProtocol,
 } from '../MailAdapterProtocol';
-import { HandlebarsAdapter } from '@shared/adapters/templateAdapter/implementations/HandlebarsAdapter';
 import { appConfig } from '@config/app';
 import { logger } from '@shared/log';
+import { TemplateAdapterProtocol } from '@shared/adapters/templateAdapter/TemplateAdapterProtocol';
 
 export class MailTrapAdapter implements MailAdapterProtocol {
   private readonly _mailerConfig: Record<string, any> = mailConfig.mailtrap;
   private readonly _appAddress: AddressOptionsProtocol = appConfig.mail;
 
+  constructor(private _templateAdapter: TemplateAdapterProtocol) {}
+
   async sendMail(options: MailOptionsProtocol): Promise<void> {
     const transporter = nodemailer.createTransport(this._mailerConfig);
 
     try {
-      const handlebars = new HandlebarsAdapter();
-      const htmlParsed = await handlebars.parse({
+      const htmlParsed = await this._templateAdapter.parse({
         file: options.html,
         variables: options.context,
       });

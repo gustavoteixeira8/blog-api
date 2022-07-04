@@ -1,5 +1,7 @@
+import { makeTemplateAdapter } from '../templateAdapter/makeTemplateAdapter';
 import { MailTrapAdapter } from './implementations/MailTrapAdapter';
 
 export const makeMailAdapter = () => {
-  return new MailTrapAdapter();
+  const templateAdapter = makeTemplateAdapter();
+  return new MailTrapAdapter(templateAdapter);
 };
