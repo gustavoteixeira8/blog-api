@@ -1,5 +1,5 @@
 import { InvalidImageNameError } from '@shared/core/errors';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '../ValueObjectProtocol';
 
 export class ImageName extends ValueObjectProtocol<string> {
   public static create(image: string): ImageName | InvalidImageNameError {

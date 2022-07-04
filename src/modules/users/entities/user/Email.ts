@@ -1,6 +1,6 @@
 import { InvalidEmailError } from '@shared/core/errors';
 import isEmail from 'validator/lib/isEmail';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '@shared/core/entities/ValueObjectProtocol';
 
 export class Email extends ValueObjectProtocol<string> {
   public static create(email: string): Email | InvalidEmailError {

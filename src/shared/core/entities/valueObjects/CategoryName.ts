@@ -1,5 +1,5 @@
 import { InvalidCategoryNameError } from '@shared/core/errors';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '../ValueObjectProtocol';
 
 export class CategoryName extends ValueObjectProtocol<string> {
   public static create(name: string): CategoryName | InvalidCategoryNameError {

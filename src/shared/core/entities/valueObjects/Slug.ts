@@ -1,6 +1,6 @@
 import { InvalidSlugError } from '@shared/core/errors';
 import isSlug from 'validator/lib/isSlug';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '../ValueObjectProtocol';
 
 export class Slug extends ValueObjectProtocol<string> {
   public static create(slug: string): Slug | InvalidSlugError {

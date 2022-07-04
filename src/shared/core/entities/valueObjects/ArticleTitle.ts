@@ -1,5 +1,5 @@
 import { InvalidArticleTitleError } from '@shared/core/errors';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '../ValueObjectProtocol';
 
 export class ArticleTitle extends ValueObjectProtocol<string> {
   public static create(title: string): ArticleTitle | InvalidArticleTitleError {

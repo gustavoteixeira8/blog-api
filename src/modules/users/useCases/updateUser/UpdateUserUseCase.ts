@@ -1,7 +1,7 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { PersonName } from '@shared/core/entities/valueObjects/PersonName';
-import { Email } from '@shared/core/entities/valueObjects/Email';
-import { Username } from '@shared/core/entities/valueObjects/Username';
+import { PersonName } from '@modules/users/entities/user/PersonName';
+import { Email } from '@modules/users/entities/user/Email';
+import { Username } from '@modules/users/entities/user/Username';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';

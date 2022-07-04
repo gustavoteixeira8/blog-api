@@ -1,6 +1,6 @@
 import { InvalidPasswordError } from '@shared/core/errors';
 import isStrongPassword from 'validator/lib/isStrongPassword';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '@shared/core/entities/ValueObjectProtocol';
 
 export class Password extends ValueObjectProtocol<string> {
   protected constructor(value: string, private _isHash = false) {

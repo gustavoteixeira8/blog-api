@@ -1,5 +1,5 @@
 import { InvalidFullNameError } from '@shared/core/errors';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '@shared/core/entities/ValueObjectProtocol';
 
 export class PersonName extends ValueObjectProtocol<string> {
   public static create(name: string): PersonName | InvalidFullNameError {

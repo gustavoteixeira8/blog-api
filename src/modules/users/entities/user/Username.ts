@@ -1,5 +1,5 @@
 import { InvalidUsernameError } from '@shared/core/errors';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '@shared/core/entities/ValueObjectProtocol';
 
 export class Username extends ValueObjectProtocol<string> {
   public static create(username: string): Username | InvalidUsernameError {

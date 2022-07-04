@@ -1,5 +1,5 @@
 import { InvalidArticleTextError } from '@shared/core/errors';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '../ValueObjectProtocol';
 
 export class ArticleText extends ValueObjectProtocol<string> {
   public static create(text: string): ArticleText | InvalidArticleTextError {

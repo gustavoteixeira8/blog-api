@@ -1,4 +1,4 @@
-import { Identifier } from './valueObjects/Identifier';
+import { Identifier } from './Identifier';
 
 export interface EntityProtocol {
   readonly id?: Identifier;

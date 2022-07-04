@@ -7,7 +7,7 @@ import { Slug } from '@shared/core/entities/valueObjects/Slug';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
-import { ForeignKeyId } from '@shared/core/entities/valueObjects/ForeignKeyId';
+import { ForeignKeyId } from '@shared/core/entities/ForeignKeyId';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 import {

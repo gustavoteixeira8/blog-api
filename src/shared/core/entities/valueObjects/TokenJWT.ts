@@ -1,5 +1,5 @@
 import isJWT from 'validator/lib/isJWT';
-import { ValueObjectProtocol } from './ValueObjectProtocol';
+import { ValueObjectProtocol } from '../ValueObjectProtocol';
 import { InvalidTokenError } from '@shared/core/errors';
 
 export class TokenJWT extends ValueObjectProtocol<string> {
