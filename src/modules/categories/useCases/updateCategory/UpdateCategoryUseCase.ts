@@ -1,7 +1,7 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { CategoryRepositoryProtocol } from '../../repositories/CategoryRepositoryProtocol';
-import { CategoryName } from '@shared/core/entities/valueObjects/CategoryName';
-import { Slug } from '@shared/core/entities/valueObjects/Slug';
+import { CategoryName } from '@shared/core/valueObjects/CategoryName';
+import { Slug } from '@shared/core/valueObjects/Slug';
 import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import {

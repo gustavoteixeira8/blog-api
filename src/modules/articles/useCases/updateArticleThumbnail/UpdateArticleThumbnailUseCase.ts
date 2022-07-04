@@ -3,7 +3,7 @@ import { UserRepositoryProtocol } from '@modules/users/repositories/UserReposito
 import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { StorageOptions } from '@shared/adapters/storageAdapter/StorageAdapterProtocol';
-import { ImageName } from '@shared/core/entities/valueObjects/ImageName';
+import { ImageName } from '@shared/core/valueObjects/ImageName';
 import {
   ArticleIsNotYoursError,
   ArticleNotFoundError,

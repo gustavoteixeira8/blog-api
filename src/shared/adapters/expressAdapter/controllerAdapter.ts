@@ -13,6 +13,6 @@ export const controllerAdapter = (webController: WebController) => {
       userData: req.userData,
     };
     const httpResponse = await webController.handleRequest(httpRequest);
-    return res.status(httpResponse.status).json(httpResponse.body);
+    return res.status(httpResponse.status).json(httpResponse);
   };
 };

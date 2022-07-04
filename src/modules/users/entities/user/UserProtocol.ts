@@ -1,9 +1,9 @@
-import { Username } from '@shared/core/entities/valueObjects/Username';
+import { Username } from '@shared/core/valueObjects/Username';
 import { TimestampProtocol } from '@shared/core/entities/TimestampProtocol';
-import { Email } from '@shared/core/entities/valueObjects/Email';
-import { Identifier } from '@shared/core/entities/valueObjects/Identifier';
-import { Password } from '@shared/core/entities/valueObjects/Password';
-import { PersonName } from '@shared/core/entities/valueObjects/PersonName';
+import { Email } from '@shared/core/valueObjects/Email';
+import { Identifier } from '@shared/core/valueObjects/Identifier';
+import { Password } from '@shared/core/valueObjects/Password';
+import { PersonName } from '@shared/core/valueObjects/PersonName';
 
 export interface UserProtocol extends TimestampProtocol {
   readonly id?: Identifier;

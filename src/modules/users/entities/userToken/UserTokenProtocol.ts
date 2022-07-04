@@ -1,8 +1,8 @@
 import { TimestampProtocol } from '@shared/core/entities/TimestampProtocol';
-import { ForeignKeyId } from '@shared/core/entities/valueObjects/ForeignKeyId';
-import { Identifier } from '@shared/core/entities/valueObjects/Identifier';
-import { TokenJWT } from '@shared/core/entities/valueObjects/TokenJWT';
-import { TokenType } from '@shared/core/entities/valueObjects/TokenType';
+import { ForeignKeyId } from '@shared/core/valueObjects/ForeignKeyId';
+import { Identifier } from '@shared/core/valueObjects/Identifier';
+import { TokenJWT } from '@shared/core/valueObjects/TokenJWT';
+import { TokenType } from '@shared/core/valueObjects/TokenType';
 
 export interface UserTokenProtocol extends Pick<TimestampProtocol, 'createdAt'> {
   readonly id?: Identifier;

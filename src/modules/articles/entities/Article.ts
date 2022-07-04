@@ -1,11 +1,11 @@
 import { ArticleDTO } from '@modules/articles/dtos/ArticleDTO';
 import { Entity } from '@shared/core/entities/Entity';
-import { ArticleText } from '@shared/core/entities/valueObjects/ArticleText';
-import { ArticleTitle } from '@shared/core/entities/valueObjects/ArticleTitle';
-import { ForeignKeyId } from '@shared/core/entities/valueObjects/ForeignKeyId';
-import { Identifier } from '@shared/core/entities/valueObjects/Identifier';
-import { ImageName } from '@shared/core/entities/valueObjects/ImageName';
-import { Slug } from '@shared/core/entities/valueObjects/Slug';
+import { ArticleText } from '@shared/core/valueObjects/ArticleText';
+import { ArticleTitle } from '@shared/core/valueObjects/ArticleTitle';
+import { ForeignKeyId } from '@shared/core/valueObjects/ForeignKeyId';
+import { Identifier } from '@shared/core/valueObjects/Identifier';
+import { ImageName } from '@shared/core/valueObjects/ImageName';
+import { Slug } from '@shared/core/valueObjects/Slug';
 import { EntityError } from '@shared/core/errors';
 import { ArticleProtocol } from './ArticleProtocol';
 

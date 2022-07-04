@@ -1,7 +1,7 @@
 import { Entity } from '@shared/core/entities/Entity';
-import { CategoryName } from '@shared/core/entities/valueObjects/CategoryName';
-import { Identifier } from '@shared/core/entities/valueObjects/Identifier';
-import { Slug } from '@shared/core/entities/valueObjects/Slug';
+import { CategoryName } from '@shared/core/valueObjects/CategoryName';
+import { Identifier } from '@shared/core/valueObjects/Identifier';
+import { Slug } from '@shared/core/valueObjects/Slug';
 import { EntityError } from '@shared/core/errors';
 import { CategoryDTO } from '../dtos/CategoryDTO';
 import { CategoryProtocol } from './CategoryProtocol';

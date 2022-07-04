@@ -4,7 +4,7 @@ import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterPro
 import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
-import { Password } from '@shared/core/entities/valueObjects/Password';
+import { Password } from '@shared/core/valueObjects/Password';
 import { HashAdapterProtocol } from '@shared/adapters/hashAdapter/HashAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserTokenRepositoryProtocol } from '../../repositories/UserTokenRepositoryProtocol';

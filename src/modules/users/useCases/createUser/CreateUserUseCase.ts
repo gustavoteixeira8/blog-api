@@ -4,7 +4,7 @@ import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapter
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
-import { Password } from '@shared/core/entities/valueObjects/Password';
+import { Password } from '@shared/core/valueObjects/Password';
 import { User } from '../../entities/user/User';
 import {
   EmailAlreadyExistsError,

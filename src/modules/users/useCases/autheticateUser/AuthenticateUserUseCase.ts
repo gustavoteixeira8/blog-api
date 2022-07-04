@@ -1,5 +1,5 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
-import { Email } from '@shared/core/entities/valueObjects/Email';
+import { Email } from '@shared/core/valueObjects/Email';
 import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
 import { HashAdapterProtocol } from '@shared/adapters/hashAdapter/HashAdapterProtocol';
 import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';

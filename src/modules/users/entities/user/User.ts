@@ -1,11 +1,11 @@
-import { Username } from '@shared/core/entities/valueObjects/Username';
+import { Username } from '@shared/core/valueObjects/Username';
 import { Entity } from '@shared/core/entities/Entity';
-import { Email } from '@shared/core/entities/valueObjects/Email';
-import { Password } from '@shared/core/entities/valueObjects/Password';
-import { PersonName } from '@shared/core/entities/valueObjects/PersonName';
+import { Email } from '@shared/core/valueObjects/Email';
+import { Password } from '@shared/core/valueObjects/Password';
+import { PersonName } from '@shared/core/valueObjects/PersonName';
 import { EntityError } from '@shared/core/errors';
 import { UserProtocol } from './UserProtocol';
-import { Identifier } from '@shared/core/entities/valueObjects/Identifier';
+import { Identifier } from '@shared/core/valueObjects/Identifier';
 import { UserDTO } from '@modules/users/dtos/UserDTO';
 
 export class User extends Entity<UserProtocol> implements UserProtocol {

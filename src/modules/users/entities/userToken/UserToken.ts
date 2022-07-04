@@ -1,9 +1,9 @@
 import { UserTokenDTO } from '@modules/users/dtos/UserTokenDTO';
 import { Entity } from '@shared/core/entities/Entity';
-import { ForeignKeyId } from '@shared/core/entities/valueObjects/ForeignKeyId';
-import { Identifier } from '@shared/core/entities/valueObjects/Identifier';
-import { TokenJWT } from '@shared/core/entities/valueObjects/TokenJWT';
-import { TokenType } from '@shared/core/entities/valueObjects/TokenType';
+import { ForeignKeyId } from '@shared/core/valueObjects/ForeignKeyId';
+import { Identifier } from '@shared/core/valueObjects/Identifier';
+import { TokenJWT } from '@shared/core/valueObjects/TokenJWT';
+import { TokenType } from '@shared/core/valueObjects/TokenType';
 import { EntityError } from '@shared/core/errors';
 import { UserTokenProtocol } from './UserTokenProtocol';
 
