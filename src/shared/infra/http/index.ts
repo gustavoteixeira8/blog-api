@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import 'express-async-errors';
 import 'dotenv/config';
-import '@shared/containers';
 import { Server } from './server';
 import { logger } from '@shared/log';
 

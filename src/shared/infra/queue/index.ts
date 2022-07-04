@@ -1,10 +1,8 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import '@shared/containers';
 import { logger } from '@shared/log';
 import { makeProcessMailQueue } from './services/processMailQueue/makeProcessMailQueue';
 import { makeProcessStorageQueue } from './services/processStorageQueue/makeProcessStorageQueue';
-import { connectDatabase } from '../database';
 
 export enum ExitStatus {
   success = 0,
