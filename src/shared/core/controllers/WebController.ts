@@ -10,10 +10,19 @@ import {
   ResolveStringsResponse,
 } from './Responses';
 
-export abstract class WebController {
+export abstract class WebController<T = UseCaseProtocol<any, any>> {
   public abstract handleRequest(httpRequest: HttpRequest): Promise<HttpResponse>;
 
-  constructor(protected _useCase: UseCaseProtocol<any, any>) {}
+  constructor(protected _useCase: T) {}
+
+  protected isTypeofErrors(value: any, ...errors: string[]): value is Error {
+    for (const errorName of errors) {
+      if (value instanceof Error && value.name === errorName) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   protected resolveQueryNumbers(object: ResolveNumbersResponse) {
     const result: ResolveNumbersResponse = {};
