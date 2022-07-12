@@ -1,6 +1,6 @@
 import { HttpError } from '@shared/infra/http/errors/httpErrors';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
-import { errorResponse } from '@shared/core/http/HttpResponse';
+import { defaultResponse } from '@shared/core/http/HttpResponse';
 import { WebMiddleware } from '@shared/core/middlewares/WebMiddleware';
 import { NextFunction, Request, Response } from 'express';
 
@@ -19,7 +19,7 @@ export const middlewareAdapter = (webMiddleware: WebMiddleware) => {
     if (middleware instanceof HttpError) {
       return res
         .status(middleware.status)
-        .json(errorResponse({ errors: middleware.errors, status: middleware.status }));
+        .json(defaultResponse({ message: middleware.errors, status: middleware.status }));
     }
 
     for (const key in middleware) {
