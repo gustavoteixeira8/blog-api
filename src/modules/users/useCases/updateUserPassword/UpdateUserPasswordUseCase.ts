@@ -23,8 +23,18 @@ export interface UpdatePasswordRequest {
   token: string;
 }
 
+export type UpdatePasswordResponse = Promise<
+  | void
+  | MissingParamError
+  | InvalidTokenError
+  | PasswordMustBeEqualConfirmPasswordError
+  | InvalidPasswordError
+  | UserNotFoundError
+  | UserEmailIsNotVerifiedError
+>;
+
 export class UpdateUserPasswordUseCase
-  implements UseCaseProtocol<UpdatePasswordRequest, Promise<void>>
+  implements UseCaseProtocol<UpdatePasswordRequest, UpdatePasswordResponse>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
@@ -35,21 +45,25 @@ export class UpdateUserPasswordUseCase
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ password, confirmPassword, token }: UpdatePasswordRequest): Promise<void> {
-    if (!token) throw new MissingParamError('Token');
+  public async execute({
+    password,
+    confirmPassword,
+    token,
+  }: UpdatePasswordRequest): UpdatePasswordResponse {
+    if (!token) return new MissingParamError('Token');
 
     if (!password || !confirmPassword) {
-      throw new MissingParamError('Password and confirm password');
+      return new MissingParamError('Password and confirm password');
     }
 
     if (password !== confirmPassword) {
-      throw new PasswordMustBeEqualConfirmPasswordError();
+      return new PasswordMustBeEqualConfirmPasswordError();
     }
 
     const userToken = await this._userTokenRepository.findByToken(token);
 
     if (!userToken || userToken.type !== 'updatePassword') {
-      throw new InvalidTokenError();
+      return new InvalidTokenError();
     }
 
     const tokenIsExpired = this._dateAdapter.isAfter(new Date(), userToken.expiresIn);
@@ -57,14 +71,14 @@ export class UpdateUserPasswordUseCase
     if (tokenIsExpired) {
       await this._userTokenRepository.delete(userToken.id.value);
 
-      throw new InvalidTokenError();
+      return new InvalidTokenError();
     }
 
     try {
       this._tokenAdapter.verify(userToken.token.value);
     } catch (error) {
       await this._userTokenRepository.delete(userToken.id.value);
-      throw new InvalidTokenError();
+      return new InvalidTokenError();
     }
 
     const user = await this._userRepository.findById(userToken.userId.value, {
@@ -72,22 +86,22 @@ export class UpdateUserPasswordUseCase
     });
 
     if (!user) {
-      throw new UserNotFoundError();
+      return new UserNotFoundError();
     }
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     const isTheSamePassword = await this._hashAdapter.compare(password, user.password.value);
 
     if (isTheSamePassword) {
-      throw new InvalidPasswordError();
+      return new InvalidPasswordError();
     }
 
     const isValidPassword = Password.create(password, false);
 
     if (isValidPassword instanceof Error) {
-      throw new InvalidPasswordError();
+      return new InvalidPasswordError();
     }
 
     const hash = await this._hashAdapter.generate(password);

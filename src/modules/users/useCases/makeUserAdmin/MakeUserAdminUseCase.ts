@@ -15,14 +15,23 @@ export interface MakeUserAdminRequest {
   adminId: string;
 }
 
-export class MakeUserAdminUseCase implements UseCaseProtocol<MakeUserAdminRequest, Promise<void>> {
+export type MakeUserAdminResponse =
+  | MissingParamError
+  | UserNotFoundError
+  | UserIsNotAdminError
+  | UserEmailIsNotVerifiedError
+  | void;
+
+export class MakeUserAdminUseCase
+  implements UseCaseProtocol<MakeUserAdminRequest, Promise<MakeUserAdminResponse>>
+{
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ adminId, userId }: MakeUserAdminRequest): Promise<void> {
-    if (!adminId || !userId) throw new MissingParamError('Admin id and user id');
+  public async execute({ adminId, userId }: MakeUserAdminRequest): Promise<MakeUserAdminResponse> {
+    if (!adminId || !userId) return new MissingParamError('Admin id and user id');
 
     const [admin, userToMakeAdmin] = await Promise.all([
       this._userRepository.findById(adminId, { withDeleted: false }),
@@ -30,15 +39,15 @@ export class MakeUserAdminUseCase implements UseCaseProtocol<MakeUserAdminReques
     ]);
 
     if (!admin || !userToMakeAdmin) {
-      throw new UserNotFoundError('Admin or user to make admin not found');
+      return new UserNotFoundError('Admin or user to make admin not found');
     }
 
     if (!admin.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     if (!admin.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     if (userToMakeAdmin.isAdmin) {
@@ -46,7 +55,7 @@ export class MakeUserAdminUseCase implements UseCaseProtocol<MakeUserAdminReques
     }
 
     if (!userToMakeAdmin.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     userToMakeAdmin.makeAdmin();

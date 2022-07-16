@@ -9,7 +9,13 @@ export interface TokenRequest {
   token: string;
 }
 
-export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Promise<void>> {
+export type VerifyUserEmailResponse = Promise<
+  void | MissingParamError | InvalidTokenError | UserNotFoundError
+>;
+
+export class VerifyUserEmailUseCase
+  implements UseCaseProtocol<TokenRequest, VerifyUserEmailResponse>
+{
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
@@ -17,13 +23,13 @@ export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Pro
     private readonly _tokenAdapter: TokenAdapterProtocol,
   ) {}
 
-  public async execute({ token }: TokenRequest): Promise<void> {
-    if (!token) throw new MissingParamError('Token');
+  public async execute({ token }: TokenRequest): VerifyUserEmailResponse {
+    if (!token) return new MissingParamError('Token');
 
     const tokenExists = await this._userTokenRepository.findByToken(token);
 
     if (!tokenExists || tokenExists.type !== 'verifyEmail') {
-      throw new InvalidTokenError();
+      return new InvalidTokenError();
     }
 
     const tokenIsExpired = this._dateAdapter.isAfter(new Date(), tokenExists.expiresIn);
@@ -31,14 +37,14 @@ export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Pro
     if (tokenIsExpired) {
       await this._userTokenRepository.delete(tokenExists.id.value);
 
-      throw new InvalidTokenError();
+      return new InvalidTokenError();
     }
 
     try {
       this._tokenAdapter.verify(token);
     } catch (error) {
       await this._userTokenRepository.delete(tokenExists.id.value);
-      throw new InvalidTokenError();
+      return new InvalidTokenError();
     }
 
     const user = await this._userRepository.findById(tokenExists.userId.value, {
@@ -48,7 +54,7 @@ export class VerifyUserEmailUseCase implements UseCaseProtocol<TokenRequest, Pro
     if (!user || user.isEmailVerified) {
       await this._userTokenRepository.delete(tokenExists.id.value);
 
-      throw new UserNotFoundError();
+      return new UserNotFoundError();
     }
 
     user.verifyEmail();

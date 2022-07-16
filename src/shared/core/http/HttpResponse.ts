@@ -68,6 +68,16 @@ export const notFound = ({ data, message }: Body): HttpResponse => {
   };
 };
 
+export const serverError = ({ data, message }: Body): HttpResponse => {
+  return {
+    body: {
+      data: data || null,
+      message: message || null,
+    },
+    status: 500,
+  };
+};
+
 export const defaultResponse = ({
   data,
   message,

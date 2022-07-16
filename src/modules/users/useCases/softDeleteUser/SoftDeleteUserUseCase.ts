@@ -13,23 +13,29 @@ export interface SoftDeleteRequest {
   userId: string;
 }
 
-export class SoftDeleteUserUseCase implements UseCaseProtocol<SoftDeleteRequest, Promise<void>> {
+export type SoftDeleteResponse = Promise<
+  void | MissingParamError | UserNotFoundError | UserEmailIsNotVerifiedError
+>;
+
+export class SoftDeleteUserUseCase
+  implements UseCaseProtocol<SoftDeleteRequest, SoftDeleteResponse>
+{
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ userId }: SoftDeleteRequest): Promise<void> {
-    if (!userId) throw new MissingParamError('User id');
+  public async execute({ userId }: SoftDeleteRequest): SoftDeleteResponse {
+    if (!userId) return new MissingParamError('User id');
 
     const userExists = await this._userRepository.findById(userId, { withDeleted: false });
 
     if (!userExists) {
-      throw new UserNotFoundError();
+      return new UserNotFoundError();
     }
 
     if (!userExists.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     userExists.delete();

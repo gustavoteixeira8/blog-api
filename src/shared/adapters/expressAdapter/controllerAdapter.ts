@@ -12,7 +12,7 @@ export const controllerAdapter = (webController: WebController) => {
       file: req.file,
       userData: req.userData,
     };
-    const httpResponse = await webController.handleRequest(httpRequest);
+    const httpResponse = await webController.handle(httpRequest);
     return res.status(httpResponse.status).json(httpResponse);
   };
 };

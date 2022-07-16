@@ -7,20 +7,23 @@ import { User } from '../../entities/user/User';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
 import { LoginOrPasswordInvalidError, MissingParamError } from '@shared/core/errors';
 
-export interface AuthenticationRequest {
+export interface AuthRequest {
   login: string;
   password: string;
 }
 
-export interface AuthenticationResponse {
-  accessToken: string;
-  expiresIn: Date;
-  userId: string;
-  userIsRecovered: boolean;
-}
+export type AuthResponse =
+  | {
+      accessToken: string;
+      expiresIn: Date;
+      userId: string;
+      userIsRecovered: boolean;
+    }
+  | LoginOrPasswordInvalidError
+  | MissingParamError;
 
 export class AuthenticateUserUseCase
-  implements UseCaseProtocol<AuthenticationRequest, Promise<AuthenticationResponse>>
+  implements UseCaseProtocol<AuthRequest, Promise<AuthResponse>>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
@@ -29,11 +32,8 @@ export class AuthenticateUserUseCase
     private readonly _hashAdapter: HashAdapterProtocol,
   ) {}
 
-  public async execute({
-    login,
-    password,
-  }: AuthenticationRequest): Promise<AuthenticationResponse> {
-    if (!login || !password) throw new MissingParamError('Login and password');
+  public async execute({ login, password }: AuthRequest): Promise<AuthResponse> {
+    if (!login || !password) return new MissingParamError('Login and password');
 
     const isEmail = Email.validate(login);
     let user: User | undefined;
@@ -44,13 +44,13 @@ export class AuthenticateUserUseCase
       user = await this._userRepository.findByUsername(login, { withDeleted: true });
     }
 
-    if (!user) throw new LoginOrPasswordInvalidError();
+    if (!user) return new LoginOrPasswordInvalidError();
 
-    if (!user.isEmailVerified) throw new LoginOrPasswordInvalidError();
+    if (!user.isEmailVerified) return new LoginOrPasswordInvalidError();
 
     const isValidPassword = await this._hashAdapter.compare(password, user.password.value);
 
-    if (!isValidPassword) throw new LoginOrPasswordInvalidError();
+    if (!isValidPassword) return new LoginOrPasswordInvalidError();
 
     const tokenExpiresIn = this._dateAdapter.add(new Date(), { days: 1 });
     const accessToken = this._tokenAdapter.sign(

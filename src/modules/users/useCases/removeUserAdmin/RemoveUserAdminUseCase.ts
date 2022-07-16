@@ -15,16 +15,26 @@ export interface RemoveUserAdminRequest {
   adminId: string;
 }
 
+export type RemoveUserAdminResponse =
+  | void
+  | MissingParamError
+  | UserNotFoundError
+  | UserIsNotAdminError
+  | UserEmailIsNotVerifiedError;
+
 export class RemoveUserAdminUseCase
-  implements UseCaseProtocol<RemoveUserAdminRequest, Promise<void>>
+  implements UseCaseProtocol<RemoveUserAdminRequest, Promise<RemoveUserAdminResponse>>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ adminId, userId }: RemoveUserAdminRequest): Promise<void> {
-    if (!adminId || !userId) throw new MissingParamError('Admin id and user id');
+  public async execute({
+    adminId,
+    userId,
+  }: RemoveUserAdminRequest): Promise<RemoveUserAdminResponse> {
+    if (!adminId || !userId) return new MissingParamError('Admin id and user id');
 
     const [admin, userToRemoveAdmin] = await Promise.all([
       this._userRepository.findById(adminId, { withDeleted: false }),
@@ -32,15 +42,15 @@ export class RemoveUserAdminUseCase
     ]);
 
     if (!admin || !userToRemoveAdmin) {
-      throw new UserNotFoundError('Admin or user to remove admin not found');
+      return new UserNotFoundError('Admin or user to remove admin not found');
     }
 
     if (!admin.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     if (!admin.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     if (!userToRemoveAdmin.isAdmin) {

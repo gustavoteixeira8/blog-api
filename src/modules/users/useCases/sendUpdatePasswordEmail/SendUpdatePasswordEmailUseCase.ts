@@ -13,8 +13,10 @@ export interface SendPasswordMailRequest {
   email: string;
 }
 
+export type SendPasswordMailResponse = Promise<MissingParamError | void>;
+
 export class SendUpdatePasswordEmailUseCase
-  implements UseCaseProtocol<SendPasswordMailRequest, Promise<void>>
+  implements UseCaseProtocol<SendPasswordMailRequest, SendPasswordMailResponse>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
@@ -24,8 +26,8 @@ export class SendUpdatePasswordEmailUseCase
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ email }: SendPasswordMailRequest): Promise<void> {
-    if (!email) throw new MissingParamError('Email');
+  public async execute({ email }: SendPasswordMailRequest): SendPasswordMailResponse {
+    if (!email) return new MissingParamError('Email');
 
     const user = await this._userRepository.findByEmail(email, { withDeleted: false });
 

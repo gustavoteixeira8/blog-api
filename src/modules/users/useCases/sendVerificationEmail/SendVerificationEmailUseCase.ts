@@ -13,8 +13,10 @@ export interface SendVerificationMailRequest {
   email: string;
 }
 
+export type SendVerificationMailResponse = Promise<MissingParamError | void>;
+
 export class SendVerificationEmailUseCase
-  implements UseCaseProtocol<SendVerificationMailRequest, Promise<void>>
+  implements UseCaseProtocol<SendVerificationMailRequest, SendVerificationMailResponse>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
@@ -24,8 +26,8 @@ export class SendVerificationEmailUseCase
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ email }: SendVerificationMailRequest): Promise<void> {
-    if (!email) throw new MissingParamError('Email');
+  public async execute({ email }: SendVerificationMailRequest): SendVerificationMailResponse {
+    if (!email) return new MissingParamError('Email');
 
     const user = await this._userRepository.findByEmail(email, { withDeleted: false });
 

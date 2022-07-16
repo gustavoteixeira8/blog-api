@@ -14,8 +14,16 @@ export interface ShowArticleForCreatorRequest {
   userId: string;
 }
 
+export type ShowArticleForCreatorResponse = Promise<
+  | MissingParamError
+  | UserNotFoundError
+  | UserIsNotAdminError
+  | ArticleNotFoundError
+  | ArticleWithRelationsDTO
+>;
+
 export class ShowArticleForCreatorUseCase
-  implements UseCaseProtocol<ShowArticleForCreatorRequest, Promise<ArticleWithRelationsDTO>>
+  implements UseCaseProtocol<ShowArticleForCreatorRequest, ShowArticleForCreatorResponse>
 {
   constructor(
     private readonly _articleRepository: ArticleRepositoryProtocol,
@@ -25,21 +33,21 @@ export class ShowArticleForCreatorUseCase
   public async execute({
     articleSlug,
     userId,
-  }: ShowArticleForCreatorRequest): Promise<ArticleWithRelationsDTO> {
-    if (!articleSlug || !userId) throw new MissingParamError('Article slug and user id');
+  }: ShowArticleForCreatorRequest): ShowArticleForCreatorResponse {
+    if (!articleSlug || !userId) return new MissingParamError('Article slug and user id');
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
-    if (!user) throw new UserNotFoundError();
+    if (!user) return new UserNotFoundError();
 
-    if (!user.isAdmin) throw new UserIsNotAdminError();
+    if (!user.isAdmin) return new UserIsNotAdminError();
 
     const article = await this._articleRepository.findBySlugForCreatorWithRelations(
       articleSlug,
       userId,
     );
 
-    if (!article) throw new ArticleNotFoundError();
+    if (!article) return new ArticleNotFoundError();
 
     return article;
   }

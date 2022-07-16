@@ -10,7 +10,9 @@ import {
 } from '@modules/articles/repositories/ArticleRepositoryProtocol';
 
 export type SearchArticlesRequest = SearchArticlesPaginate<SearchArticlesForCreatorProtocol>;
-export type SearchArticlesResponse = Promise<ArticlesPaginateResponse>;
+export type SearchArticlesResponse = Promise<
+  ArticlesPaginateResponse | MissingParamError | UserIsNotAdminError
+>;
 
 export class SearchArticlesForUserCreatorUseCase
   implements UseCaseProtocol<SearchArticlesRequest, SearchArticlesResponse>
@@ -30,11 +32,11 @@ export class SearchArticlesForUserCreatorUseCase
     isPublic,
     userId,
   }: SearchArticlesRequest): SearchArticlesResponse {
-    if (!userId) throw new MissingParamError('User id');
+    if (!userId) return new MissingParamError('User id');
 
     const user = await this._userRepository.findById(userId);
 
-    if (!user || !user.isAdmin) throw new UserIsNotAdminError();
+    if (!user || !user.isAdmin) return new UserIsNotAdminError();
 
     const take = !perPage || perPage > 20 ? 20 : Math.ceil(perPage);
     const skip = page ? take * (Math.ceil(page) - 1) : 0;

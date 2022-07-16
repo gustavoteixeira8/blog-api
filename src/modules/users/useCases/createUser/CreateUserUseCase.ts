@@ -8,6 +8,10 @@ import { Password } from '@shared/core/valueObjects/Password';
 import { User } from '../../entities/user/User';
 import {
   EmailAlreadyExistsError,
+  InvalidEmailError,
+  InvalidFullNameError,
+  InvalidPasswordError,
+  InvalidUsernameError,
   MissingParamError,
   UsernameAlreadyExistsError,
 } from '@shared/core/errors';
@@ -19,16 +23,33 @@ export interface CreateUserRequest {
   password: string;
 }
 
-export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Promise<void>> {
+export type CreateUserResponse =
+  | MissingParamError
+  | EmailAlreadyExistsError
+  | UsernameAlreadyExistsError
+  | InvalidEmailError
+  | InvalidUsernameError
+  | InvalidFullNameError
+  | InvalidPasswordError
+  | void;
+
+export class CreateUserUseCase
+  implements UseCaseProtocol<CreateUserRequest, Promise<CreateUserResponse>>
+{
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _hashAdapter: HashAdapterProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ fullName, email, password, username }: CreateUserRequest): Promise<void> {
+  public async execute({
+    fullName,
+    email,
+    password,
+    username,
+  }: CreateUserRequest): Promise<CreateUserResponse> {
     if (!fullName || !email || !password || !username) {
-      throw new MissingParamError('Full name, email, username and password');
+      return new MissingParamError('Full name, email, username and password');
     }
 
     const [emailExists, usernameExists] = await Promise.all([
@@ -37,10 +58,10 @@ export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Pro
     ]);
 
     if (emailExists) {
-      throw new EmailAlreadyExistsError();
+      return new EmailAlreadyExistsError();
     }
     if (usernameExists) {
-      throw new UsernameAlreadyExistsError();
+      return new UsernameAlreadyExistsError();
     }
 
     const user = User.create({
@@ -51,6 +72,10 @@ export class CreateUserUseCase implements UseCaseProtocol<CreateUserRequest, Pro
       isEmailVerified: false,
       isAdmin: false,
     });
+
+    if (user instanceof Error) {
+      return user;
+    }
 
     const hash = await this._hashAdapter.generate(user.password.value);
     const passwordHash = Password.create(hash, true) as Password;

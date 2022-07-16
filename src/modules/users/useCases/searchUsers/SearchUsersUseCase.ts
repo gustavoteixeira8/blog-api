@@ -10,7 +10,9 @@ import {
 
 export type SearchUsersRequest = SearchUsersPaginate<{ adminId: string } & SearchUsersProtocol>;
 
-export type SearchUsersResponse = Promise<UsersPaginateResponse>;
+export type SearchUsersResponse = Promise<
+  UsersPaginateResponse | MissingParamError | UserIsNotAdminError
+>;
 
 export class SearchUsersUseCase
   implements UseCaseProtocol<SearchUsersRequest, SearchUsersResponse>
@@ -25,12 +27,12 @@ export class SearchUsersUseCase
     username,
     isAdmin,
   }: SearchUsersRequest): SearchUsersResponse {
-    if (!adminId) throw new MissingParamError('Admin id');
+    if (!adminId) return new MissingParamError('Admin id');
 
     const adminExists = await this._userRepository.findById(adminId, { withDeleted: false });
 
     if (!adminExists || !adminExists.isEmailVerified || !adminExists.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     const take = !perPage || perPage > 20 ? 20 : Math.ceil(perPage);

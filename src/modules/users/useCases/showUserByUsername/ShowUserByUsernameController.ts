@@ -4,25 +4,30 @@ import { UserMapper } from '@modules/users/mappers/UserMapper';
 import { ShowUserByUsernameUseCase } from './ShowUserByUsernameUseCase';
 import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
-import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
+import { badRequest, HttpResponse, notFound, ok } from '@shared/core/http/HttpResponse';
+import { MissingParamError, UserNotFoundError } from '@shared/core/errors';
 
-export class ShowUserByUsernameController extends WebController {
-  constructor(useCase: ShowUserByUsernameUseCase) {
-    super(useCase);
-  }
-
+export class ShowUserByUsernameController extends WebController<ShowUserByUsernameUseCase> {
   public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId } = httpRequest.userData;
     const { username } = httpRequest.params;
 
-    const user = await this._useCase.execute({ username });
+    const userOrError = await this._useCase.execute({ username });
+
+    if (this.isTypeofErrors(userOrError, MissingParamError.name)) {
+      return badRequest({ message: userOrError.message });
+    }
+
+    if (this.isTypeofErrors(userOrError, UserNotFoundError.name)) {
+      return notFound({ message: userOrError.message });
+    }
 
     let userFormatted: UserToHimself | UserDetailsDTO;
 
-    if (user.id.value === userId) {
-      userFormatted = UserMapper.toHimself(user);
+    if (userOrError.id.value === userId) {
+      userFormatted = UserMapper.toHimself(userOrError);
     } else {
-      userFormatted = UserMapper.toDetails(user);
+      userFormatted = UserMapper.toDetails(userOrError);
     }
 
     return ok({ message: null, data: userFormatted });

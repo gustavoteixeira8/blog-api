@@ -21,7 +21,13 @@ export class UserMapper {
   }
 
   public static toDomain(user: UserDTO): User {
-    return User.create(user);
+    const newUser = User.create(user);
+
+    if (newUser instanceof Error) {
+      return {} as User;
+    }
+
+    return newUser;
   }
 
   public static toHimself(user: UserProtocol): UserToHimself {

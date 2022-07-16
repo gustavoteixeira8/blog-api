@@ -7,12 +7,14 @@ export interface ShowUserByUsernameRequest {
   username: string;
 }
 
+export type ShowUserByUsernameResponse = Promise<User | MissingParamError | UserNotFoundError>;
+
 export class ShowUserByUsernameUseCase
-  implements UseCaseProtocol<ShowUserByUsernameRequest, Promise<User>>
+  implements UseCaseProtocol<ShowUserByUsernameRequest, ShowUserByUsernameResponse>
 {
   constructor(private readonly _userRepository: UserRepositoryProtocol) {}
 
-  public async execute({ username }: ShowUserByUsernameRequest): Promise<User> {
+  public async execute({ username }: ShowUserByUsernameRequest): ShowUserByUsernameResponse {
     if (!username) throw new MissingParamError('Username');
 
     const user = await this._userRepository.findByUsername(username, { withDeleted: false });

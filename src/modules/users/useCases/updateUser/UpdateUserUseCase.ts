@@ -24,25 +24,42 @@ export interface UpdateUserRequest {
   username?: string;
 }
 
-export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Promise<void>> {
+export type UpdateUserResponse = Promise<
+  | void
+  | UserNotFoundError
+  | UserEmailIsNotVerifiedError
+  | MissingParamError
+  | InvalidUsernameError
+  | InvalidFullNameError
+  | InvalidEmailError
+  | UsernameAlreadyExistsError
+  | EmailAlreadyExistsError
+>;
+
+export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, UpdateUserResponse> {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ userId, fullName, email, username }: UpdateUserRequest): Promise<void> {
-    if (!userId) throw new MissingParamError('User id');
+  public async execute({
+    userId,
+    fullName,
+    email,
+    username,
+  }: UpdateUserRequest): UpdateUserResponse {
+    if (!userId) return new MissingParamError('User id');
 
     if (!fullName && !email && !username) {
-      throw new MissingParamError('Full name, email or username');
+      return new MissingParamError('Full name, email or username');
     }
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
-    if (!user) throw new UserNotFoundError();
+    if (!user) return new UserNotFoundError();
 
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     const userToCompare = JSON.stringify(user);
@@ -51,7 +68,7 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
       const fullNameOrError = PersonName.create(fullName);
 
       if (fullNameOrError instanceof Error) {
-        throw new InvalidFullNameError();
+        return new InvalidFullNameError();
       }
 
       if (!user.fullName.equals(fullNameOrError)) {
@@ -63,13 +80,13 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
       const userWithUsernameExists = await this._userRepository.existsWithUsername(username);
 
       if (userWithUsernameExists && user.username.value !== username) {
-        throw new UsernameAlreadyExistsError();
+        return new UsernameAlreadyExistsError();
       }
 
       const usernameOrError = Username.create(username);
 
       if (usernameOrError instanceof Error) {
-        throw new InvalidUsernameError();
+        return new InvalidUsernameError();
       }
 
       if (!user.username.equals(usernameOrError)) {
@@ -81,13 +98,13 @@ export class UpdateUserUseCase implements UseCaseProtocol<UpdateUserRequest, Pro
       const userWithEmailExists = await this._userRepository.existsWithEmail(email);
 
       if (userWithEmailExists && user.email.value !== email) {
-        throw new EmailAlreadyExistsError();
+        return new EmailAlreadyExistsError();
       }
 
       const emailOrError = Email.create(email);
 
       if (emailOrError instanceof Error) {
-        throw new InvalidEmailError();
+        return new InvalidEmailError();
       }
 
       if (!user.email.equals(emailOrError)) {

@@ -3,10 +3,22 @@ import { Entity } from '@shared/core/entities/Entity';
 import { Email } from '@shared/core/valueObjects/Email';
 import { Password } from '@shared/core/valueObjects/Password';
 import { PersonName } from '@shared/core/valueObjects/PersonName';
-import { EntityError } from '@shared/core/errors';
+import {
+  InvalidEmailError,
+  InvalidFullNameError,
+  InvalidPasswordError,
+  InvalidUsernameError,
+} from '@shared/core/errors';
 import { UserProtocol } from './UserProtocol';
 import { Identifier } from '@shared/core/valueObjects/Identifier';
 import { UserDTO } from '@modules/users/dtos/UserDTO';
+
+export type UserCreateResponse =
+  | InvalidEmailError
+  | InvalidFullNameError
+  | InvalidPasswordError
+  | InvalidUsernameError
+  | User;
 
 export class User extends Entity<UserProtocol> implements UserProtocol {
   private _fullName: PersonName;
@@ -60,7 +72,7 @@ export class User extends Entity<UserProtocol> implements UserProtocol {
     this._deletedAt = props.deletedAt;
   }
 
-  public static create(props: UserDTO): User {
+  public static create(props: UserDTO): UserCreateResponse {
     const isNewUser = !props.id;
     const dateNow = new Date();
 
@@ -76,15 +88,12 @@ export class User extends Entity<UserProtocol> implements UserProtocol {
       updatedAt: !props.updatedAt ? dateNow : props.updatedAt,
       deletedAt: !props.deletedAt ? null : props.deletedAt,
     };
-    const errors: string[] = [];
 
     for (const key in userOrError) {
       if (userOrError[key] instanceof Error) {
-        errors.push(userOrError[key].message);
+        return userOrError[key];
       }
     }
-
-    if (errors.length) throw new EntityError(...errors);
 
     return new User(userOrError);
   }

@@ -2,13 +2,10 @@ import { UserMapper } from '@modules/users/mappers/UserMapper';
 import { SearchUsersUseCase } from './SearchUsersUseCase';
 import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
-import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
+import { badRequest, forbidden, HttpResponse, ok } from '@shared/core/http/HttpResponse';
+import { MissingParamError, UserIsNotAdminError } from '@shared/core/errors';
 
-export class SearchUsersController extends WebController {
-  constructor(useCase: SearchUsersUseCase) {
-    super(useCase);
-  }
-
+export class SearchUsersController extends WebController<SearchUsersUseCase> {
   public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId: adminId } = httpRequest.userData;
     const { order, perPage, page, isAdmin, username } = httpRequest.query;
@@ -26,6 +23,18 @@ export class SearchUsersController extends WebController {
       username: stringFormatted.username,
       isAdmin: boolFormatted.isAdmin,
     });
+
+    const isBadRequest = this.isTypeofErrors(result, MissingParamError.name);
+
+    if (isBadRequest) {
+      return badRequest({ message: result.message });
+    }
+
+    const isForbidden = this.isTypeofErrors(result, UserIsNotAdminError.name);
+
+    if (isForbidden) {
+      return forbidden({ message: result.message });
+    }
 
     const usersFormatted = result.data.map(UserMapper.toHimself);
 

@@ -1,19 +1,26 @@
 import { OrderByProtocol } from '../repositories/PaginationProtocol';
 import { UseCaseProtocol } from '../useCases/UseCaseProtocol';
 import { HttpRequest } from '../http/HttpRequest';
-import { HttpResponse } from '../http/HttpResponse';
-import {
-  DefaultObject,
-  ResolveBooleanResponse,
-  ResolveDateResponse,
-  ResolveNumbersResponse,
-  ResolveStringsResponse,
-} from './Responses';
+import { HttpResponse, serverError } from '../http/HttpResponse';
+
+export type ResolveNumbersResponse = Record<string, number | undefined>;
+export type ResolveDateResponse = Record<string, Date | undefined>;
+export type ResolveStringsResponse = Record<string, string | undefined>;
+export type ResolveBooleanResponse = Record<string, boolean>;
+export type DefaultObject = Record<string, any>;
 
 export abstract class WebController<T = UseCaseProtocol<any, any>> {
-  public abstract handleRequest(httpRequest: HttpRequest): Promise<HttpResponse>;
+  protected abstract handleRequest(httpRequest: HttpRequest): Promise<HttpResponse>;
 
   constructor(protected _useCase: T) {}
+
+  public async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+    try {
+      return await this.handleRequest(httpRequest);
+    } catch (error) {
+      return serverError({ message: 'Internal error' });
+    }
+  }
 
   protected isTypeofErrors(value: any, ...errors: string[]): value is Error {
     for (const errorName of errors) {
@@ -76,8 +83,6 @@ export abstract class WebController<T = UseCaseProtocol<any, any>> {
   }
 
   protected resolveQueryOrderBy(str: any): OrderByProtocol {
-    console.log(str);
-
     const result: OrderByProtocol = {};
 
     if (typeof str === 'undefined') return result;
