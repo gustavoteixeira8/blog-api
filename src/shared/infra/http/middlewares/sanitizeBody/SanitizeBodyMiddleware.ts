@@ -2,10 +2,12 @@ import { SanitizerAdapterProtocol } from '@shared/adapters/sanitizerAdapter/Sani
 import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { MiddlewareResponse, WebMiddleware } from '@shared/core/middlewares/WebMiddleware';
 
-export class SanitizeBodyMiddleware implements WebMiddleware {
-  constructor(private _sanitizerAdapter: SanitizerAdapterProtocol) {}
+export class SanitizeBodyMiddleware extends WebMiddleware {
+  constructor(private _sanitizerAdapter: SanitizerAdapterProtocol) {
+    super();
+  }
 
-  public async handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
+  protected async handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
     const body = httpRequest.body;
 
     if (body && Object.keys(body).length) {

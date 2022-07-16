@@ -3,10 +3,12 @@ import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { MiddlewareResponse, WebMiddleware } from '@shared/core/middlewares/WebMiddleware';
 import { ForbiddenError } from '../../errors/httpErrors';
 
-export class EnsureAdminMiddleware implements WebMiddleware {
-  constructor(private _userRepository: UserRepositoryProtocol) {}
+export class EnsureAdminMiddleware extends WebMiddleware {
+  constructor(private _userRepository: UserRepositoryProtocol) {
+    super();
+  }
 
-  public async handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
+  protected async handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
     const { userId } = httpRequest.userData;
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });

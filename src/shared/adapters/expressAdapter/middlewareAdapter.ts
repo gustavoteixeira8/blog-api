@@ -14,7 +14,7 @@ export const middlewareAdapter = (webMiddleware: WebMiddleware) => {
       file: req.file,
       userData: req.userData,
     };
-    const middleware = await webMiddleware.handleMiddleware(httpRequest);
+    const middleware = await webMiddleware.handle(httpRequest);
 
     if (middleware instanceof HttpError) {
       return res

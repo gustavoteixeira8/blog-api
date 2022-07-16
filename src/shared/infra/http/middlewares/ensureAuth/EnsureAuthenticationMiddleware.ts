@@ -3,10 +3,12 @@ import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { UnauthorizedError } from '../../errors/httpErrors';
 import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 
-export class EnsureAuthenticationMiddleware implements WebMiddleware {
-  constructor(private _tokenAdapter: TokenAdapterProtocol) {}
+export class EnsureAuthenticationMiddleware extends WebMiddleware {
+  constructor(private _tokenAdapter: TokenAdapterProtocol) {
+    super();
+  }
 
-  public async handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
+  protected async handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
     const authorization = httpRequest.headers.authorization;
 
     if (!authorization) {
