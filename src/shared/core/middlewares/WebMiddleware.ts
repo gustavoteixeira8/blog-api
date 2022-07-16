@@ -1,4 +1,4 @@
-import { HttpError } from '@shared/infra/http/errors/httpErrors';
+import { HttpError, InternalServerError } from '@shared/infra/http/errors/httpErrors';
 import { HttpRequest } from '../http/HttpRequest';
 
 /**
@@ -7,6 +7,16 @@ import { HttpRequest } from '../http/HttpRequest';
  */
 export type MiddlewareResponse = HttpError | Record<string, any>;
 
-export interface WebMiddleware {
-  handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse>;
+export abstract class WebMiddleware {
+  protected abstract handleMiddleware(httpRequest: HttpRequest): Promise<MiddlewareResponse>;
+
+  public async handle(httpRequest: HttpRequest): Promise<MiddlewareResponse> {
+    try {
+      return await this.handleMiddleware(httpRequest);
+    } catch (error) {
+      console.log(error);
+
+      return new InternalServerError();
+    }
+  }
 }
