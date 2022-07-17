@@ -6,7 +6,7 @@ import { ok } from '@shared/core/http/HttpResponse';
 import { LoginOrPasswordInvalidError, MissingParamError } from '@shared/core/errors';
 
 export class AuthenticateUserController extends WebController<AuthenticateUserUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { login, password } = httpRequest.body;
 
     const authResponse = await this._useCase.execute({

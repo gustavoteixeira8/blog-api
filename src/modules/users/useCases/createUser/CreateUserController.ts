@@ -12,7 +12,7 @@ import {
 } from '@shared/core/errors';
 
 export class CreateUserController extends WebController<CreateUserUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { fullName, email, password, username } = httpRequest.body;
 
     const createUserResponse = await this._useCase.execute({ fullName, email, password, username });

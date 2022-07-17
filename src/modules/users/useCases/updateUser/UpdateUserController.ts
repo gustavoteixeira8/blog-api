@@ -14,7 +14,7 @@ import {
 } from '@shared/core/errors';
 
 export class UpdateUserController extends WebController<UpdateUserUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { fullName, email, username } = httpRequest.body;
     const { userId } = httpRequest.userData;
 

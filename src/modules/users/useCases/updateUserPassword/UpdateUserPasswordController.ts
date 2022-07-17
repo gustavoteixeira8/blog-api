@@ -12,7 +12,7 @@ import {
 } from '@shared/core/errors';
 
 export class UpdateUserPasswordController extends WebController<UpdateUserPasswordUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { password, confirmPassword } = httpRequest.body;
     const { token } = httpRequest.params;
 

@@ -11,7 +11,7 @@ import {
 } from '@shared/core/errors';
 
 export class ShowArticleForCreatorController extends WebController<ShowArticleForCreatorUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId } = httpRequest.userData;
     const { articleSlug } = httpRequest.params;
 

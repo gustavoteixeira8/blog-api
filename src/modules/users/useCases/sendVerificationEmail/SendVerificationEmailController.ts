@@ -5,7 +5,7 @@ import { badRequest, HttpResponse, ok } from '@shared/core/http/HttpResponse';
 import { MissingParamError } from '@shared/core/errors';
 
 export class SendVerificationEmailController extends WebController<SendVerificationEmailUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { email } = httpRequest.body;
 
     const result = await this._useCase.execute({ email });

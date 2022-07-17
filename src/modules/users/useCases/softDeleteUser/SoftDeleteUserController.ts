@@ -13,7 +13,7 @@ export class SoftDeleteUserController extends WebController {
     super(useCase);
   }
 
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId } = httpRequest.userData;
 
     const result = await this._useCase.execute({ userId });

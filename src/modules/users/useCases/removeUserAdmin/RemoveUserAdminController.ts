@@ -10,7 +10,7 @@ import {
 } from '@shared/core/errors';
 
 export class RemoveUserAdminController extends WebController<RemoveUserAdminUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId } = httpRequest.body;
     const { userId: adminId } = httpRequest.userData;
 

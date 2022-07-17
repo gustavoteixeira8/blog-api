@@ -6,7 +6,7 @@ import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { badRequest, forbidden, HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
 export class SearchArticlesForUserCreatorController extends WebController<SearchArticlesForUserCreatorUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { categoryName, articleTitle, isPublic, isDeleted, order, page, perPage } =
       httpRequest.query;
     const { userId } = httpRequest.userData;

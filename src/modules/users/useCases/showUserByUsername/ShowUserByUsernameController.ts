@@ -8,7 +8,7 @@ import { badRequest, HttpResponse, notFound, ok } from '@shared/core/http/HttpRe
 import { MissingParamError, UserNotFoundError } from '@shared/core/errors';
 
 export class ShowUserByUsernameController extends WebController<ShowUserByUsernameUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId } = httpRequest.userData;
     const { username } = httpRequest.params;
 

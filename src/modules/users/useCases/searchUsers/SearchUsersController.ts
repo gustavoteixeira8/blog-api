@@ -6,7 +6,7 @@ import { badRequest, forbidden, HttpResponse, ok } from '@shared/core/http/HttpR
 import { MissingParamError, UserIsNotAdminError } from '@shared/core/errors';
 
 export class SearchUsersController extends WebController<SearchUsersUseCase> {
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId: adminId } = httpRequest.userData;
     const { order, perPage, page, isAdmin, username } = httpRequest.query;
 
