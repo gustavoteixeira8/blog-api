@@ -4,12 +4,8 @@ import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { HttpResponse, ok } from '@shared/core/http/HttpResponse';
 
-export class SearchPublicArticlesController extends WebController {
-  constructor(useCase: SearchPublicArticlesUseCase) {
-    super(useCase);
-  }
-
-  public async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
+export class SearchPublicArticlesController extends WebController<SearchPublicArticlesUseCase> {
+  protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { categoryName, articleTitle, order, page, perPage, username } = httpRequest.query;
 
     const orderFormatted = this.resolveQueryOrderBy(order as string);

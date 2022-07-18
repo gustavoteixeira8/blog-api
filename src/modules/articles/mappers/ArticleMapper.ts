@@ -24,7 +24,7 @@ export class ArticleMapper {
   }
 
   public static toDomain(article: ArticleDTO): Article {
-    return Article.create({
+    const newArticle = Article.create({
       id: article.id,
       title: article.title,
       text: article.text,
@@ -37,6 +37,12 @@ export class ArticleMapper {
       updatedAt: article.updatedAt,
       deletedAt: article.deletedAt,
     });
+
+    if (newArticle instanceof Error) {
+      return {} as Article;
+    }
+
+    return newArticle;
   }
 
   public static toDetails(

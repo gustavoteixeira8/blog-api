@@ -15,38 +15,48 @@ export interface RecoverArticleRequest {
   userId: string;
 }
 
+export type RecoverArticleResponse = Promise<
+  | void
+  | ArticleIsNotYoursError
+  | ArticleNotFoundError
+  | MissingParamError
+  | UserEmailIsNotVerifiedError
+  | UserIsNotAdminError
+  | UserNotFoundError
+>;
+
 export class RecoverArticleUseCase
-  implements UseCaseProtocol<RecoverArticleRequest, Promise<void>>
+  implements UseCaseProtocol<RecoverArticleRequest, RecoverArticleResponse>
 {
   constructor(
     private readonly _articleRepository: ArticleRepositoryProtocol,
     private readonly _userRepository: UserRepositoryProtocol,
   ) {}
 
-  public async execute({ articleId, userId }: RecoverArticleRequest): Promise<void> {
-    if (!articleId || !userId) throw new MissingParamError('Article id and user id');
+  public async execute({ articleId, userId }: RecoverArticleRequest): RecoverArticleResponse {
+    if (!articleId || !userId) return new MissingParamError('Article id and user id');
 
     const [user, article] = await Promise.all([
       this._userRepository.findById(userId, { withDeleted: false }),
       this._articleRepository.findById(articleId, { withDeleted: true }),
     ]);
 
-    if (!user) throw new UserNotFoundError('User not found');
+    if (!user) return new UserNotFoundError('User not found');
 
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
 
     if (!user.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     if (!article || !article.deletedAt) {
-      throw new ArticleNotFoundError();
+      return new ArticleNotFoundError();
     }
 
     if (article.userId.value !== user.id.value) {
-      throw new ArticleIsNotYoursError();
+      return new ArticleIsNotYoursError();
     }
 
     article.recover();

@@ -13,3 +13,4 @@ TODO.md
 .env.dev
 dist/
 build
+.vscode

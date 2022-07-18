@@ -18,8 +18,18 @@ export interface DeleteArticleRequest {
   userId: string;
 }
 
+export type DeleteArticleResponse = Promise<
+  | void
+  | ArticleIsNotYoursError
+  | ArticleNotFoundError
+  | MissingParamError
+  | UserEmailIsNotVerifiedError
+  | UserIsNotAdminError
+  | UserNotFoundError
+>;
+
 export class SoftDeleteArticleUseCase
-  implements UseCaseProtocol<DeleteArticleRequest, Promise<void>>
+  implements UseCaseProtocol<DeleteArticleRequest, DeleteArticleResponse>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
@@ -27,26 +37,26 @@ export class SoftDeleteArticleUseCase
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ articleId, userId }: DeleteArticleRequest): Promise<void> {
-    if (!articleId || !userId) throw new MissingParamError('Article id and user id');
+  public async execute({ articleId, userId }: DeleteArticleRequest): DeleteArticleResponse {
+    if (!articleId || !userId) return new MissingParamError('Article id and user id');
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
-    if (!user) throw new UserNotFoundError();
+    if (!user) return new UserNotFoundError();
 
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
     if (!user.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     const article = await this._articleRepository.findById(articleId, { withDeleted: false });
 
-    if (!article) throw new ArticleNotFoundError();
+    if (!article) return new ArticleNotFoundError();
 
     if (article.userId.value !== user.id.value) {
-      throw new ArticleIsNotYoursError();
+      return new ArticleIsNotYoursError();
     }
 
     article.delete();

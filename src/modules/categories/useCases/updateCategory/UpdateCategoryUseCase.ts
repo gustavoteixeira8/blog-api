@@ -21,8 +21,20 @@ export interface UpdateCategoryRequest {
   name: string;
 }
 
+export type UpdateCategoryResponse = Promise<
+  | void
+  | CategoryNameAlreadyExistsError
+  | InvalidCategoryNameError
+  | InvalidSlugError
+  | MissingParamError
+  | UserEmailIsNotVerifiedError
+  | UserIsNotAdminError
+  | CategoryNotFoundError
+  | UserNotFoundError
+>;
+
 export class UpdateCategoryUseCase
-  implements UseCaseProtocol<UpdateCategoryRequest, Promise<void>>
+  implements UseCaseProtocol<UpdateCategoryRequest, UpdateCategoryResponse>
 {
   constructor(
     private readonly _categoryRepository: CategoryRepositoryProtocol,
@@ -30,44 +42,48 @@ export class UpdateCategoryUseCase
     private readonly _slugAdapter: SlugAdapterProtocol,
   ) {}
 
-  public async execute({ categoryId, name, userId }: UpdateCategoryRequest): Promise<void> {
-    if (!userId || !categoryId) throw new MissingParamError('User id and category id');
+  public async execute({
+    categoryId,
+    name,
+    userId,
+  }: UpdateCategoryRequest): UpdateCategoryResponse {
+    if (!userId || !categoryId) return new MissingParamError('User id and category id');
 
     if (!name) {
-      throw new MissingParamError('Category name');
+      return new MissingParamError('Category name');
     }
 
     const userExists = await this._userRepository.findById(userId, { withDeleted: false });
 
-    if (!userExists) throw new UserNotFoundError();
+    if (!userExists) return new UserNotFoundError();
 
     if (!userExists.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
     if (!userExists.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     const category = await this._categoryRepository.findById(categoryId);
 
-    if (!category) throw new CategoryNotFoundError();
+    if (!category) return new CategoryNotFoundError();
 
     const slug = this._slugAdapter.generate(name);
 
     const categoryAlreadyExists = await this._categoryRepository.existsWithSlug(slug);
 
     if (categoryAlreadyExists && category.slug.value !== slug) {
-      throw new CategoryNameAlreadyExistsError();
+      return new CategoryNameAlreadyExistsError();
     }
 
     const categoryNameOrError = CategoryName.create(name);
     const slugOrError = Slug.create(slug);
 
     if (categoryNameOrError instanceof Error) {
-      throw new InvalidCategoryNameError();
+      return new InvalidCategoryNameError();
     }
     if (slugOrError instanceof Error) {
-      throw new InvalidSlugError();
+      return new InvalidSlugError();
     }
 
     category.updateName(categoryNameOrError, slugOrError);

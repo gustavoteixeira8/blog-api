@@ -10,6 +10,9 @@ import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryP
 import {
   ArticleTitleAlreadyExistsError,
   CategoryNotFoundError,
+  InvalidArticleTextError,
+  InvalidArticleTitleError,
+  MaxOfDifferentCategoriesError,
   MissingParamError,
   UserEmailIsNotVerifiedError,
   UserIsNotAdminError,
@@ -24,7 +27,22 @@ export interface CreateArticleRequest {
   categoriesId: string[];
 }
 
-export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleRequest, Promise<void>> {
+export type CreateArticleResponse = Promise<
+  | void
+  | ArticleTitleAlreadyExistsError
+  | CategoryNotFoundError
+  | MissingParamError
+  | UserEmailIsNotVerifiedError
+  | UserIsNotAdminError
+  | UserNotFoundError
+  | InvalidArticleTitleError
+  | InvalidArticleTextError
+  | MaxOfDifferentCategoriesError
+>;
+
+export class CreateArticleUseCase
+  implements UseCaseProtocol<CreateArticleRequest, CreateArticleResponse>
+{
   constructor(
     private readonly _articleRepository: ArticleRepositoryProtocol,
     private readonly _categoryRepository: CategoryRepositoryProtocol,
@@ -39,24 +57,24 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
     isPublic,
     userId,
     categoriesId,
-  }: CreateArticleRequest): Promise<void> {
+  }: CreateArticleRequest): CreateArticleResponse {
     if (!userId) {
-      throw new MissingParamError('User id');
+      return new MissingParamError('User id');
     }
 
     if (!title || !text || !categoriesId || !categoriesId.length) {
-      throw new MissingParamError('Title, text and categories id');
+      return new MissingParamError('Title, text and categories id');
     }
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
-    if (!user) throw new UserNotFoundError();
+    if (!user) return new UserNotFoundError();
 
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
     if (!user.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     const slug = this._slugAdapter.generate(title);
@@ -66,16 +84,16 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
     });
 
     if (articleExists) {
-      throw new ArticleTitleAlreadyExistsError();
+      return new ArticleTitleAlreadyExistsError();
     }
 
     for (const categoryId of categoriesId) {
       if (!(await this._categoryRepository.findById(categoryId))) {
-        throw new CategoryNotFoundError();
+        return new CategoryNotFoundError();
       }
     }
 
-    const article = Article.create({
+    const articleOrError = Article.create({
       title,
       text,
       slug,
@@ -85,8 +103,12 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
       thumbnail: null,
     });
 
+    if (articleOrError instanceof Error) {
+      return articleOrError;
+    }
+
     await Promise.all([
-      this._articleRepository.save(article),
+      this._articleRepository.save(articleOrError),
       this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,
@@ -96,11 +118,11 @@ export class CreateArticleUseCase implements UseCaseProtocol<CreateArticleReques
         context: {
           user: { username: user.username.value },
           article: {
-            id: article.id.value,
-            title: article.title.value,
-            slug: article.slug.value,
-            isPublic: article.isPublic,
-            createdAt: article.createdAt,
+            id: articleOrError.id.value,
+            title: articleOrError.title.value,
+            slug: articleOrError.slug.value,
+            isPublic: articleOrError.isPublic,
+            createdAt: articleOrError.createdAt,
           },
           appConfig,
         },

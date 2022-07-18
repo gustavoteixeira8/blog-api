@@ -20,8 +20,19 @@ export interface UpdateArticleThumbnailRequest {
   userId: string;
 }
 
+export type UpdateArticleThumbnailResponse = Promise<
+  | void
+  | ArticleIsNotYoursError
+  | ArticleNotFoundError
+  | InvalidImageNameError
+  | MissingParamError
+  | UserEmailIsNotVerifiedError
+  | UserIsNotAdminError
+  | UserNotFoundError
+>;
+
 export class UpdateArticleThumbnailUseCase
-  implements UseCaseProtocol<UpdateArticleThumbnailRequest, Promise<void>>
+  implements UseCaseProtocol<UpdateArticleThumbnailRequest, UpdateArticleThumbnailResponse>
 {
   constructor(
     private readonly _articleRepository: ArticleRepositoryProtocol,
@@ -33,26 +44,26 @@ export class UpdateArticleThumbnailUseCase
     thumbnail,
     articleId,
     userId,
-  }: UpdateArticleThumbnailRequest): Promise<void> {
-    if (!articleId || !userId) throw new MissingParamError('Article id and user id');
+  }: UpdateArticleThumbnailRequest): UpdateArticleThumbnailResponse {
+    if (!articleId || !userId) return new MissingParamError('Article id and user id');
 
     const [user, article] = await Promise.all([
       this._userRepository.findById(userId),
       this._articleRepository.findById(articleId),
     ]);
 
-    if (!user) throw new UserNotFoundError('User not found');
+    if (!user) return new UserNotFoundError('User not found');
 
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
     if (!user.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
-    if (!article) throw new ArticleNotFoundError();
+    if (!article) return new ArticleNotFoundError();
 
     if (article.userId.value !== user.id.value) {
-      throw new ArticleIsNotYoursError();
+      return new ArticleIsNotYoursError();
     }
 
     if (!thumbnail) {
@@ -78,7 +89,7 @@ export class UpdateArticleThumbnailUseCase
     const oldThumbnail = article.thumbnail?.value;
 
     if (newThumbnail instanceof Error) {
-      throw new InvalidImageNameError();
+      return new InvalidImageNameError();
     }
 
     article.updateThumbnail(newThumbnail);

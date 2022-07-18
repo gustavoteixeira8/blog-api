@@ -6,8 +6,18 @@ import { ForeignKeyId } from '@shared/core/valueObjects/ForeignKeyId';
 import { Identifier } from '@shared/core/valueObjects/Identifier';
 import { ImageName } from '@shared/core/valueObjects/ImageName';
 import { Slug } from '@shared/core/valueObjects/Slug';
-import { EntityError } from '@shared/core/errors';
+import {
+  InvalidArticleTextError,
+  InvalidArticleTitleError,
+  MaxOfDifferentCategoriesError,
+} from '@shared/core/errors';
 import { ArticleProtocol } from './ArticleProtocol';
+
+export type ArticleCreateResponse =
+  | Article
+  | InvalidArticleTitleError
+  | InvalidArticleTextError
+  | MaxOfDifferentCategoriesError;
 
 export class Article extends Entity<ArticleProtocol> implements ArticleProtocol {
   private _title: ArticleTitle;
@@ -66,7 +76,7 @@ export class Article extends Entity<ArticleProtocol> implements ArticleProtocol 
     this._isPublic = props.isPublic;
   }
 
-  public static create(article: ArticleDTO): Article {
+  public static create(article: ArticleDTO): ArticleCreateResponse {
     const articleOrError: ArticleProtocol = {
       id: Identifier.create(article.id),
       title: ArticleTitle.create(article.title) as ArticleTitle,
@@ -82,23 +92,17 @@ export class Article extends Entity<ArticleProtocol> implements ArticleProtocol 
       deletedAt: !article.deletedAt ? null : article.deletedAt,
     };
 
-    const errors: string[] = [];
-
     for (const key in articleOrError) {
       if (articleOrError[key] instanceof Error) {
-        errors.push(articleOrError[key].message);
+        return articleOrError[key];
       }
-    }
-
-    if (errors.length) {
-      throw new EntityError(...errors);
     }
 
     const categoriesAreTheSame = this.categoriesAreTheSame(articleOrError.categoriesId);
     const categoriesIsFull = this.categoriesIsFull(articleOrError.categoriesId);
 
     if (categoriesAreTheSame || categoriesIsFull) {
-      throw new EntityError('Maximum of different categories are 5');
+      return new MaxOfDifferentCategoriesError();
     }
 
     return new Article(articleOrError);
@@ -118,9 +122,9 @@ export class Article extends Entity<ArticleProtocol> implements ArticleProtocol 
     return categories.length > 5;
   }
 
-  public updateCategories(categories: ForeignKeyId[]): void {
+  public updateCategories(categories: ForeignKeyId[]): void | Error {
     if (Article.categoriesAreTheSame(categories) || Article.categoriesIsFull(this._categoriesId)) {
-      throw new EntityError('Maximum of different categories are 5');
+      return new MaxOfDifferentCategoriesError();
     }
 
     this._categoriesId = categories;

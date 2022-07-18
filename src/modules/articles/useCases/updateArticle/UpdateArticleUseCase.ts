@@ -32,7 +32,23 @@ export interface UpdateArticleRequest {
   articleId: string;
 }
 
-export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleRequest, Promise<void>> {
+export type UpdateArticleResponse = Promise<
+  | void
+  | ArticleIsNotYoursError
+  | ArticleNotFoundError
+  | ArticleTitleAlreadyExistsError
+  | CategoryNotFoundError
+  | InvalidArticleTextError
+  | InvalidArticleTitleError
+  | MissingParamError
+  | UserEmailIsNotVerifiedError
+  | UserIsNotAdminError
+  | UserNotFoundError
+>;
+
+export class UpdateArticleUseCase
+  implements UseCaseProtocol<UpdateArticleRequest, UpdateArticleResponse>
+{
   constructor(
     private readonly _articleRepository: ArticleRepositoryProtocol,
     private readonly _categoryRepository: CategoryRepositoryProtocol,
@@ -48,28 +64,28 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
     userId,
     articleId,
     categoriesId,
-  }: UpdateArticleRequest): Promise<void> {
-    if (!articleId || !userId) throw new MissingParamError('Article id and user id');
+  }: UpdateArticleRequest): UpdateArticleResponse {
+    if (!articleId || !userId) return new MissingParamError('Article id and user id');
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
     if (!user) {
-      throw new UserNotFoundError();
+      return new UserNotFoundError();
     }
 
     if (!user.isEmailVerified) {
-      throw new UserEmailIsNotVerifiedError();
+      return new UserEmailIsNotVerifiedError();
     }
     if (!user.isAdmin) {
-      throw new UserIsNotAdminError();
+      return new UserIsNotAdminError();
     }
 
     const article = await this._articleRepository.findById(articleId, { withDeleted: false });
 
-    if (!article) throw new ArticleNotFoundError();
+    if (!article) return new ArticleNotFoundError();
 
     if (article.userId.value !== user.id.value) {
-      throw new ArticleIsNotYoursError();
+      return new ArticleIsNotYoursError();
     }
 
     const articleToCompare = JSON.stringify(article);
@@ -82,14 +98,14 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
       });
 
       if (articleWithSlugAlreadyExists) {
-        throw new ArticleTitleAlreadyExistsError();
+        return new ArticleTitleAlreadyExistsError();
       }
 
       const titleOrError = ArticleTitle.create(title);
       const slugOrError = Slug.create(slug);
 
       if (titleOrError instanceof Error || slugOrError instanceof Error) {
-        throw new InvalidArticleTitleError();
+        return new InvalidArticleTitleError();
       }
 
       article.updateTitle(titleOrError, slugOrError);
@@ -99,7 +115,7 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
       const textOrError = ArticleText.create(text);
 
       if (textOrError instanceof InvalidArticleTextError) {
-        throw new InvalidArticleTextError();
+        return new InvalidArticleTextError();
       }
 
       article.updateText(textOrError);
@@ -116,7 +132,7 @@ export class UpdateArticleUseCase implements UseCaseProtocol<UpdateArticleReques
       for (const categoryId of categoriesId) {
         const category = await this._categoryRepository.findById(categoryId);
 
-        if (!category) throw new CategoryNotFoundError();
+        if (!category) return new CategoryNotFoundError();
 
         const categoryFK = ForeignKeyId.create(category.id.value);
 

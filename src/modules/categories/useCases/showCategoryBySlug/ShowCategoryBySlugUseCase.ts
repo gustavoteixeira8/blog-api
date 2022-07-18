@@ -7,17 +7,21 @@ export interface ShowCategoryRequest {
   categorySlug: string;
 }
 
+export type ShowCategoryResponse = Promise<
+  CategoryProtocol | MissingParamError | CategoryNotFoundError
+>;
+
 export class ShowCategoryBySlugUseCase
-  implements UseCaseProtocol<ShowCategoryRequest, Promise<CategoryProtocol>>
+  implements UseCaseProtocol<ShowCategoryRequest, ShowCategoryResponse>
 {
   constructor(private readonly _categoryRepository: CategoryRepositoryProtocol) {}
 
-  public async execute({ categorySlug }: ShowCategoryRequest): Promise<CategoryProtocol> {
-    if (!categorySlug) throw new MissingParamError('Category slug');
+  public async execute({ categorySlug }: ShowCategoryRequest): ShowCategoryResponse {
+    if (!categorySlug) return new MissingParamError('Category slug');
 
     const category = await this._categoryRepository.findBySlug(categorySlug);
 
-    if (!category) throw new CategoryNotFoundError();
+    if (!category) return new CategoryNotFoundError();
 
     return category;
   }

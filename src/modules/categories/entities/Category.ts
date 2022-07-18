@@ -1,10 +1,12 @@
 import { Entity } from '@shared/core/entities/Entity';
+import { InvalidCategoryNameError, InvalidSlugError } from '@shared/core/errors';
 import { CategoryName } from '@shared/core/valueObjects/CategoryName';
 import { Identifier } from '@shared/core/valueObjects/Identifier';
 import { Slug } from '@shared/core/valueObjects/Slug';
-import { EntityError } from '@shared/core/errors';
 import { CategoryDTO } from '../dtos/CategoryDTO';
 import { CategoryProtocol } from './CategoryProtocol';
+
+export type CategoryCreateResponse = Category | InvalidCategoryNameError | InvalidSlugError;
 
 export class Category extends Entity<CategoryProtocol> implements CategoryProtocol {
   private _name: CategoryName;
@@ -33,7 +35,7 @@ export class Category extends Entity<CategoryProtocol> implements CategoryProtoc
     this._updatedAt = props.updatedAt;
   }
 
-  public static create(props: CategoryDTO): Category {
+  public static create(props: CategoryDTO): CategoryCreateResponse {
     const categoryOrError = {
       id: Identifier.create(props.id) as Identifier,
       name: CategoryName.create(props.name) as CategoryName,
@@ -41,15 +43,12 @@ export class Category extends Entity<CategoryProtocol> implements CategoryProtoc
       createdAt: !props.createdAt ? new Date() : props.createdAt,
       updatedAt: !props.updatedAt ? new Date() : props.updatedAt,
     };
-    const errors: string[] = [];
 
     for (const key in categoryOrError) {
       if (categoryOrError[key] instanceof Error) {
-        errors.push(categoryOrError[key].message);
+        return categoryOrError[key];
       }
     }
-
-    if (errors.length) throw new EntityError(...errors);
 
     return new Category(categoryOrError);
   }

@@ -10,6 +10,14 @@ export class EntityError extends Error {
   }
 }
 
+export class MaxOfDifferentCategoriesError extends Error {
+  public readonly name = 'MaxOfDifferentCategoriesError';
+
+  constructor() {
+    super('Maximum of different categories are 5');
+  }
+}
+
 export class UserNotFoundError extends Error {
   public readonly name = 'UserNotFoundError';
 
