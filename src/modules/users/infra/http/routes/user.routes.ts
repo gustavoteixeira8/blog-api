@@ -1,5 +1,5 @@
 import { makeCreateUser } from '@modules/users/useCases/createUser/makeCreateUser';
-import { makeMakeUserAdmin } from '@modules/users/useCases/makeUserAdmin/makeMakeUserAdmin';
+import { makeAddRoleAdminToUser } from '@modules/users/useCases/makeUserAdmin/makeAddRoleAdminToUser';
 import { makeRemoveUserAdmin } from '@modules/users/useCases/removeUserAdmin/makeRemoveUserAdmin';
 import { makeSearchArticlesForUserCreator } from '@modules/users/useCases/searchArticleForUserCreator/makeSearchArticlesForUserCreator';
 import { makeSearchUsersController } from '@modules/users/useCases/searchUsers/makeSearchUsers';
@@ -31,7 +31,7 @@ export const setupUserRoutes = () => {
   userRoutes.get('/', controllerAdapter(makeSearchUsersController()));
   userRoutes.get('/me/article', controllerAdapter(makeSearchArticlesForUserCreator()));
   userRoutes.get('/me/article/:articleSlug', controllerAdapter(makeShowArticleForCreator()));
-  userRoutes.put('/admin/add', controllerAdapter(makeMakeUserAdmin()));
+  userRoutes.put('/admin/add', controllerAdapter(makeAddRoleAdminToUser()));
   userRoutes.put('/admin/remove', controllerAdapter(makeRemoveUserAdmin()));
 
   return userRoutes;

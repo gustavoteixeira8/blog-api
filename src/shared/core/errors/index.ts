@@ -67,10 +67,10 @@ export class UserIsNotAdminError extends Error {
 }
 
 export class UserEmailIsNotVerifiedError extends Error {
-  public readonly name = 'UserEmailIsNotVerifiedErrorError';
+  public readonly name = 'UserEmailIsNotVerifiedError';
 
-  constructor() {
-    super('Your email must be verified');
+  constructor(message?: string) {
+    super(message || 'Your email must be verified');
   }
 }
 

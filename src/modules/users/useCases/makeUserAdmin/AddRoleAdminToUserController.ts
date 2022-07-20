@@ -1,4 +1,4 @@
-import { MakeUserAdminUseCase } from './MakeUserAdminUseCase';
+import { AddRoleAdminToUserUseCase } from './AddRoleAdminToUserUseCase.ts';
 import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { badRequest, forbidden, HttpResponse, notFound, ok } from '@shared/core/http/HttpResponse';
@@ -9,36 +9,36 @@ import {
   UserNotFoundError,
 } from '@shared/core/errors';
 
-export class MakeUserAdminController extends WebController<MakeUserAdminUseCase> {
+export class AddRoleAdminToUserController extends WebController<AddRoleAdminToUserUseCase> {
   async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { userId } = httpRequest.body;
     const { userId: adminId } = httpRequest.userData;
 
-    const makeUserAdminResponse = await this._useCase.execute({ adminId, userId });
-    const isBadRequest = this.isTypeofErrors(makeUserAdminResponse, MissingParamError.name);
-
+    const result = await this._useCase.execute({ adminId, userId });
+    const isBadRequest = this.isTypeofErrors(result, MissingParamError.name);
+    console.log(result);
     if (isBadRequest) {
-      return badRequest({ message: makeUserAdminResponse.message });
+      return badRequest({ message: result.message });
     }
 
-    const isNotFound = this.isTypeofErrors(makeUserAdminResponse, UserNotFoundError.name);
+    const isNotFound = this.isTypeofErrors(result, UserNotFoundError.name);
 
     if (isNotFound) {
-      return notFound({ message: makeUserAdminResponse.message });
+      return notFound({ message: result.message });
     }
 
     const isForbidden = this.isTypeofErrors(
-      makeUserAdminResponse,
+      result,
       UserIsNotAdminError.name,
       UserEmailIsNotVerifiedError.name,
     );
 
     if (isForbidden) {
-      return forbidden({ message: makeUserAdminResponse.message });
+      return forbidden({ message: result.message });
     }
 
     return ok({
-      message: 'You have given admin permission to a new user successfully',
+      message: 'You add a new user to admins',
       data: null,
     });
   }

@@ -42,7 +42,7 @@ export class RemoveUserAdminUseCase
     ]);
 
     if (!admin || !userToRemoveAdmin) {
-      return new UserNotFoundError('Admin or user to remove admin not found');
+      return new UserNotFoundError('User to add admin not found');
     }
 
     if (!admin.isAdmin) {
@@ -64,29 +64,10 @@ export class RemoveUserAdminUseCase
       this._mailQueueAdapter.add([
         {
           to: {
-            name: admin.fullName.value,
-            address: admin.email.value,
-          },
-          subject: `You have removed a user from admin - ${appConfig.name}`,
-          context: {
-            user: { username: admin.username.value },
-            userToRemoveAdmin: {
-              id: userToRemoveAdmin.id.value,
-              email: userToRemoveAdmin.email.value,
-            },
-            appConfig,
-          },
-          html: {
-            filename: 'adminRemoveAdmin',
-            module: 'users',
-          },
-        },
-        {
-          to: {
             name: userToRemoveAdmin.fullName.value,
             address: userToRemoveAdmin.email.value,
           },
-          subject: `You are no longer an admin - ${appConfig.name}`,
+          subject: `${admin.username.value} removed you from admins - ${appConfig.name}`,
           context: {
             user: { username: userToRemoveAdmin.username.value },
             adminUsername: admin.username.value,

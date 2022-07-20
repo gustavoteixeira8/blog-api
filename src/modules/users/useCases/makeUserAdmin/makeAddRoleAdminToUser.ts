@@ -1,12 +1,12 @@
-import { MakeUserAdminController } from './MakeUserAdminController';
-import { MakeUserAdminUseCase } from './MakeUserAdminUseCase';
+import { AddRoleAdminToUserController } from './AddRoleAdminToUserController';
+import { AddRoleAdminToUserUseCase } from './AddRoleAdminToUserUseCase.ts';
 import { WebController } from '@shared/core/controllers/WebController';
 import { makeMailQueueAdapter } from '@shared/adapters/queueAdapter/makeMailQueueAdapter';
 import { makeUserRepository } from '../../repositories/implementations/makeUserRepository';
 
-export const makeMakeUserAdmin = (): WebController => {
+export const makeAddRoleAdminToUser = (): WebController => {
   const userRepository = makeUserRepository();
   const mailQueueAdapter = makeMailQueueAdapter();
-  const useCase = new MakeUserAdminUseCase(userRepository, mailQueueAdapter);
-  return new MakeUserAdminController(useCase);
+  const useCase = new AddRoleAdminToUserUseCase(userRepository, mailQueueAdapter);
+  return new AddRoleAdminToUserController(useCase);
 };

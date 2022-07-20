@@ -10,36 +10,39 @@ import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterPro
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
 
-export interface MakeUserAdminRequest {
+export interface AddRoleAdminToUserRequest {
   userId: string;
   adminId: string;
 }
 
-export type MakeUserAdminResponse =
+export type AddRoleAdminToUserResponse =
   | MissingParamError
   | UserNotFoundError
   | UserIsNotAdminError
   | UserEmailIsNotVerifiedError
   | void;
 
-export class MakeUserAdminUseCase
-  implements UseCaseProtocol<MakeUserAdminRequest, Promise<MakeUserAdminResponse>>
+export class AddRoleAdminToUserUseCase
+  implements UseCaseProtocol<AddRoleAdminToUserRequest, Promise<AddRoleAdminToUserResponse>>
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
-  public async execute({ adminId, userId }: MakeUserAdminRequest): Promise<MakeUserAdminResponse> {
+  public async execute({
+    adminId,
+    userId,
+  }: AddRoleAdminToUserRequest): Promise<AddRoleAdminToUserResponse> {
     if (!adminId || !userId) return new MissingParamError('Admin id and user id');
 
-    const [admin, userToMakeAdmin] = await Promise.all([
+    const [admin, userToAddAdminRole] = await Promise.all([
       this._userRepository.findById(adminId, { withDeleted: false }),
       this._userRepository.findById(userId, { withDeleted: false }),
     ]);
 
-    if (!admin || !userToMakeAdmin) {
-      return new UserNotFoundError('Admin or user to make admin not found');
+    if (!admin || !userToAddAdminRole) {
+      return new UserNotFoundError('User to add admin not found');
     }
 
     if (!admin.isAdmin) {
@@ -50,43 +53,27 @@ export class MakeUserAdminUseCase
       return new UserEmailIsNotVerifiedError();
     }
 
-    if (userToMakeAdmin.isAdmin) {
+    if (userToAddAdminRole.isAdmin) {
       return;
     }
 
-    if (!userToMakeAdmin.isEmailVerified) {
-      return new UserEmailIsNotVerifiedError();
+    if (!userToAddAdminRole.isEmailVerified) {
+      return new UserEmailIsNotVerifiedError('User to add admin role must have verified email');
     }
 
-    userToMakeAdmin.makeAdmin();
+    userToAddAdminRole.makeAdmin();
 
     await Promise.all([
-      this._userRepository.save(userToMakeAdmin),
+      this._userRepository.save(userToAddAdminRole),
       this._mailQueueAdapter.add([
         {
           to: {
-            name: admin.fullName.value,
-            address: admin.email.value,
+            name: userToAddAdminRole.fullName.value,
+            address: userToAddAdminRole.email.value,
           },
-          subject: `You have given admin permission to a new user - ${appConfig.name}`,
+          subject: `${admin.username.value} add you to admins - ${appConfig.name}`,
           context: {
-            user: { username: admin.username.value },
-            userToMakeAdmin: { id: userToMakeAdmin.id.value, email: userToMakeAdmin.email.value },
-            appConfig,
-          },
-          html: {
-            filename: 'adminAddAdmin',
-            module: 'users',
-          },
-        },
-        {
-          to: {
-            name: userToMakeAdmin.fullName.value,
-            address: userToMakeAdmin.email.value,
-          },
-          subject: `Now you are an admin - ${appConfig.name}`,
-          context: {
-            user: { username: userToMakeAdmin.username.value },
+            user: { username: userToAddAdminRole.username.value },
             adminUsername: admin.username.value,
             appConfig,
           },
