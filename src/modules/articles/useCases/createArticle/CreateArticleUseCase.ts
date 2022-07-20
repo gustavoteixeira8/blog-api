@@ -107,30 +107,6 @@ export class CreateArticleUseCase
       return articleOrError;
     }
 
-    await Promise.all([
-      this._articleRepository.save(articleOrError),
-      this._mailQueueAdapter.add({
-        to: {
-          name: user.fullName.value,
-          address: user.email.value,
-        },
-        subject: `A new article was created by you - ${appConfig.name}`,
-        context: {
-          user: { username: user.username.value },
-          article: {
-            id: articleOrError.id.value,
-            title: articleOrError.title.value,
-            slug: articleOrError.slug.value,
-            isPublic: articleOrError.isPublic,
-            createdAt: articleOrError.createdAt,
-          },
-          appConfig,
-        },
-        html: {
-          filename: 'articleCreated',
-          module: 'articles',
-        },
-      }),
-    ]);
+    this._articleRepository.save(articleOrError);
   }
 }

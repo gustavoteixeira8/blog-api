@@ -88,8 +88,6 @@ export class UpdateArticleUseCase
       return new ArticleIsNotYoursError();
     }
 
-    const articleToCompare = JSON.stringify(article);
-
     if (title && title !== article.title.value) {
       const slug = this._slugAdapter.generate(title);
 
@@ -146,34 +144,6 @@ export class UpdateArticleUseCase
       article.updateCategories(categoriesFK);
     }
 
-    const articleUpdatedToCompare = JSON.stringify(article);
-
-    if (articleToCompare !== articleUpdatedToCompare) {
-      await Promise.all([
-        this._articleRepository.save(article),
-        this._mailQueueAdapter.add({
-          to: {
-            name: user.fullName.value,
-            address: user.email.value,
-          },
-          subject: `An article was updated by you - ${appConfig.name}`,
-          context: {
-            user: { username: user.username.value },
-            article: {
-              id: article.id.value,
-              title: article.title.value,
-              slug: article.slug.value,
-              isPublic: article.isPublic,
-              createdAt: article.createdAt,
-            },
-            appConfig,
-          },
-          html: {
-            filename: 'articleUpdated',
-            module: 'articles',
-          },
-        }),
-      ]);
-    }
+    this._articleRepository.save(article);
   }
 }

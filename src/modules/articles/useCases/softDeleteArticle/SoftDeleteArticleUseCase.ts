@@ -62,30 +62,6 @@ export class SoftDeleteArticleUseCase
     article.delete();
     article.makePrivate();
 
-    await Promise.all([
-      this._articleRepository.save(article),
-      this._mailQueueAdapter.add({
-        to: {
-          name: user.fullName.value,
-          address: user.email.value,
-        },
-        subject: `An article was deleted by you - ${appConfig.name}`,
-        context: {
-          user: { username: user.username.value },
-          article: {
-            id: article.id.value,
-            title: article.title.value,
-            slug: article.slug.value,
-            isPublic: article.isPublic,
-            createdAt: article.createdAt,
-          },
-          appConfig,
-        },
-        html: {
-          filename: 'articleSoftDeleted',
-          module: 'articles',
-        },
-      }),
-    ]);
+    this._articleRepository.save(article);
   }
 }

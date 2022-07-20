@@ -1,7 +1,7 @@
 <style>
   body{
     font-family: Arial, Helvetica, sans-serif;
-    max-width: 600px;
+    max-width: 800px;
     font-size: 18px;
     line-height: 21px;
   }
@@ -11,12 +11,12 @@
   <p>Hello, {{user.username}}</p>
 
   <p>
-    Use the link below to check your email and get access to all the blog's features: <br>
-    {{appConfig.url}}/auth/email/verify/{{token}}
+    Use the code below to verify your email: <br>
+    {{code}}
   </p>
 
   <p>
-    Your token expires in {{convertDate tokenExpires}}.
+    Your code expires in {{convertDate tokenExpires}}.
   </p>
 
   <p>
