@@ -1,5 +1,4 @@
 import { UpdateArticleThumbnailUseCase } from './UpdateArticleThumbnailUseCase';
-import { SharpAdapter } from '@shared/adapters/processImageAdapter/implementations/SharpAdapter';
 import { resolve, basename } from 'path';
 import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
@@ -13,14 +12,21 @@ import {
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
+import { ProcessImageAdapterProtocol } from '@shared/adapters/processImageAdapter/ProcessImageAdapterProtocol';
 
 export class UpdateArticleThumbnailController extends WebController<UpdateArticleThumbnailUseCase> {
+  private _processImage: ProcessImageAdapterProtocol;
+
+  constructor(useCase: UpdateArticleThumbnailUseCase, processImage: ProcessImageAdapterProtocol) {
+    super(useCase);
+    this._processImage = processImage;
+  }
+
   protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
     let thumbnail: string | undefined;
 
     if (httpRequest.file) {
-      const sharpProvider = new SharpAdapter();
-      const newPath = await sharpProvider.convertToWebp(resolve(httpRequest.file.path));
+      const newPath = await this._processImage.convertToWebp(resolve(httpRequest.file.path));
       thumbnail = basename(newPath);
     }
 
