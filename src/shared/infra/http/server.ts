@@ -6,7 +6,6 @@ import http from 'http';
 import { appConfig } from '@config/app';
 import { closeConnectionDatabase, connectDatabase } from '../database';
 import { setupRoutes } from './routes/index.routes';
-import { errorHandler } from './middlewares/errorHandler';
 import { logger } from '@shared/log';
 import { corsConfig } from '@config/cors';
 
@@ -28,7 +27,6 @@ export class Server {
 
   private setupRoutes(routes: Router): void {
     this._app.use(routes);
-    this._app.use(errorHandler);
   }
 
   private setupMiddlewares(): void {
