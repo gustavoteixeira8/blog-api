@@ -1,4 +1,4 @@
-import { HttpError } from '@shared/infra/http/errors/httpErrors';
+import { HttpError } from '@shared/core/http/httpErrors';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { defaultResponse } from '@shared/core/http/HttpResponse';
 import { WebMiddleware } from '@shared/core/middlewares/WebMiddleware';

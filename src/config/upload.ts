@@ -1,4 +1,4 @@
-import { BadRequestError } from '@shared/infra/http/errors/httpErrors';
+import { BadRequestError } from '@shared/core/http/httpErrors';
 import { diskStorage, FileFilterCallback } from 'multer';
 import { extname, resolve } from 'path';
 import { randomBytes } from 'crypto';

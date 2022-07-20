@@ -1,4 +1,4 @@
-import { HttpError, InternalServerError } from '@shared/infra/http/errors/httpErrors';
+import { HttpError, InternalServerError } from '../http/httpErrors';
 import { HttpRequest } from '../http/HttpRequest';
 
 /**
@@ -14,8 +14,6 @@ export abstract class WebMiddleware {
     try {
       return await this.handleMiddleware(httpRequest);
     } catch (error) {
-      console.log(error);
-
       return new InternalServerError();
     }
   }

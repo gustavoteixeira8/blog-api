@@ -1,6 +1,6 @@
 import { MiddlewareResponse, WebMiddleware } from '@shared/core/middlewares/WebMiddleware';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
-import { UnauthorizedError } from '../../errors/httpErrors';
+import { UnauthorizedError } from '@shared/core/http/httpErrors';
 import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 
 export class EnsureAuthenticationMiddleware extends WebMiddleware {
