@@ -60,7 +60,9 @@ export class SearchArticlesUseCase
       }
     }
 
-    if (!canReturnToEveryone && userId) {
+    if (!canReturnToEveryone) {
+      if (!userId) return new UserIsNotAdminError();
+
       const user = await this._userRepository.findById(userId, { withDeleted: false });
 
       if (!user) return new UserNotFoundError();
