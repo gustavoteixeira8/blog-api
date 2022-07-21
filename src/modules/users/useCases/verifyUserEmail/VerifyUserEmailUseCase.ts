@@ -1,6 +1,5 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
-import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
 import { UserTokenRepositoryProtocol } from '../../repositories/UserTokenRepositoryProtocol';
 import { InvalidTokenError, MissingParamError, UserNotFoundError } from '@shared/core/errors';
@@ -20,7 +19,6 @@ export class VerifyUserEmailUseCase
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
     private readonly _dateAdapter: DateAdapterProtocol,
-    private readonly _tokenAdapter: TokenAdapterProtocol,
   ) {}
 
   public async execute({ token }: TokenRequest): VerifyUserEmailResponse {
@@ -37,13 +35,6 @@ export class VerifyUserEmailUseCase
     if (tokenIsExpired) {
       await this._userTokenRepository.delete(tokenExists.id.value);
 
-      return new InvalidTokenError();
-    }
-
-    try {
-      this._tokenAdapter.verify(token);
-    } catch (error) {
-      await this._userTokenRepository.delete(tokenExists.id.value);
       return new InvalidTokenError();
     }
 

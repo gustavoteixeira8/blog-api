@@ -15,6 +15,12 @@ export class UserTokenMapper {
   }
 
   public static toDomain(userToken: UserTokenDTO): UserToken {
-    return UserToken.create(userToken);
+    const newUserToken = UserToken.create(userToken);
+
+    if (newUserToken instanceof Error) {
+      return {} as UserToken;
+    }
+
+    return newUserToken;
   }
 }

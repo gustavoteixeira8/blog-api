@@ -20,7 +20,6 @@ export class CreateUserTokenTable1637287265748 implements MigrationInterface {
             name: 'type',
             type: 'enum',
             enum: ['updatePassword', 'verifyEmail'],
-            isUnique: true,
           },
           {
             name: 'userId',

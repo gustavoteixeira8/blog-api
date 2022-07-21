@@ -10,6 +10,22 @@ export class EntityError extends Error {
   }
 }
 
+export class TokenMustExpiresInFutureError extends Error {
+  public readonly name = 'TokenMustExpiresInFutureError';
+
+  constructor() {
+    super('Token must expires in future');
+  }
+}
+
+export class TokenMustBeSpecificTypeError extends Error {
+  public readonly name = 'TokenMustBeSpecificTypeError';
+
+  constructor() {
+    super('Token must be to verify email or update password');
+  }
+}
+
 export class MaxOfDifferentCategoriesError extends Error {
   public readonly name = 'MaxOfDifferentCategoriesError';
 

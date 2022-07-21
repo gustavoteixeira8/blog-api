@@ -40,7 +40,6 @@ export class UpdateUserPasswordUseCase
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _userTokenRepository: UserTokenRepositoryProtocol,
     private readonly _dateAdapter: DateAdapterProtocol,
-    private readonly _tokenAdapter: TokenAdapterProtocol,
     private readonly _hashAdapter: HashAdapterProtocol,
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
@@ -71,13 +70,6 @@ export class UpdateUserPasswordUseCase
     if (tokenIsExpired) {
       await this._userTokenRepository.delete(userToken.id.value);
 
-      return new InvalidTokenError();
-    }
-
-    try {
-      this._tokenAdapter.verify(userToken.token.value);
-    } catch (error) {
-      await this._userTokenRepository.delete(userToken.id.value);
       return new InvalidTokenError();
     }
 

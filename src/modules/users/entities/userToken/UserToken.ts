@@ -2,19 +2,24 @@ import { UserTokenDTO } from '@modules/users/dtos/UserTokenDTO';
 import { Entity } from '@shared/core/entities/Entity';
 import { ForeignKeyId } from '@shared/core/valueObjects/ForeignKeyId';
 import { Identifier } from '@shared/core/valueObjects/Identifier';
-import { TokenJWT } from '@shared/core/valueObjects/TokenJWT';
+import { TokenSpecific } from '@shared/core/valueObjects/TokenSpecific';
 import { TokenType } from '@shared/core/valueObjects/TokenType';
-import { EntityError } from '@shared/core/errors';
+import { TokenMustBeSpecificTypeError, TokenMustExpiresInFutureError } from '@shared/core/errors';
 import { UserTokenProtocol } from './UserTokenProtocol';
 
+export type UserTokenCreateResponse =
+  | UserToken
+  | TokenMustBeSpecificTypeError
+  | TokenMustExpiresInFutureError;
+
 export class UserToken extends Entity<UserTokenProtocol> implements UserTokenProtocol {
-  private _token: TokenJWT;
+  private _token: TokenSpecific;
   private _type: TokenType;
   private _userId: ForeignKeyId;
   private _expiresIn: Date;
   private _createdAt: Date;
 
-  get token(): TokenJWT {
+  get token(): TokenSpecific {
     return this._token;
   }
   get type(): TokenType {
@@ -39,33 +44,30 @@ export class UserToken extends Entity<UserTokenProtocol> implements UserTokenPro
     this._createdAt = props.createdAt || new Date();
   }
 
-  public static create(props: UserTokenDTO): UserToken {
+  public static create(props: UserTokenDTO): UserTokenCreateResponse {
     const tokenOrError = {
       id: Identifier.create(props.id),
-      token: TokenJWT.create(props.token) as TokenJWT,
+      token: TokenSpecific.create(props.token) as TokenSpecific,
       userId: ForeignKeyId.create(props.userId) as ForeignKeyId,
       type: props.type as TokenType,
       expiresIn: props.expiresIn,
       createdAt: props.createdAt || new Date(),
     };
-    const errors: string[] = [];
 
     for (const key in tokenOrError) {
       if (tokenOrError[key] instanceof Error) {
-        errors.push(tokenOrError[key].message);
+        return tokenOrError[key];
       }
     }
-
-    if (errors.length) throw new EntityError(...errors);
 
     const isNewToken = !props.id;
 
     if (!this.expiresInFuture(props.expiresIn, isNewToken)) {
-      throw new EntityError('Expires in must be in future');
+      return new TokenMustExpiresInFutureError();
     }
 
     if (!this.isValidType(props.type)) {
-      throw new EntityError('Token type is invalid');
+      return new TokenMustBeSpecificTypeError();
     }
 
     return new UserToken(tokenOrError);
