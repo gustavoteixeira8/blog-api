@@ -25,7 +25,10 @@ export interface ArticleRepositoryProtocol {
   findById(articleId: string, options?: RepositoryOptions): Promise<Article | undefined>;
   findAllDeleted(): Promise<Article[]>;
   existsWithSlug(slug: string, options?: RepositoryOptions): Promise<boolean>;
-  findBySlugWithRelations(articleSlug: string): Promise<ArticleWithRelationsDTO | undefined>;
+  findBySlugWithRelations(
+    articleSlug: string,
+    options?: RepositoryOptions,
+  ): Promise<ArticleWithRelationsDTO | undefined>;
   searchWithRelations(
     searchOptions: SearchArticlesProtocol,
     pagination: PaginationOptionsProtocol,

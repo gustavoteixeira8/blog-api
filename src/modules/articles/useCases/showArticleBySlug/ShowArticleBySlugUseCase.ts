@@ -1,5 +1,6 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import {
+  ArticleIsNotYoursError,
   ArticleNotFoundError,
   MissingParamError,
   UserIsNotAdminError,
@@ -20,6 +21,7 @@ export type ShowArticleBySlugResponse = Promise<
   | UserIsNotAdminError
   | ArticleNotFoundError
   | ArticleWithRelationsDTO
+  | ArticleIsNotYoursError
 >;
 
 export class ShowArticleBySlugUseCase
@@ -51,6 +53,10 @@ export class ShowArticleBySlugUseCase
     if (!user) return new UserNotFoundError();
 
     if (!user.isAdmin) return new UserIsNotAdminError();
+
+    if (userId !== articleWithRelations.article.userId.value) {
+      return new ArticleIsNotYoursError();
+    }
 
     return articleWithRelations;
   }

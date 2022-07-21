@@ -65,7 +65,7 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
         alias: 'a',
         leftJoinAndSelect: { user: 'a.user', categories: 'a.categories' },
       },
-      where: { slug: articleSlug, isPublic: true },
+      where: { slug: articleSlug },
       ...options,
     });
 

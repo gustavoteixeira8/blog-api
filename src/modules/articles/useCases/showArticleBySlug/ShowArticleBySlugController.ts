@@ -4,6 +4,7 @@ import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { badRequest, forbidden, HttpResponse, notFound, ok } from '@shared/core/http/HttpResponse';
 import {
+  ArticleIsNotYoursError,
   ArticleNotFoundError,
   MissingParamError,
   UserIsNotAdminError,
@@ -38,7 +39,11 @@ export class ShowArticleBySlugController extends WebController<ShowArticleBySlug
       return notFound({ message: articleOrError.message });
     }
 
-    const isForbidden = this.isTypeofErrors(articleOrError, UserIsNotAdminError.name);
+    const isForbidden = this.isTypeofErrors(
+      articleOrError,
+      UserIsNotAdminError.name,
+      ArticleIsNotYoursError.name,
+    );
 
     if (isForbidden) {
       return forbidden({ message: articleOrError.message });
