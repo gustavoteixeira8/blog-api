@@ -1,5 +1,5 @@
 import { ArticleMapper } from '@modules/articles/mappers/ArticleMapper';
-import { ShowArticleForCreatorUseCase } from './ShowArticleForCreatorUseCase';
+import { ShowArticleBySlugUseCase } from './ShowArticleBySlugUseCase';
 import { WebController } from '@shared/core/controllers/WebController';
 import { HttpRequest } from '@shared/core/http/HttpRequest';
 import { badRequest, forbidden, HttpResponse, notFound, ok } from '@shared/core/http/HttpResponse';
@@ -10,9 +10,14 @@ import {
   UserNotFoundError,
 } from '@shared/core/errors';
 
-export class ShowArticleForCreatorController extends WebController<ShowArticleForCreatorUseCase> {
+export class ShowArticleBySlugController extends WebController<ShowArticleBySlugUseCase> {
   protected async handleRequest(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { userId } = httpRequest.userData;
+    let userId = '';
+
+    if (httpRequest.userData) {
+      userId = httpRequest.userData.userId;
+    }
+
     const { articleSlug } = httpRequest.params;
 
     const articleOrError = await this._useCase.execute({ articleSlug, userId });

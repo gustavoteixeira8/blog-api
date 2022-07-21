@@ -7,14 +7,14 @@ import {
 } from '@shared/core/errors';
 import { ArticleWithRelationsDTO } from '@modules/articles/dtos/ArticleWithRelationsDTO';
 import { ArticleRepositoryProtocol } from '@modules/articles/repositories/ArticleRepositoryProtocol';
-import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
+import { UserRepositoryProtocol } from '../../../users/repositories/UserRepositoryProtocol';
 
-export interface ShowArticleForCreatorRequest {
+export interface ShowArticleBySlugRequest {
   articleSlug: string;
   userId: string;
 }
 
-export type ShowArticleForCreatorResponse = Promise<
+export type ShowArticleBySlugResponse = Promise<
   | MissingParamError
   | UserNotFoundError
   | UserIsNotAdminError
@@ -22,8 +22,8 @@ export type ShowArticleForCreatorResponse = Promise<
   | ArticleWithRelationsDTO
 >;
 
-export class ShowArticleForCreatorUseCase
-  implements UseCaseProtocol<ShowArticleForCreatorRequest, ShowArticleForCreatorResponse>
+export class ShowArticleBySlugUseCase
+  implements UseCaseProtocol<ShowArticleBySlugRequest, ShowArticleBySlugResponse>
 {
   constructor(
     private readonly _articleRepository: ArticleRepositoryProtocol,
@@ -33,8 +33,18 @@ export class ShowArticleForCreatorUseCase
   public async execute({
     articleSlug,
     userId,
-  }: ShowArticleForCreatorRequest): ShowArticleForCreatorResponse {
-    if (!articleSlug || !userId) return new MissingParamError('Article slug and user id');
+  }: ShowArticleBySlugRequest): ShowArticleBySlugResponse {
+    if (!articleSlug) return new MissingParamError('Article slug');
+
+    const articleWithRelations = await this._articleRepository.findBySlugWithRelations(articleSlug);
+
+    if (!articleWithRelations) return new ArticleNotFoundError();
+
+    if (articleWithRelations.article.isPublic && !articleWithRelations.article.deletedAt) {
+      return articleWithRelations;
+    }
+
+    if (!userId) return new UserIsNotAdminError();
 
     const user = await this._userRepository.findById(userId, { withDeleted: false });
 
@@ -42,13 +52,6 @@ export class ShowArticleForCreatorUseCase
 
     if (!user.isAdmin) return new UserIsNotAdminError();
 
-    const article = await this._articleRepository.findBySlugForCreatorWithRelations(
-      articleSlug,
-      userId,
-    );
-
-    if (!article) return new ArticleNotFoundError();
-
-    return article;
+    return articleWithRelations;
   }
 }

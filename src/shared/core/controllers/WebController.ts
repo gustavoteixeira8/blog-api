@@ -18,6 +18,7 @@ export abstract class WebController<T = UseCaseProtocol<any, any>> {
     try {
       return await this.handleRequest(httpRequest);
     } catch (error) {
+      console.log(error);
       return serverError({ message: 'Internal error' });
     }
   }

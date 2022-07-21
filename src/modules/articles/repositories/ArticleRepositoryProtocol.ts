@@ -6,18 +6,13 @@ import { RepositoryOptions } from '@shared/core/repositories/RepositoryOptions';
 import { ArticleWithRelationsDTO } from '../dtos/ArticleWithRelationsDTO';
 import { Article } from '../entities/Article';
 
-export type SearchArticlesForCreatorProtocol = {
+export type SearchArticlesProtocol = {
   isPublic?: boolean;
   isDeleted?: boolean;
   categoryName?: string;
   articleTitle?: string;
-  userId: string;
-};
-
-export type SearchArticlesProtocol = {
-  categoryName?: string;
-  articleTitle?: string;
   username?: string;
+  userId?: string;
 };
 
 export type SearchArticlesPaginate<T> = Partial<PaginationOptionsProtocol> & T;
@@ -30,20 +25,9 @@ export interface ArticleRepositoryProtocol {
   findById(articleId: string, options?: RepositoryOptions): Promise<Article | undefined>;
   findAllDeleted(): Promise<Article[]>;
   existsWithSlug(slug: string, options?: RepositoryOptions): Promise<boolean>;
-  findPublicBySlugWithRelations(
-    articleSlug: string,
-    options?: RepositoryOptions,
-  ): Promise<ArticleWithRelationsDTO | undefined>;
-  findBySlugForCreatorWithRelations(
-    articleSlug: string,
-    userId: string,
-  ): Promise<ArticleWithRelationsDTO | undefined>;
+  findBySlugWithRelations(articleSlug: string): Promise<ArticleWithRelationsDTO | undefined>;
   searchWithRelations(
     searchOptions: SearchArticlesProtocol,
-    pagination: PaginationOptionsProtocol,
-  ): Promise<ArticlesPaginateResponse>;
-  searchForCreatorWithRelations(
-    searchOptions: SearchArticlesForCreatorProtocol,
     pagination: PaginationOptionsProtocol,
   ): Promise<ArticlesPaginateResponse>;
 }

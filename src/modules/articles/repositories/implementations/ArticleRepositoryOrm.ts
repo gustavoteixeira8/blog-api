@@ -6,7 +6,6 @@ import { ArticleEntity } from '@shared/infra/database/entities/ArticleEntity';
 import {
   ArticleRepositoryProtocol,
   ArticlesPaginateResponse,
-  SearchArticlesForCreatorProtocol,
   SearchArticlesProtocol,
 } from '../ArticleRepositoryProtocol';
 import { ArticleWithRelationsDTO } from '@modules/articles/dtos/ArticleWithRelationsDTO';
@@ -79,16 +78,15 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
     };
   }
 
-  public async findBySlugForCreatorWithRelations(
+  public async findBySlugWithRelations(
     articleSlug: string,
-    userId: string,
   ): Promise<ArticleWithRelationsDTO | undefined> {
     const article = await this._table.findOne({
       join: {
         alias: 'a',
         leftJoinAndSelect: { user: 'a.user', categories: 'a.categories' },
       },
-      where: { slug: articleSlug, userId },
+      where: { slug: articleSlug },
       withDeleted: true,
     });
 
@@ -106,7 +104,7 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
     pagination: PaginationOptionsProtocol,
   ): Promise<ArticlesPaginateResponse> {
     const { order, page, perPage } = pagination;
-    const { articleTitle, categoryName, username } = searchOptions;
+    const { articleTitle, categoryName, username, isDeleted, isPublic, userId } = searchOptions;
 
     const qb = this._table
       .createQueryBuilder('a')
@@ -115,6 +113,10 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
       .take(perPage)
       .skip(page)
       .where('a.isPublic = true');
+
+    if (userId) {
+      qb.where('user.id = :userId', { userId });
+    }
 
     if (order) {
       for (const key in order) {
@@ -140,56 +142,6 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
       });
     }
 
-    const [articles, count] = await qb.getManyAndCount();
-
-    return {
-      data: articles.map((article) => {
-        const user = UserMapper.toDomain(article.user);
-        const categories = article.categories.map(CategoryMapper.toDomain);
-
-        return { article: ArticleMapper.toDomain(article), user, categories };
-      }),
-      page: Math.ceil(page / perPage + 1),
-      perPage,
-      maxItems: count,
-      maxPage: Math.ceil(count / perPage),
-      order: order || null,
-    };
-  }
-
-  public async searchForCreatorWithRelations(
-    searchOptions: SearchArticlesForCreatorProtocol,
-    pagination: PaginationOptionsProtocol,
-  ): Promise<ArticlesPaginateResponse> {
-    const { order, page, perPage } = pagination;
-    const { articleTitle, categoryName, userId, isDeleted, isPublic } = searchOptions;
-
-    const qb = this._table
-      .createQueryBuilder('a')
-      .leftJoinAndSelect('a.user', 'user')
-      .leftJoinAndSelect('a.categories', 'category')
-      .where('user.id = :userId', { userId })
-      .take(perPage)
-      .skip(page);
-
-    if (order) {
-      for (const key in order) {
-        qb.addOrderBy(`a.${key}`, order[key]);
-      }
-    }
-
-    if (articleTitle) {
-      qb.andWhere('lower(a.title) like :articleTitle', {
-        articleTitle: `%${articleTitle.toLowerCase()}%`,
-      });
-    }
-
-    if (categoryName) {
-      qb.andWhere('lower(category.name) like :categoryName', {
-        categoryName: `${categoryName.toLowerCase()}%`,
-      });
-    }
-
     if (isDeleted === true) {
       qb.withDeleted().andWhere('a.deletedAt is not null');
     } else if (isDeleted === false) {
@@ -210,10 +162,10 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
         return { article: ArticleMapper.toDomain(article), user, categories };
       }),
       page: Math.ceil(page / perPage + 1),
+      order,
       perPage,
       maxItems: count,
       maxPage: Math.ceil(count / perPage),
-      order: order || null,
     };
   }
 }

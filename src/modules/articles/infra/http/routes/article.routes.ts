@@ -2,8 +2,7 @@ import multer from 'multer';
 import { Router } from 'express';
 import { uploadConfig } from '@config/upload';
 import { controllerAdapter } from '@shared/adapters/expressAdapter/controllerAdapter';
-import { makeSearchPublicArticles } from '@modules/articles/useCases/searchPublicArticles/makeSearchPublicArticles';
-import { makeShowPublicArticleBySlug } from '@modules/articles/useCases/showPublicArticleBySlug/makeShowPublicArticleBySlug';
+import { makeSearchPublicArticles } from '@modules/articles/useCases/searchArticles/makeSearchPublicArticles';
 import { makeCreateArticle } from '@modules/articles/useCases/createArticle/makeCreateArticle';
 import { makeUpdateArticle } from '@modules/articles/useCases/updateArticle/makeUpdateArticle';
 import { makeRecoverArticle } from '@modules/articles/useCases/recoverArticle/makeRecoverArticle';
@@ -12,12 +11,22 @@ import { makeUpdateArticleThumbnail } from '@modules/articles/useCases/updateArt
 import { middlewareAdapter } from '@shared/adapters/expressAdapter/middlewareAdapter';
 import { makeEnsureAuthentication } from '@shared/infra/http/middlewares/ensureAuth/makeEnsureAuthentication';
 import { makeEnsureAdmin } from '@shared/infra/http/middlewares/ensureAdmin/makeEnsureAdmin';
+import { makeShowArticleBySlug } from '@modules/articles/useCases/showArticleBySlug/makeShowArticleBySlug';
+import { makeChooseToCallAuthMiddleware } from '@shared/infra/http/middlewares/chooseToCallAuthMiddleware/makeChooseToCallAuthMiddleware';
 
 export const setupArticleRoutes = () => {
   const articleRoutes = Router();
 
-  articleRoutes.get('/', controllerAdapter(makeSearchPublicArticles()));
-  articleRoutes.get('/:articleSlug', controllerAdapter(makeShowPublicArticleBySlug()));
+  articleRoutes.get(
+    '/',
+    middlewareAdapter(makeChooseToCallAuthMiddleware()),
+    controllerAdapter(makeSearchPublicArticles()),
+  );
+  articleRoutes.get(
+    '/:articleSlug',
+    middlewareAdapter(makeChooseToCallAuthMiddleware()),
+    controllerAdapter(makeShowArticleBySlug()),
+  );
 
   articleRoutes.use(middlewareAdapter(makeEnsureAuthentication()));
   articleRoutes.use(middlewareAdapter(makeEnsureAdmin()));
