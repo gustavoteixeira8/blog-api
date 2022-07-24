@@ -1,12 +1,7 @@
 import { RedisProvider } from '@shared/infra/cache';
+import { Auth, RedisAuthStorageProtocol } from '../RedisAuthStorageProtocol';
 
-export interface Auth {
-  userId: string;
-  accessToken: string;
-  expiresIn: Date;
-}
-
-export class AuthStorage {
+export class RedisAuthStorage implements RedisAuthStorageProtocol {
   constructor(private _cacheProvider: RedisProvider) {}
 
   public async saveToken({ userId, accessToken, expiresIn }: Auth): Promise<void> {
@@ -15,17 +10,18 @@ export class AuthStorage {
     await this._cacheProvider.save(key, { userId, accessToken, expiresIn });
   }
 
-  public async deleteToken(userId: string) {
+  public async deleteToken(userId: string): Promise<void> {
     const key = this.constructKey(userId);
 
     await this._cacheProvider.delete(key);
   }
 
-  public async getToken(userId: string) {
-    return await this._cacheProvider.get<Auth>(this.constructKey(userId));
+  public async getToken(userId: string): Promise<Auth | undefined> {
+    const key = this.constructKey(userId);
+    return await this._cacheProvider.get<Auth>(key);
   }
 
-  private constructKey(userId: string) {
+  private constructKey(userId: string): string {
     return `authService:${userId}`;
   }
 }

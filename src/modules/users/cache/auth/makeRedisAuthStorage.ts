@@ -1,8 +1,8 @@
 import { cacheConfig } from '@config/cache';
 import { RedisProvider } from '@shared/infra/cache';
-import { AuthStorage } from './AuthStorage';
+import { RedisAuthStorage } from './implementations/RedisAuthStorage';
 
-export const makeAuthStorage = () => {
+export const makeRedisAuthStorage = () => {
   const redis = RedisProvider.connect(cacheConfig.redis);
-  return new AuthStorage(redis);
+  return new RedisAuthStorage(redis);
 };
