@@ -56,28 +56,6 @@ export class ArticleRepositoryOrm implements ArticleRepositoryProtocol {
     return !!article;
   }
 
-  public async findPublicBySlugWithRelations(
-    articleSlug: string,
-    options?: RepositoryOptions,
-  ): Promise<ArticleWithRelationsDTO | undefined> {
-    const article = await this._table.findOne({
-      join: {
-        alias: 'a',
-        leftJoinAndSelect: { user: 'a.user', categories: 'a.categories' },
-      },
-      where: { slug: articleSlug },
-      ...options,
-    });
-
-    if (!article) return;
-
-    return {
-      article: ArticleMapper.toDomain(article),
-      user: UserMapper.toDomain(article.user),
-      categories: article.categories.map(CategoryMapper.toDomain),
-    };
-  }
-
   public async findBySlugWithRelations(
     articleSlug: string,
   ): Promise<ArticleWithRelationsDTO | undefined> {
