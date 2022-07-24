@@ -1,7 +1,6 @@
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
-import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapterProtocol';
 import { DateAdapterProtocol } from '@shared/adapters/dateAdapter/DateAdapterProtocol';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
 import { Password } from '@shared/core/valueObjects/Password';
