@@ -4,7 +4,7 @@ import { UserDetailsDTO } from '@modules/users/dtos/UserDetailsDTO';
 export interface ArticleDetailsDTO {
   id: string;
   title: string;
-  text?: string;
+  text: string;
   slug: string;
   isPublic: boolean;
   thumbnail: string | null;

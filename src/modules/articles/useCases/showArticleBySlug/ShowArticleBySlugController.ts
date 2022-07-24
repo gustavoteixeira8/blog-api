@@ -49,7 +49,7 @@ export class ShowArticleBySlugController extends WebController<ShowArticleBySlug
       return forbidden({ message: articleOrError.message });
     }
 
-    const articleFormatted = ArticleMapper.toDetails(articleOrError, true);
+    const articleFormatted = ArticleMapper.toDetails(articleOrError);
 
     return ok({ message: null, data: articleFormatted });
   }

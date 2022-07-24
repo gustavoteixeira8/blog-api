@@ -45,16 +45,17 @@ export class ArticleMapper {
     return newArticle;
   }
 
-  public static toDetails(
-    { article, user, categories }: ArticleWithRelationsDTO,
-    withText = false,
-  ): ArticleDetailsDTO {
+  public static toDetails({
+    article,
+    user,
+    categories,
+  }: ArticleWithRelationsDTO): ArticleDetailsDTO {
     const thumbnailLocation = uploadConfig.storageProvider.storageLocation;
 
     return {
       id: article.id.value,
       title: article.title.value,
-      ...(withText ? { text: article.text.value } : null),
+      text: article.text.value,
       slug: article.slug.value,
       isPublic: article.isPublic,
       thumbnail: !article.thumbnail ? null : `${thumbnailLocation}/${article.thumbnail.value}`,

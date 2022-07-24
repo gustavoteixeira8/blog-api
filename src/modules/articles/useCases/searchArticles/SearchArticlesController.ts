@@ -53,7 +53,7 @@ export class SearchArticlesController extends WebController<SearchArticlesUseCas
       return forbidden({ message: result.message });
     }
 
-    const articlesFormatted = result.data.map((article) => ArticleMapper.toDetails(article, false));
+    const articlesFormatted = result.data.map((article) => ArticleMapper.toDetails(article));
 
     return ok({ data: { ...result, data: articlesFormatted }, message: null });
   }
