@@ -6,6 +6,7 @@ import { TokenAdapterProtocol } from '@shared/adapters/tokenAdapter/TokenAdapter
 import { User } from '../../entities/user/User';
 import { UserRepositoryProtocol } from '../../repositories/UserRepositoryProtocol';
 import { LoginOrPasswordInvalidError, MissingParamError } from '@shared/core/errors';
+import { AuthStorage } from '@modules/users/auth/AuthStorage';
 
 export interface AuthRequest {
   login: string;
@@ -27,6 +28,7 @@ export class AuthenticateUserUseCase
 {
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
+    private readonly _authStorage: AuthStorage,
     private readonly _tokenAdapter: TokenAdapterProtocol,
     private readonly _dateAdapter: DateAdapterProtocol,
     private readonly _hashAdapter: HashAdapterProtocol,
@@ -52,11 +54,28 @@ export class AuthenticateUserUseCase
 
     if (!isValidPassword) return new LoginOrPasswordInvalidError();
 
+    const userIsAlreadyLoggedIn = await this._authStorage.getToken(user.id.value);
+
+    if (userIsAlreadyLoggedIn) {
+      return {
+        accessToken: userIsAlreadyLoggedIn.accessToken,
+        expiresIn: userIsAlreadyLoggedIn.expiresIn,
+        userId: user.id.value,
+        userIsRecovered: false,
+      };
+    }
+
     const tokenExpiresIn = this._dateAdapter.add(new Date(), { days: 1 });
     const accessToken = this._tokenAdapter.sign(
       { id: user.id.value, expiresIn: tokenExpiresIn },
       { expiresIn: '1d' },
     );
+
+    await this._authStorage.saveToken({
+      accessToken,
+      userId: user.id.value,
+      expiresIn: tokenExpiresIn,
+    });
 
     const userIsDeleted = !!user.deletedAt;
 

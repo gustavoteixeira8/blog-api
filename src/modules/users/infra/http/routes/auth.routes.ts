@@ -1,4 +1,4 @@
-import { makeAuthenticateUser } from '@modules/users/useCases/autheticateUser/makeAuthenticateUser';
+import { makeAuthenticateUser } from '@modules/users/useCases/authenticateUser/makeAuthenticateUser';
 import { makeSendUpdatePasswordEmail } from '@modules/users/useCases/sendUpdatePasswordEmail/makeSendUpdatePasswordEmail';
 import { makeSendVerificationEmail } from '@modules/users/useCases/sendVerificationEmail/makeSendVerificationEmail';
 import { makeUpdateUserPassword } from '@modules/users/useCases/updateUserPassword/makeUpdateUserPassword';

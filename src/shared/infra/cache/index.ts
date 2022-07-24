@@ -35,4 +35,20 @@ export class RedisProvider {
       });
     }
   }
+
+  public async save(key: string, value: unknown): Promise<void> {
+    await this._client.set(key, JSON.stringify(value));
+  }
+
+  public async delete(key: string): Promise<void> {
+    await this._client.del(key);
+  }
+
+  public async get<T = any>(key: string): Promise<T | undefined> {
+    const value = await this._client.get(key);
+
+    if (!value) return;
+
+    return JSON.parse(value) as T;
+  }
 }
