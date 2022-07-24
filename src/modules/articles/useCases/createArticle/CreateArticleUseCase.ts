@@ -2,9 +2,6 @@ import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import { SlugAdapterProtocol } from '@shared/adapters/slugAdapter/SlugAdapterProtocol';
 import { CategoryRepositoryProtocol } from '@modules/categories/repositories/CategoryRepositoryProtocol';
 import { Article } from '../../entities/Article';
-import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
-import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
-import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 import {
@@ -48,7 +45,6 @@ export class CreateArticleUseCase
     private readonly _categoryRepository: CategoryRepositoryProtocol,
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _slugAdapter: SlugAdapterProtocol,
-    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({
@@ -87,12 +83,6 @@ export class CreateArticleUseCase
       return new ArticleTitleAlreadyExistsError();
     }
 
-    for (const categoryId of categoriesId) {
-      if (!(await this._categoryRepository.findById(categoryId))) {
-        return new CategoryNotFoundError();
-      }
-    }
-
     const articleOrError = Article.create({
       title,
       text,
@@ -105,6 +95,14 @@ export class CreateArticleUseCase
 
     if (articleOrError instanceof Error) {
       return articleOrError;
+    }
+
+    for (const categoryId of categoriesId) {
+      const categoryExists = await this._categoryRepository.findById(categoryId);
+
+      if (!categoryExists) {
+        return new CategoryNotFoundError();
+      }
     }
 
     this._articleRepository.save(articleOrError);

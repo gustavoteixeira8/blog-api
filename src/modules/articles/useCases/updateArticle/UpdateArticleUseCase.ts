@@ -4,9 +4,6 @@ import { CategoryRepositoryProtocol } from '@modules/categories/repositories/Cat
 import { ArticleTitle } from '@shared/core/valueObjects/ArticleTitle';
 import { ArticleText } from '@shared/core/valueObjects/ArticleText';
 import { Slug } from '@shared/core/valueObjects/Slug';
-import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
-import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
-import { appConfig } from '@config/app';
 import { ForeignKeyId } from '@shared/core/valueObjects/ForeignKeyId';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
@@ -17,6 +14,7 @@ import {
   CategoryNotFoundError,
   InvalidArticleTextError,
   InvalidArticleTitleError,
+  MaxOfDifferentCategoriesError,
   MissingParamError,
   UserEmailIsNotVerifiedError,
   UserIsNotAdminError,
@@ -44,6 +42,7 @@ export type UpdateArticleResponse = Promise<
   | UserEmailIsNotVerifiedError
   | UserIsNotAdminError
   | UserNotFoundError
+  | MaxOfDifferentCategoriesError
 >;
 
 export class UpdateArticleUseCase
@@ -54,7 +53,6 @@ export class UpdateArticleUseCase
     private readonly _categoryRepository: CategoryRepositoryProtocol,
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _slugAdapter: SlugAdapterProtocol,
-    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({
@@ -120,11 +118,14 @@ export class UpdateArticleUseCase
     }
 
     if (typeof isPublic !== 'undefined') {
-      if (isPublic === true) article.makePublic();
-      else article.makePrivate();
+      if (isPublic === true) {
+        article.makePublic();
+      } else {
+        article.makePrivate();
+      }
     }
 
-    if (categoriesId && categoriesId.length) {
+    if (categoriesId && categoriesId.length > 0 && categoriesId.length < 5) {
       const categoriesFK: ForeignKeyId[] = [];
 
       for (const categoryId of categoriesId) {

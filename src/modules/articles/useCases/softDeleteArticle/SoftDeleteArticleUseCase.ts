@@ -1,4 +1,3 @@
-import { appConfig } from '@config/app';
 import { UserRepositoryProtocol } from '@modules/users/repositories/UserRepositoryProtocol';
 import { UseCaseProtocol } from '@shared/core/useCases/UseCaseProtocol';
 import {
@@ -9,8 +8,6 @@ import {
   UserIsNotAdminError,
   UserNotFoundError,
 } from '@shared/core/errors';
-import { MailOptionsProtocol } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
-import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
 import { ArticleRepositoryProtocol } from '../../repositories/ArticleRepositoryProtocol';
 
 export interface DeleteArticleRequest {
@@ -34,7 +31,6 @@ export class SoftDeleteArticleUseCase
   constructor(
     private readonly _userRepository: UserRepositoryProtocol,
     private readonly _articleRepository: ArticleRepositoryProtocol,
-    private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
   public async execute({ articleId, userId }: DeleteArticleRequest): DeleteArticleResponse {
