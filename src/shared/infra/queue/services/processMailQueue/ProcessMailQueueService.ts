@@ -4,14 +4,10 @@ import {
   MailAdapterProtocol,
 } from '@shared/adapters/mailAdapter/MailAdapterProtocol';
 import { QueueAdapterProtocol } from '@shared/adapters/queueAdapter/QueueAdapterProtocol';
-import { inject, injectable } from 'tsyringe';
 
-@injectable()
 export class ProcessMailQueueService {
   constructor(
-    @inject('MailAdapter')
     private readonly _mailAdapter: MailAdapterProtocol,
-    @inject('MailQueueAdapter')
     private readonly _mailQueueAdapter: QueueAdapterProtocol<MailOptionsProtocol>,
   ) {}
 
