@@ -39,7 +39,6 @@ export const uploadConfig = {
       cb(new BadRequestError('The supported types are jpeg, png, gif, bmp, webp'));
     },
   },
-
   storageProvider: {
     storageLocation: process.env.STORAGE_LOCATION_FILE,
     cloudinary: {
