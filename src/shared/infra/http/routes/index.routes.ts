@@ -5,6 +5,7 @@ import { setupCategoryRoutes } from '@modules/categories/infra/http/routes/categ
 import { setupArticleRoutes } from '@modules/articles/infra/http/routes/article.routes';
 import { middlewareAdapter } from '@shared/adapters/expressAdapter/middlewareAdapter';
 import { makeSanitizeBody } from '../middlewares/sanitizeBody/makeSanitizeBody';
+import { catchErrorsInRoutes } from '../middlewares/catchErrorsInRoutes';
 
 export const setupRoutes = () => {
   const routes = Router();
@@ -15,7 +16,8 @@ export const setupRoutes = () => {
     .use('/user', sanitizeBody, setupUserRoutes())
     .use('/auth', sanitizeBody, setupAuthRoutes())
     .use('/category', sanitizeBody, setupCategoryRoutes())
-    .use('/article', sanitizeBody, setupArticleRoutes());
+    .use('/article', sanitizeBody, setupArticleRoutes())
+    .use(catchErrorsInRoutes);
 
   return routes;
 };
