@@ -2,6 +2,7 @@ import { OrderByProtocol } from '../repositories/PaginationProtocol';
 import { UseCaseProtocol } from '../useCases/UseCaseProtocol';
 import { HttpRequest } from '../http/HttpRequest';
 import { HttpResponse, serverError } from '../http/HttpResponse';
+import { logger } from '@shared/log';
 
 export type ResolveNumbersResponse = Record<string, number | undefined>;
 export type ResolveDateResponse = Record<string, Date | undefined>;
@@ -18,7 +19,7 @@ export abstract class WebController<T = UseCaseProtocol<any, any>> {
     try {
       return await this.handleRequest(httpRequest);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return serverError({ message: 'Internal error' });
     }
   }

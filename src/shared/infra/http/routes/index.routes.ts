@@ -6,6 +6,12 @@ import { setupArticleRoutes } from '@modules/articles/infra/http/routes/article.
 import { middlewareAdapter } from '@shared/adapters/expressAdapter/middlewareAdapter';
 import { makeSanitizeBody } from '../middlewares/sanitizeBody/makeSanitizeBody';
 import { catchErrorsInRoutes } from '../middlewares/catchErrorsInRoutes';
+import {
+  authRoutesLimiter,
+  authRoutesSlowDown,
+  defaultLimiter,
+  defaultSlowDown,
+} from '../middlewares/rateLimiter';
 
 export const setupRoutes = () => {
   const routes = Router();
@@ -13,10 +19,10 @@ export const setupRoutes = () => {
   const sanitizeBody = middlewareAdapter(makeSanitizeBody());
 
   routes
-    .use('/user', sanitizeBody, setupUserRoutes())
-    .use('/auth', sanitizeBody, setupAuthRoutes())
-    .use('/category', sanitizeBody, setupCategoryRoutes())
-    .use('/article', sanitizeBody, setupArticleRoutes())
+    .use('/user', defaultSlowDown, defaultLimiter, sanitizeBody, setupUserRoutes())
+    .use('/auth', authRoutesSlowDown, authRoutesLimiter, sanitizeBody, setupAuthRoutes())
+    .use('/category', defaultSlowDown, defaultLimiter, sanitizeBody, setupCategoryRoutes())
+    .use('/article', defaultSlowDown, defaultLimiter, sanitizeBody, setupArticleRoutes())
     .use(catchErrorsInRoutes);
 
   return routes;

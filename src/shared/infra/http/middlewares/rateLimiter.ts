@@ -1,5 +1,5 @@
 import { cacheConfig } from '@config/cache';
-import { TooManyRequestsError } from '@shared/infra/http/errors/httpErrors';
+import { TooManyRequestsError } from '@shared/core/http/httpErrors';
 import { RedisProvider } from '@shared/infra/cache';
 import rateLimiter from 'express-rate-limit';
 import slowDown from 'express-slow-down';
@@ -13,7 +13,7 @@ export const authRoutesLimiter = rateLimiter({
     prefix: 'auth-routes-limit:',
   }),
   max: 15,
-  windowMs: 1000 * 60 * 5,
+  windowMs: 300_000,
   draft_polli_ratelimit_headers: true,
   statusCode: 429,
   handler(): never {
@@ -30,10 +30,10 @@ export const authRoutesSlowDown = slowDown({
   }),
   skipFailedRequests: false,
   skipSuccessfulRequests: false,
-  windowMs: 1000 * 60 * 5,
+  windowMs: 300_000,
   delayAfter: 3,
   delayMs: Math.floor(Math.random() * 2000),
-  maxDelayMs: 1000 * 60,
+  maxDelayMs: 60_000,
 });
 
 export const defaultLimiter = rateLimiter({
@@ -42,7 +42,7 @@ export const defaultLimiter = rateLimiter({
     prefix: 'default-limit:',
   }),
   max: 1000,
-  windowMs: 1000 * 60 * 3,
+  windowMs: 300_000,
   draft_polli_ratelimit_headers: true,
   statusCode: 429,
   handler(): never {
@@ -50,4 +50,17 @@ export const defaultLimiter = rateLimiter({
       'Too many requests coming from the same IP, try again in a few moments',
     );
   },
+});
+
+export const defaultSlowDown = slowDown({
+  store: new RedisStoreLimiter({
+    client: redisProvider.client,
+    prefix: 'default-slow-down:',
+  }),
+  skipFailedRequests: false,
+  skipSuccessfulRequests: false,
+  windowMs: 300_000,
+  delayAfter: 50,
+  delayMs: Math.floor(Math.random() * 2000),
+  maxDelayMs: 60_000,
 });

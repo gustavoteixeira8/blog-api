@@ -1,3 +1,4 @@
+import { logger } from '@shared/log';
 import { HttpError, InternalServerError } from '../http/httpErrors';
 import { HttpRequest } from '../http/HttpRequest';
 
@@ -14,6 +15,7 @@ export abstract class WebMiddleware {
     try {
       return await this.handleMiddleware(httpRequest);
     } catch (error) {
+      logger.error(error);
       return new InternalServerError();
     }
   }
