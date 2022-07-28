@@ -22,8 +22,10 @@ export const middlewareAdapter = (webMiddleware: WebMiddleware) => {
         .json(defaultResponse({ message: middleware.errors, status: middleware.status }));
     }
 
-    for (const key in middleware) {
-      req[key] = middleware[key];
+    if (Object.keys(middleware).length > 0) {
+      for (const key in middleware) {
+        req[key] = middleware[key];
+      }
     }
 
     return next();
