@@ -78,7 +78,7 @@ export class AddRoleAdminToUserUseCase
             appConfig,
           },
           html: {
-            filename: 'userAddAdmin',
+            filename: 'addRoleAdminToUser',
             module: 'users',
           },
         },
