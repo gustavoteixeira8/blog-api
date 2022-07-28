@@ -16,7 +16,7 @@ export class AddRoleAdminToUserController extends WebController<AddRoleAdminToUs
 
     const result = await this._useCase.execute({ adminId, userId });
     const isBadRequest = this.isTypeofErrors(result, MissingParamError.name);
-    console.log(result);
+
     if (isBadRequest) {
       return badRequest({ message: result.message });
     }
