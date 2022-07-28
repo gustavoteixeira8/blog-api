@@ -37,7 +37,7 @@ export class SearchArticlesUseCase
     categoryName,
     username,
   }: SearchArticlesRequest): SearchArticlesResponse {
-    const take = !perPage || perPage > 20 ? 20 : Math.ceil(perPage);
+    const take = !perPage || perPage > 1000 ? 1000 : Math.ceil(perPage);
     const skip = page ? take * (Math.ceil(page) - 1) : 0;
     const orderByDefault = Object.keys(order || {}).length ? order : { createdAt: 'DESC' };
     const pagination = {
