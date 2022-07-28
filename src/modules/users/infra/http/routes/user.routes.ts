@@ -1,5 +1,5 @@
 import { makeCreateUser } from '@modules/users/useCases/createUser/makeCreateUser';
-import { makeAddRoleAdminToUser } from '@modules/users/useCases/makeUserAdmin/makeAddRoleAdminToUser';
+import { makeAddRoleAdminToUser } from '@modules/users/useCases/addRoleAdminToUser/makeAddRoleAdminToUser';
 import { makeRemoveUserAdmin } from '@modules/users/useCases/removeUserAdmin/makeRemoveUserAdmin';
 import { makeSearchUsersController } from '@modules/users/useCases/searchUsers/makeSearchUsers';
 import { makeShowUserById } from '@modules/users/useCases/showUserById/makeShowUserById';
