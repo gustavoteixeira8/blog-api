@@ -54,6 +54,13 @@ export class AuthenticateUserUseCase
 
     if (!isValidPassword) return new LoginOrPasswordInvalidError();
 
+    const userIsDeleted = !!user.deletedAt;
+
+    if (userIsDeleted) {
+      user.recover();
+      await this._userRepository.recover(user.id.value);
+    }
+
     const userIsAlreadyLoggedIn = await this._redisAuthStorage.getToken(user.id.value);
 
     if (userIsAlreadyLoggedIn) {
@@ -76,13 +83,6 @@ export class AuthenticateUserUseCase
       userId: user.id.value,
       expiresIn: tokenExpiresIn,
     });
-
-    const userIsDeleted = !!user.deletedAt;
-
-    if (userIsDeleted) {
-      user.recover();
-      await this._userRepository.recover(user.id.value);
-    }
 
     return {
       accessToken,
