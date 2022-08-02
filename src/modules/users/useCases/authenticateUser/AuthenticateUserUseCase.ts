@@ -61,15 +61,22 @@ export class AuthenticateUserUseCase
       await this._userRepository.recover(user.id.value);
     }
 
-    const userIsAlreadyLoggedIn = await this._redisAuthStorage.getToken(user.id.value);
+    const accessTokenStored = await this._redisAuthStorage.getToken(user.id.value);
 
-    if (userIsAlreadyLoggedIn) {
-      return {
-        accessToken: userIsAlreadyLoggedIn.accessToken,
-        expiresIn: userIsAlreadyLoggedIn.expiresIn,
-        userId: user.id.value,
-        userIsRecovered: false,
-      };
+    if (accessTokenStored) {
+      const tokenIsExpired = this._dateAdapter.isAfter(
+        new Date(),
+        new Date(accessTokenStored?.expiresIn),
+      );
+
+      if (!tokenIsExpired) {
+        return {
+          accessToken: accessTokenStored.accessToken,
+          expiresIn: accessTokenStored.expiresIn,
+          userId: user.id.value,
+          userIsRecovered: false,
+        };
+      }
     }
 
     const tokenExpiresIn = this._dateAdapter.add(new Date(), { days: 1 });
