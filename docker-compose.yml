@@ -26,31 +26,6 @@ services:
     networks:
       - net
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_blog
-    restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - 3001:80
-    depends_on:
-      - postgres
-
-  redisinsight:
-    image: redislabs/redisinsight:latest
-    container_name: redisinsight_blog
-    restart: always
-    depends_on:
-      - redis
-    ports:
-      - 3002:8001
-    networks:
-      - net
-
-
-
 networks:
   net:
     driver: bridge
