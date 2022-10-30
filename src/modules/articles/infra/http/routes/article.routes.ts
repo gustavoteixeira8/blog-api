@@ -13,15 +13,12 @@ import { makeEnsureAuthentication } from '@shared/infra/http/middlewares/ensureA
 import { makeEnsureAdmin } from '@shared/infra/http/middlewares/ensureAdmin/makeEnsureAdmin';
 import { makeShowArticleBySlug } from '@modules/articles/useCases/showArticleBySlug/makeShowArticleBySlug';
 import { makeChooseToCallAuthMiddleware } from '@shared/infra/http/middlewares/chooseToCallAuthMiddleware/makeChooseToCallAuthMiddleware';
+import { makeSearchMyArticles } from '@modules/articles/useCases/searchMyArticles/makeSearchPublicArticles';
 
 export const setupArticleRoutes = () => {
   const articleRoutes = Router();
 
-  articleRoutes.get(
-    '/',
-    middlewareAdapter(makeChooseToCallAuthMiddleware()),
-    controllerAdapter(makeSearchPublicArticles()),
-  );
+  articleRoutes.get('/', controllerAdapter(makeSearchPublicArticles()));
   articleRoutes.get(
     '/:articleSlug',
     middlewareAdapter(makeChooseToCallAuthMiddleware()),
@@ -31,6 +28,7 @@ export const setupArticleRoutes = () => {
   articleRoutes.use(middlewareAdapter(makeEnsureAuthentication()));
   articleRoutes.use(middlewareAdapter(makeEnsureAdmin()));
 
+  articleRoutes.get('/my/articles', controllerAdapter(makeSearchMyArticles()));
   articleRoutes.post('/', controllerAdapter(makeCreateArticle()));
   articleRoutes.put('/:articleId', controllerAdapter(makeUpdateArticle()));
   articleRoutes.put('/:articleId/recover', controllerAdapter(makeRecoverArticle()));
