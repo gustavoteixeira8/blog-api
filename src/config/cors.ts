@@ -2,11 +2,7 @@
 import { UnauthorizedError } from '@shared/core/http/httpErrors';
 import { CorsOptions } from 'cors';
 
-const allowedDomains = [
-  'https://blog.gustavo.gq',
-  // process.env.MY_LOCALHOST_IP,
-  // process.env.MY_LOCALHOST,
-];
+const allowedDomains = ['https://gustavoteixeira.xyz', 'http://localhost:3001'];
 
 export const corsConfig = {
   origin: (origin, cb) => {

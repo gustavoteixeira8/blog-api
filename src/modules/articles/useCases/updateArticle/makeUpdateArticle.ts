@@ -1,7 +1,6 @@
 import { makeArticleRepository } from '@modules/articles/repositories/implementations/makeArticleRepository';
 import { makeCategoryRepository } from '@modules/categories/repositories/implementations/makeCategoryRepository';
 import { makeUserRepository } from '@modules/users/repositories/implementations/makeUserRepository';
-import { makeMailQueueAdapter } from '@shared/adapters/queueAdapter/makeMailQueueAdapter';
 import { makeSlugAdapter } from '@shared/adapters/slugAdapter/makeSlugAdapter';
 import { WebController } from '@shared/core/controllers/WebController';
 import { UpdateArticleController } from './UpdateArticleController';
@@ -12,13 +11,11 @@ export const makeUpdateArticle = (): WebController => {
   const userRepository = makeUserRepository();
   const categoryRepository = makeCategoryRepository();
   const slugAdapter = makeSlugAdapter();
-  const mailQueueAdapter = makeMailQueueAdapter();
   const useCase = new UpdateArticleUseCase(
     articleRepository,
     categoryRepository,
     userRepository,
     slugAdapter,
-    mailQueueAdapter,
   );
   return new UpdateArticleController(useCase);
 };

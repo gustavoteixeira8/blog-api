@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm-run-all --parallel dev:server dev:queue | pino-pretty -c",
+    "dev": "NODE_ENV=development npm-run-all --parallel dev:server dev:queue | pino-pretty -c",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules src/shared/infra/http/index.ts",
     "dev:queue": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules src/shared/infra/queue/index.ts",
     "typeorm:dev": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
-    "start": "NODE_ENV=production pm2 start dist/shared/infra/http/index.js --name app_server && NODE_ENV=production pm2 start dist/shared/infra/queue/index.js --name app_queue",
+    "start:server": "NODE_ENV=production node dist/shared/infra/http/index.js",
+    "start:queue": "NODE_ENV=production node dist/shared/infra/queue/index.js",
     "typeorm:prod": "node ./node_modules/typeorm/cli.js"
   },
   "keywords": [],
@@ -87,7 +88,7 @@
     "sharp": "^0.30.6",
     "slugify": "^1.6.3",
     "tsyringe": "^4.6.0",
-    "typeorm": "^0.3.16",
+    "typeorm": "^0.2.45",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"
   }

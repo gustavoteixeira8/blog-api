@@ -26,6 +26,50 @@ services:
     networks:
       - net
 
+  api:
+    depends_on:
+      - postgres
+      - redis
+      - migration
+    build:
+      dockerfile: .docker/api/Dockerfile
+      context: .
+    container_name: api_blog
+    restart: always
+    tty: true
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file: .env
+    networks:
+      - net
+
+  queue:
+    depends_on:
+      - postgres
+      - redis
+      - migration
+    build:
+      dockerfile: .docker/queue/Dockerfile
+      context: .
+    container_name: queue_blog
+    restart: always
+    tty: true
+    env_file: .env
+    networks:
+      - net
+
+  migration:
+    container_name: migration_blog
+    build:
+      dockerfile: .docker/migration/Dockerfile
+      context: .
+    tty: true
+    env_file: .env
+    depends_on:
+      - postgres
+    networks:
+      - net
+
 networks:
   net:
     driver: bridge

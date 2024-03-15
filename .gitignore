@@ -14,3 +14,4 @@ TODO.md
 dist/
 build
 .vscode
+wait-for-it.sh
