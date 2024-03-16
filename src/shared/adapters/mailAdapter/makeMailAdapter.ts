@@ -4,5 +4,5 @@ import { SendGridMailAdapter } from './implementations/SendGridMailAdapter';
 
 export const makeMailAdapter = () => {
   const templateAdapter = makeTemplateAdapter();
-  return new MailTrapAdapter(templateAdapter);
+  return new SendGridMailAdapter(templateAdapter);
 };
