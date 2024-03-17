@@ -43,21 +43,6 @@ services:
     networks:
       - net
 
-  queue:
-    depends_on:
-      - postgres
-      - redis
-      - migration
-    build:
-      dockerfile: .docker/queue/Dockerfile
-      context: .
-    container_name: queue_blog
-    restart: always
-    tty: true
-    env_file: .env
-    networks:
-      - net
-
   migration:
     container_name: migration_blog
     build:

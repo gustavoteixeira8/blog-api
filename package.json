@@ -11,8 +11,7 @@
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
-    "start:server": "NODE_ENV=production node dist/shared/infra/http/index.js",
-    "start:queue": "NODE_ENV=production node dist/shared/infra/queue/index.js",
+    "start:prod": "NODE_ENV=production pm2 start dist/shared/infra/http/index.js && NODE_ENV=production pm2 start dist/shared/infra/queue/index.js",
     "typeorm:prod": "node ./node_modules/typeorm/cli.js"
   },
   "keywords": [],

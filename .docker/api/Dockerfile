@@ -10,6 +10,6 @@ COPY ormconfig.json /blog
 
 RUN npm i --omit=dev
 
-# RUN npm install pm2 -g
+RUN npm install pm2 -g
 
-CMD [ "npm", "run", "start:server" ]
+CMD [ "npm", "run", "start:prod" ]
