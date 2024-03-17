@@ -1,6 +1,6 @@
 import { appConfig } from '@config/app';
 import { mailConfig } from '@config/mail';
-import sendGrid from '@sendgrid/mail';
+import * as Brevo from '@getbrevo/brevo';
 import { logger } from '@shared/log';
 import {
   AddressOptionsProtocol,
@@ -9,12 +9,15 @@ import {
 } from '../MailAdapterProtocol';
 import { TemplateAdapterProtocol } from '@shared/adapters/templateAdapter/TemplateAdapterProtocol';
 
-export class SendGridMailAdapter implements MailAdapterProtocol {
-  private readonly _apiKey = mailConfig.sendGrid.apiKey;
+export class BrevoMailAdapter implements MailAdapterProtocol {
+  private readonly _apiKey = mailConfig.brevo.apiKey;
   private readonly _appAddress: AddressOptionsProtocol = appConfig.mail;
 
+  private _apiInstance: Brevo.TransactionalEmailsApi;
+
   constructor(private _templateAdapter: TemplateAdapterProtocol) {
-    sendGrid.setApiKey(this._apiKey);
+    this._apiInstance = new Brevo.TransactionalEmailsApi();
+    this._apiInstance.setApiKey(0, this._apiKey);
   }
 
   public async sendMail(options: MailOptionsProtocol): Promise<void> {
@@ -24,28 +27,31 @@ export class SendGridMailAdapter implements MailAdapterProtocol {
         variables: options.context,
       });
 
-      const mailConfig = {
-        from: {
+      const mailConfig: Brevo.SendSmtpEmail = {
+        sender: {
           email: options.from?.address || this._appAddress.address,
           name: options.from?.name || this._appAddress.name,
         },
-        to: {
-          email: options.to.address,
-          name: options.to.name,
-        },
+        to: [
+          {
+            email: options.to.address,
+            name: options.to.name,
+          },
+        ],
         subject: options.subject,
-        html: htmlParsed,
-        attachments: options.attachments?.map((a) => ({
+        htmlContent: htmlParsed,
+        attachment: options.attachments?.map((a) => ({
           content: a.content,
           filename: a.filename,
           type: a.contentType,
         })),
-        replyTo: options.replyTo || this._appAddress.address,
+        replyTo: {
+          email:  options.replyTo || this._appAddress.address,
+          name: options.from?.name || this._appAddress.name,
+        }
       };
 
-      console.log(mailConfig);
-
-      await sendGrid.send(mailConfig);
+      await this._apiInstance.sendTransacEmail(mailConfig);
     } catch (error) {
       logger.error(error);
       throw new Error('Mail service error');

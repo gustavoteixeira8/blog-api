@@ -10,4 +10,7 @@ export const mailConfig = {
   sendGrid: {
     apiKey: process.env.SENDGRID_API_KEY as string,
   },
+  brevo: {
+    apiKey: process.env.BREVO_API_KEY as string,
+  }
 };
