@@ -40,7 +40,7 @@ export const uploadConfig = {
     },
   },
   storageProvider: {
-    storageLocation: process.env.STORAGE_LOCATION_FILE,
+    storageLocation: process.env.CLOUDINARY_LOCATION_FILE,
     cloudinary: {
       cloudinaryOptions: {
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
