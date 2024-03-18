@@ -35,6 +35,7 @@ services:
       dockerfile: .docker/api/Dockerfile
       context: .
     container_name: api_blog
+    image: gustavoteixeira8/api_blog
     restart: always
     tty: true
     ports:
@@ -50,6 +51,7 @@ services:
       context: .
     tty: true
     env_file: .env
+    image: gustavoteixeira8/migration_blog
     depends_on:
       - postgres
     networks:

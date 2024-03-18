@@ -14,6 +14,10 @@ export abstract class TemplateAdapterProtocol {
   public abstract parse({ file, variables }: TemplateOptionsProtocol): Promise<string | never>;
 
   protected normalizeFilePath(file: FileTemplateProtocol): string {
-    return resolve('src', 'modules', `${file.module}`, 'views', `${file.filename}.hbs`);
+    const isDev = process.env.NODE_ENV;
+
+    const rootPath = isDev === 'development' ? 'src' : 'dist';
+
+    return resolve(rootPath, 'modules', `${file.module}`, 'views', `${file.filename}.hbs`);
   }
 }

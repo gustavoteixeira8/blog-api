@@ -6,7 +6,7 @@ ENV NODE_ENV=production
 
 COPY dist /migration/dist
 COPY package.json /migration
-COPY ormconfig.json /migration
+COPY ormconfig.js /migration
 
 COPY .docker/migration/wait-for-it.sh /migration
 RUN chmod a+x /migration/wait-for-it.sh

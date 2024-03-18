@@ -59,7 +59,7 @@ export class SendUpdatePasswordEmailUseCase
     }
 
     await Promise.all([
-      // this._userTokenRepository.save(newUserToken),
+      this._userTokenRepository.save(newUserToken),
       this._mailQueueAdapter.add({
         to: {
           name: user.fullName.value,

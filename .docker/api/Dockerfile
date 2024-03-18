@@ -6,7 +6,7 @@ ENV NODE_ENV=production
 
 COPY dist /blog/dist
 COPY package.json /blog
-COPY ormconfig.json /blog
+COPY ormconfig.js /blog
 
 RUN npm i --omit=dev
 

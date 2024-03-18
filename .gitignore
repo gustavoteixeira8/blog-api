@@ -15,3 +15,4 @@ dist/
 build
 .vscode
 wait-for-it.sh
+.docker/nginx

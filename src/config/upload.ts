@@ -3,7 +3,7 @@ import { diskStorage, FileFilterCallback } from 'multer';
 import { extname, resolve } from 'path';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
-import { mkdir } from 'fs/promises';
+import { mkdirSync, existsSync } from 'fs';
 
 export const uploadConfig = {
   tempPath: resolve(__dirname, '..', '..', 'temp'),
@@ -11,7 +11,9 @@ export const uploadConfig = {
   multer: {
     storage: diskStorage({
       destination(req, file, cb) {
-        mkdir(uploadConfig.tempPath);
+        if (!existsSync(uploadConfig.tempPath)) {
+          mkdirSync(uploadConfig.tempPath);
+        }
 
         cb(null, resolve(uploadConfig.tempPath));
       },
@@ -19,7 +21,7 @@ export const uploadConfig = {
         const hash = randomBytes(10).toString('hex');
 
         const filename = `${Date.now()}_${hash}${extname(file.originalname)}`;
-        console.log(filename)
+        console.log(filename);
         cb(null, filename);
       },
     }),
